@@ -558,7 +558,7 @@ namespace E_Ticaret.Controllers
                 }
             }
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Homes");
         }
 
         private async Task<bool> CheckAdmin()

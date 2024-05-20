@@ -1,0 +1,140 @@
+﻿@model Cart
+
+@{
+    ViewData["Title"] = "E-Ticaret Sepet";
+}
+
+<section class="breadcrumb-option">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb__text">
+                    <h4>Alışveriş Sepeti</h4>
+                    <div class="breadcrumb__links">
+                        <a asp-controller="Home" asp-action="Index">AnaSayfa</a>
+                        <span>Sepet</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="shopping-cart spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="shopping__cart__table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Ürün</th>
+                                <th>Adet</th>
+                                <th>Toplam</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="TableBody">
+                            @foreach (var cart in Model.Carts)
+                            { /*
+                                <tr>
+                                    <td class="product__cart__item">
+                                        <div class="product__cart__item__pic">
+                                            @if (cart.Product.Pictures != null && cart.Product.Pictures.Count > 0)
+                                            {
+                                                <img class="card-img-top" src="img/@cart.Product.Pictures[0].Path" alt="@cart.Product.Name" style="height: 90px">
+                                            }
+                                        </div>
+                                        <div class="product__cart__item__text">
+                                            <h6>@cart.Product.Name</h6>
+                                            <h5>
+                                                @{
+                                                    string proPrice = cart.Product.Price.ToString();
+                                                    @proPrice
+                                                } ₺
+                                            </h5>
+                                        </div>
+                                    </td>
+                                    <td class="quantity__item">
+                                        <div class="quantity">
+                                            <div class="pro-qty-2">
+                                                <input type="text" class="cartQuantity" action="Cart/Edit/@cart.CartId" name="Quantity" id="@cart.CartId" value="@cart.Quantity">
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="cart__price">
+                                        @{
+                                            string totalsPrice = cart.Total.ToString("N2");
+                                            @totalsPrice
+                                        } ₺
+                                    </td>
+                                    
+                                    <td class="cart__close">
+                                        <form action="Cart/Delete/@cart.CartId">
+                                            <button type="submit" style="border: unset; background: unset;">
+                                                <i class="fa fa-close"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                */
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <div class="continue__btn">
+                            <a asp-controller="Home" asp-action="Index">Alışverişe Devam Et</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <div class="continue__btn update__btn">
+                            <a type="button" onclick="cartUpdateHeader()"><i class="fa fa-spinner"></i> Sepeti Güncelle</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="cart__discount">
+                    <h6>Kupon Kodu</h6>
+                    <form asp-controller="Cart" asp-action="Coupon">
+                        <input type="text" placeholder="Kupon Kodu" name="Code">
+                        <button type="submit">Uygula</button>
+                    </form>
+                </div>
+                <div class="cart__total">
+                    <h6 id="cart_cc" style="display: none;">Kupon</h6>
+                    <ul>
+                        <li id="coupon_li">
+							<pp id="coupon_name"></pp>
+                        </li>
+                    </ul>
+                    <h6>Sepet Toplamı</h6>
+                    <ul>
+                        <li id="cart_cs" style="display: none;">
+                            Tutar <span class="cart_totalg">
+                                @{
+                                    string totalPrice = Model.Total.ToString("N2");
+                                    @totalPrice
+                                } ₺
+                            </span>
+                        </li>
+                        <li id="cart_c" style="display: none;">
+                            Kupon İndirimi <span class="cart_totalc"></span>
+                        </li>
+                        <li>
+                            Toplam Tutar <span class="cart_totalp">
+                                @{
+                                    string totalsPrice = Model.Total.ToString("N2");
+                                    @totalsPrice
+                                } ₺
+                            </span>
+                        </li>
+                    </ul>
+                    <a asp-controller="Checkout" asp-action="Index" class="primary-btn">Ödemeye Geç</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

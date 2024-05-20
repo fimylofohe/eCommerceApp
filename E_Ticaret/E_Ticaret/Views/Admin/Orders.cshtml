@@ -1,0 +1,111 @@
+﻿@{
+    ViewData["Title"] = "Admin Panel";
+    var orders = ViewBag.Orders;
+}
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Siparişler</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item "><a asp-controller="Admin" asp-action="Index">Panel</a></li>
+                    <li class="breadcrumb-item active">Siparişler</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+		<div class="row">
+			<div class="col-12">
+				<div class="card">
+                    <div class="card-header bg-gradient-info">
+						<h3 class="card-title">Siparişler</h3>
+					</div>
+					<div class="card-body">
+						<table id="example1" class="table table-bordered table-striped">
+							<thead>
+								<tr>
+                                    <th>#</th>
+                                    <th>Kullanıcı</th>
+                                    <th>Sipariş Tutarı</th>
+                                    <th>Ürünler</th>
+                                    <th>Sipariş Tarihi</th>
+                                    <th>Sipariş Durumu</th>
+                                    <th></th>
+								</tr>
+							</thead>
+							<tbody>
+                                @foreach (var order in orders)
+                                {
+                                    <tr>
+                                        <td>
+                                            @order.OrderId
+                                        </td>
+                                        <td>
+                                            <a href="/Admin/Users/@order.UserId">@order.User.NameSurname</a>
+                                        </td>
+                                        <td>
+                                            @(Double.Parse(order.Amount.ToString()).ToString("N2")) ₺
+                                        </td>
+                                        <td>
+                                            @foreach (var products in order.Carts)
+                                            {
+                                                var product = products.Product;
+
+                                                @if (product.Pictures != null && product.Pictures.Count > 0)
+                                                {
+                                                    for (int i = 0; i < 1; i++)
+                                                    {
+                                                        var picture = product.Pictures[i];
+
+                                                        <a href="/Admin/Products/@product.ProductId">
+															<img src="/img/@picture.Path" style="width: 40px;" title="@products.Quantity Adet : @product.Name" />
+                                                            <p style="display: none;">@products.Quantity Adet : @product.Name, </p>
+                                                        </a>
+                                                    }
+                                                }
+                                            }
+                                        </td>
+                                        <td>
+                                            @order.OrderDate
+                                        </td>
+                                        <td>
+                                            @if (order.OrderStatus == 0)
+                                            {
+                                                <span class="badge badge-danger">Ödeme Bekliyor</span>
+                                            }else if (order.OrderStatus == 1)
+                                            {
+                                                <span class="badge badge-success">Ödeme Yapıldı</span>
+                                            }
+                                        </td>
+                                        <td style="display: flex;">
+                                            <a href="/Admin/Order/@order.OrderId" style="border: unset; background: unset;">
+                                                <i class="fa fa-eye"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+							</tbody>
+							<tfoot>
+								<tr>
+                                    <th>#</th>
+                                    <th>Kullanıcı</th>
+                                    <th>Sipariş Tutarı</th>
+                                    <th>Ürünler</th>
+                                    <th>Sipariş Tarihi</th>
+                                    <th>Sipariş Durumu</th>
+                                    <th></th>
+								</tr>
+							</tfoot>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+    </div>
+</section>

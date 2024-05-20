@@ -1,0 +1,121 @@
+﻿@{
+    @model E_Ticaret.Models.CategoryModel
+    ViewData["Title"] = "E-Ticaret Kullanıcı";
+
+    var category = ViewBag.Category;
+}
+
+<style>
+    .dflex {
+        display: flex;
+    }
+</style>
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Kategori Düzenle</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item "><a asp-controller="Admin" asp-action="Index">Panel</a></li>
+                    <li class="breadcrumb-item "><a asp-controller="Admin" asp-action="Categories">Kategoriler</a></li>
+                    <li class="breadcrumb-item active">#@category.CategoryId</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="x">
+                    <div class="xs" style="margin-block-end: 100px;">
+                        <div class="row">
+                            <div class="col-md-6 col-12 d-flex align-items-stretch">
+                                <div class="card shadow" style="width: 100%;">
+                                    <div class="card-header bg-gradient-danger">
+                                        <h4 class="card-title">Kullanıcı Bilgileri</h4>
+                                    </div>
+                                    <table class="table">
+                                        <tbody>
+                                            <tr>
+                                                <th scope="row">Başlık</th>
+                                                <td>:</td>
+                                                <td>@category.Name</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Bağlı Olan Ürün</th>
+                                                <td>:</td>
+                                                <td>@category.Products Adet</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Durum</th>
+                                                <td>:</td>
+                                                <td>
+                                                    @if (category.Status == false)
+                                                    {
+                                                        <span class="badge badge-danger">Pasif</span>
+                                                    }
+                                                    else if (category.Status == true)
+                                                    {
+                                                        <span class="badge badge-success">Aktif</span>
+                                                    }
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-12 d-flex align-items-stretch">
+                                <div class="card shadow" style="width: 100%;">
+                                    <div class="card-header bg-gradient-info">
+                                        <h4 class="card-title">Hesap Ayarlar</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <form action="" method="post">
+                                            <div class="row">
+                                                <div class="col-12 col-md-6" style="margin-block-end: 10px;">
+                                                    <label asp-for="Name"></label>
+                                                    <input asp-for="Name" class="form-control" value="@category.Name">
+                                                </div>
+                                                <div class="col-12 col-md-6">
+                                                    <label asp-for="Status"></label>
+                                                    <select asp-for="Status" class="form-control">
+                                                        @if (category.Status == false)
+                                                        {
+                                                            <option value="false" selected>Pasif</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="false">Pasif</option>
+                                                        }
+
+                                                        @if (category.Status == true)
+                                                        {
+                                                            <option value="true" selected>Aktif</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="true">Aktif</option>
+                                                        }
+                                                    </select>
+                                                </div>
+                                                <div class="col-12">
+                                                    <button type="submit" class="btn btn-success mt-4 btn-block" style="background-color: #061b3d;"> Güncelle</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

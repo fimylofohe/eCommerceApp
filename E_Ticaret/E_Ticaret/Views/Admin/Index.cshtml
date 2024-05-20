@@ -1,0 +1,251 @@
+﻿@{
+    ViewData["Title"] = "Admin Panel";
+    var datas = ViewBag.Datas;
+}
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Panel</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item "><a asp-controller="Admin" asp-action="Index">Panel</a></li>
+                    <li class="breadcrumb-item active">Ana Sayfa</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3 col-sm-6 col-12">
+                <div class="info-box bg-dark" style="background-image: linear-gradient(to right,#6c6c6c 0%,#262626 100%) !important;">
+                    <span class="info-box-icon"><i class="far fa-bookmark"></i></span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text">24 Saat</span>
+                        <span class="info-box-number" style="font-size: 20px;">
+                            @{
+                                string deger = Double.Parse(datas.dailyEarning.ToString()).ToString("N2");
+                            }
+                            @deger ₺
+                        </span>
+
+                        <div class="progress">
+                            <div class="progress-bar" style="width: 100%"></div>
+                        </div>
+                        <span class="progress-description">
+                            Günlük Kazanç
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 col-12">
+                <div class="info-box bg-dark" style="background-color: #262626 !important;">
+                    <span class="info-box-icon"><i class="far fa-bookmark"></i></span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text">7 Gün</span>
+                        <span class="info-box-number" style="font-size: 20px;">
+                            @{
+                                string deger_2 = Double.Parse(datas.weeklyEarning.ToString()).ToString("N2");
+                            }
+                            @deger_2 ₺
+                        </span>
+
+                        <div class="progress">
+                            <div class="progress-bar" style="width: 100%"></div>
+                        </div>
+                        <span class="progress-description">
+                            Haftalık Kazanç
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 col-12">
+                <div class="info-box bg-dark" style="background-color: #262626 !important;">
+                    <span class="info-box-icon"><i class="far fa-bookmark"></i></span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text">30 Gün</span>
+                        <span class="info-box-number" style="font-size: 20px;">
+                            @{
+                                string deger_3 = Double.Parse(datas.monthlyEarning.ToString()).ToString("N2");
+                            }
+                            @deger_3 ₺
+                        </span>
+
+                        <div class="progress">
+                            <div class="progress-bar" style="width: 100%"></div>
+                        </div>
+                        <span class="progress-description">
+                            Aylık Kazanç
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 col-12">
+                <div class="info-box bg-dark" style="background-image: linear-gradient(to left,#6c6c6c 0%,#262626 100%) !important;">
+                    <span class="info-box-icon"><i class="far fa-bookmark"></i></span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text">Toplam</span>
+                        <span class="info-box-number" style="font-size: 20px;">
+                            @{
+                                string deger_4 = Double.Parse(datas.totalEarning.ToString()).ToString("N2");
+                            }
+                            @deger_4 ₺
+                        </span>
+
+                        <div class="progress">
+                            <div class="progress-bar" style="width: 100%"></div>
+                        </div>
+                        <span class="progress-description">
+                            Toplam Satış
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <hr />
+            </div>
+            <div class="col-lg-2 col-6">
+                <div class="small-box bg-info" style="background-image: linear-gradient(to left,#0db2de 0%,#005bea 100%) !important;">
+                    <div class="inner">
+                        <h3>
+                            @datas.orderCounts
+                        </h3>
+                        <p>Toplam Sipariş</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-bag"></i>
+                    </div>
+                    <a asp-controller="Admin" asp-action="Orders" class="small-box-footer">Tüm Siparişler <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            <div class="col-lg-2 col-6">
+                <div class="small-box bg-success" style="background-image: linear-gradient(45deg,#f93a5a,#f7778c) !important;">
+                    <div class="inner">
+                        <h3>
+                            @datas.usersCounts
+                        </h3>
+                        <p>Toplam Kullanıcı</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <a asp-controller="Admin" asp-action="Users" class="small-box-footer">Tüm Kullanıcılar <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            <div class="col-lg-2 col-6">
+                <div class="small-box bg-success" style="background-image: linear-gradient(to left,#48d6a8 0%,#029666 100%) !important;">
+                    <div class="inner">
+                        <h3>
+                            @datas.categoriesCounts
+                        </h3>
+                        <p>Toplam Kategori</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-stats-bars"></i>
+                    </div>
+                    <a asp-controller="Admin" asp-action="Categories" class="small-box-footer">Tüm Kategoriler <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            <div class="col-lg-2 col-6">
+                <div class="small-box bg-success" style="background-image: linear-gradient(to left,#efa65f,#f76a2d) !important;">
+                    <div class="inner">
+                        <h3>
+                            @datas.commentsCounts
+                        </h3>
+                        <p>Toplam Yorum</p>
+                    </div>
+                    <div class="icon">
+                        <i class="far fa-comments"></i>
+                    </div>
+                    <a asp-controller="Admin" asp-action="Comments" class="small-box-footer">Tüm Yorumlar <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            <div class="col-lg-2 col-6">
+                <div class="small-box bg-info" style="background-image: linear-gradient(to left,#0db2de 0%,#005bea 100%) !important;">
+                    <div class="inner">
+                        <h3>
+                            @datas.couponsCounts
+                        </h3>
+                        <p>Toplam Kupon</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-ticket-alt"></i>
+                    </div>
+                    <a asp-controller="Admin" asp-action="Coupons" class="small-box-footer">Tüm Kuponlar <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+        </div>
+
+		<div class="row">
+
+            <div class="col-md-6">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Aylık Kazanç Grafiği</h3>
+
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body" style="display: block;">
+                        <div class="chart">
+                            <div class="chartjs-size-monitor">
+                                <div class="chartjs-size-monitor-expand">
+                                    <div class=""></div>
+                                </div>
+                                <div class="chartjs-size-monitor-shrink">
+                                    <div class=""></div>
+                                </div>
+                            </div>
+                            <canvas id="areaChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%; display: block;" width="464" height="250" class="chartjs-render-monitor"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Aylık Sipariş Grafiği</h3>
+
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body" style="display: block;">
+                        <div class="chart">
+                            <div class="chartjs-size-monitor">
+                                <div class="chartjs-size-monitor-expand">
+                                    <div class=""></div>
+                                </div>
+                                <div class="chartjs-size-monitor-shrink">
+                                    <div class=""></div>
+                                </div>
+                            </div>
+                            <canvas id="areaCharts" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%; display: block;" width="464" height="250" class="chartjs-render-monitor"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+		</div>
+
+    </div>
+</section>

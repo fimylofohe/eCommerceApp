@@ -1,0 +1,38 @@
+﻿@{
+    ViewData["Title"] = "E-Ticaret Sipariş";
+    var order = ViewBag.Order;
+    bool testCart = true;
+}
+@Html.Raw(ViewBag.Iyzico)
+<section class="breadcrumb-option">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb__text">
+                    <h4>Sipariş Oluştur</h4>
+                    <div class="breadcrumb__links">
+                        <a asp-controller="Home" asp-action="Index">AnaSayfa</a>
+                        <a asp-controller="Shop" asp-action="Index">Ödeme Yap</a>
+                        <span>@order.OrderKey</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="checkout spad">
+    <div class="container">
+        @if (testCart)
+        {
+            <p class="text-white" style="background: black; text-align: center; border-radius: 10px; padding: 15px;">
+                <strong class="text-white"><span class="text-danger">TEST MODU AKTİF</span> Sandbox Test Ortamı Kart Bilgileri</strong><br>
+                Ad Soyad: <strong class="text-white">Halil Şahin </strong><br>
+                Kart Numarası: <strong class="text-white">5526080000000006 </strong><br>
+                Ay / Yıl: <strong class="text-white">12/25</strong><br>
+                CVC: <strong class="text-white">123 </strong>
+            </p>
+        }
+        <div id="iyzipay-checkout-form" class="responsive"></div>
+    </div>
+</section>

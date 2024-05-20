@@ -1,0 +1,127 @@
+﻿@{
+    ViewData["Title"] = "Admin Panel";
+    var users = ViewBag.Users;
+}
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Kullanıcılar</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item "><a asp-controller="Admin" asp-action="Index">Panel</a></li>
+                    <li class="breadcrumb-item active">Kullanıcılar</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-gradient-info">
+                        <h3 class="card-title">Kullanıcılar</h3>
+                    </div>
+                    <div class="card-body">
+                        <table id="example1" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>İsim Soyisim</th>
+                                    <th>E-Posta</th>
+                                    <th>Telefon</th>
+                                    <th>Toplam Sipariş</th>
+                                    <th>Toplam Yorum</th>
+                                    <th>Yetki</th>
+                                    <th>Durum</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var user in users)
+                                {
+                                    <tr>
+                                        <td>
+                                            @user.UserId
+                                        </td>
+                                        <td>
+                                            @user.NameSurname
+                                        </td>
+                                        <td>
+                                            @user.Email
+                                        </td>
+                                        <td>
+                                            @user.PhoneNumber
+                                        </td>
+                                        <td>
+                                            @{
+                                                int adet_say = 0;
+                                                foreach (var say in user.Orders)
+                                                {
+                                                    adet_say++;
+                                                }
+                                                @adet_say;
+                                            }
+                                        </td>
+                                        <td>
+                                            @{
+                                                adet_say = 0;
+                                                foreach (var say in user.Comments)
+                                                {
+                                                    adet_say++;
+                                                }
+                                                @adet_say;
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (user.Admin == true)
+                                            {
+                                                <span class="badge badge-success">Admin</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge badge-info">Kullanıcı</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (user.Status == false)
+                                            {
+                                                <span class="badge badge-danger">Pasif</span>
+                                            }
+                                            else if (user.Status == true)
+                                            {
+                                                <span class="badge badge-success">Aktif</span>
+                                            }
+                                        </td>
+                                        <td style="display: flex;">
+                                            <a href="/Admin/User/@user.UserId" style="border: unset; background: unset;">
+                                                <i class="fa fa-eye"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>#</th>
+                                    <th>İsim Soyisim</th>
+                                    <th>E-Posta</th>
+                                    <th>Telefon</th>
+                                    <th>Toplam Sipariş</th>
+                                    <th>Toplam Yorum</th>
+                                    <th>Yetki</th>
+                                    <th>Durum</th>
+                                    <th></th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,323 @@
+﻿@{
+    @model E_Ticaret.Models.ProductModel
+    ViewData["Title"] = "E-Ticaret Kullanıcı";
+
+    var product = ViewBag.Product;
+}
+
+<style>
+    .dflex {
+        display: flex;
+    }
+</style>
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Ürün Düzenle</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item "><a asp-controller="Admin" asp-action="Index">Panel</a></li>
+                    <li class="breadcrumb-item "><a asp-controller="Admin" asp-action="Products">Ürünler</a></li>
+                    <li class="breadcrumb-item active">#@product.ProductId</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="x">
+                    <div class="xs" style="margin-block-end: 100px;">
+                        <div class="row">
+                            <div class="col-md-3 col-sm-6 col-12">
+                                <div class="info-box bg-dark" style="background-image: linear-gradient(to right,#ff73ae 0%,#d04242 100%) !important;">
+                                    <span class="info-box-icon"><i class="ion ion-bag"></i></span>
+
+                                    <div class="info-box-content">
+                                        <span class="info-box-number" style="font-size: 20px;">
+                                            @{
+                                                int adet_say = 0;
+                                                foreach (var say in product.Comments)
+                                                {
+                                                    adet_say++;
+                                                }
+                                                @adet_say
+                                                ;
+                                            }
+                                        </span>
+
+                                        <div class="progress">
+                                            <div class="progress-bar" style="width: 100%"></div>
+                                        </div>
+                                        <span class="progress-description">
+                                            Toplam Yorum
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-12">
+                                <div class="info-box bg-dark" style="background-image: linear-gradient(to left,#d04242 0%,#d04242 100%) !important;">
+                                    <span class="info-box-icon"><i class="far fa-comments"></i></span>
+
+                                    <div class="info-box-content">
+                                        <span class="info-box-number" style="font-size: 20px;">
+                                            @{
+                                                adet_say = 0;
+                                                foreach (var say in product.Pictures)
+                                                {
+                                                    adet_say++;
+                                                }
+                                                @adet_say
+                                                ;
+                                            }
+                                        </span>
+
+                                        <div class="progress">
+                                            <div class="progress-bar" style="width: 100%"></div>
+                                        </div>
+                                        <span class="progress-description">
+                                            Toplam Fotoğraf
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-12">
+                                <div class="info-box bg-dark" style="background-image: linear-gradient(to left,#d04242 0%,#d04242 100%) !important;">
+                                    <span class="info-box-icon"><i class="fas fa-map-marker-alt"></i></span>
+
+                                    <div class="info-box-content">
+                                        <span class="info-box-number" style="font-size: 20px;">
+                                            @product.Stock
+                                        </span>
+
+                                        <div class="progress">
+                                            <div class="progress-bar" style="width: 100%"></div>
+                                        </div>
+                                        <span class="progress-description">
+                                            Stok
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-12">
+                                <div class="info-box bg-dark" style="background-image: linear-gradient(to left,#ff73ae 0%,#d04242 100%) !important;">
+                                    <span class="info-box-icon"><i class="fas fa-shopping-cart"></i></span>
+
+                                    <div class="info-box-content">
+                                        <span class="info-box-number" style="font-size: 20px;">
+                                            Null
+                                        </span>
+
+                                        <div class="progress">
+                                            <div class="progress-bar" style="width: 100%"></div>
+                                        </div>
+                                        <span class="progress-description">
+                                            Kalan Stok
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 col-12 d-flex align-items-stretch">
+                                <div class="card shadow" style="width: 100%;">
+                                    <div class="card-header bg-gradient-danger">
+                                        <h4 class="card-title">Ürün Bilgileri</h4>
+                                    </div>
+                                    <table class="table">
+                                        <tbody>
+                                            <tr>
+                                                <th scope="row">Başlık</th>
+                                                <td>:</td>
+                                                <td>@product.Name</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Kategori</th>
+                                                <td>:</td>
+                                                <td><a href="/Admin/Category/@product.Category.CategoryId">@product.Category.Name</a></td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">SKU</th>
+                                                <td>:</td>
+                                                <td>@product.Sku</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Fiyat</th>
+                                                <td>:</td>
+                                                <td>@(Double.Parse(product.Price.ToString()).ToString("N2")) ₺</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Stok</th>
+                                                <td>:</td>
+                                                <td>@product.Stock</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Durum</th>
+                                                <td>:</td>
+                                                <td>
+                                                    @if (product.Status == false)
+                                                    {
+                                                        <span class="badge badge-danger">Pasif</span>
+                                                    }
+                                                    else if (product.Status == true)
+                                                    {
+                                                        <span class="badge badge-success">Aktif</span>
+                                                    }
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-8 col-12 d-flex align-items-stretch">
+                                <div class="card shadow" style="width: 100%;">
+                                    <div class="card-header bg-gradient-danger">
+                                        <h4 class="card-title">Ürün Düzenle</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <form action="" method="post">
+                                            <div class="row">
+                                                <div class="col-12 col-md-6" style="margin-block-end: 10px;">
+                                                    <div class="row">
+                                                        <div class="col-12 col-md-6" style="margin-block-end: 10px;">
+                                                            <label asp-for="Name"></label>
+                                                            <input asp-for="Name" class="form-control" value="@product.Name">
+                                                        </div>
+                                                        <div class="col-12 col-md-6" style="margin-block-end: 10px;">
+                                                            <label asp-for="Sku"></label>
+                                                            <input asp-for="Sku" class="form-control" value="@product.Sku">
+                                                        </div>
+                                                        <div class="col-12 col-md-6" style="margin-block-end: 10px;">
+                                                            <label asp-for="Price"></label>
+                                                            <input asp-for="Price" class="form-control numberZone" value="@product.Price">
+                                                        </div>
+                                                        <div class="col-12 col-md-6" style="margin-block-end: 10px;">
+                                                            <label asp-for="Stock"></label>
+                                                            <input asp-for="Stock" class="form-control" value="@product.Stock">
+                                                        </div>
+                                                        <div class="col-12 col-md-6">
+                                                            <label asp-for="Status"></label>
+                                                            <select asp-for="Status" class="form-control">
+                                                                @if (product.Status == false)
+                                                                {
+                                                                    <option value="false" selected>Pasif</option>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <option value="false">Pasif</option>
+                                                                }
+
+                                                                @if (product.Status == true)
+                                                                {
+                                                                    <option value="true" selected>Aktif</option>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <option value="true">Aktif</option>
+                                                                }
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-12 col-md-6">
+                                                            <label asp-for="CategoryId"></label>
+                                                            <select asp-for="CategoryId" class="form-control">
+                                                                @foreach(var cat in ViewBag.Categories)
+                                                                {
+                                                                    if (product.CategoryId == cat.CategoryId)
+                                                                    {
+                                                                        <option value="@cat.CategoryId" selected>@cat.Name</option>
+                                                                    }else{
+                                                                        <option value="@cat.CategoryId">@cat.Name</option>
+                                                                    }
+                                                                }                                                                
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-md-6" style="margin-block-end: 10px;">
+                                                    <label asp-for="Description"></label>
+                                                    <textarea name="Description" class="form-control">@product.Description</textarea>
+                                                </div>
+                                                <div class="col-12">
+                                                    <button type="submit" class="btn btn-success mt-4 btn-block" style="background-color: #061b3d;"> Güncelle</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            
+                            <div class="col-12 col-md-4">
+                                <div class="card-header bg-gradient-info">
+                                    <h4 class="card-title">Resim Yükle ( Sürükle Bırak )<h4>
+                                </div>
+                                <form method="post" action="/Admin/Image/@product.ProductId" class="dropzone" id="uploadForm" enctype="multipart/form-data">
+                                    <div class="fallback">
+                                        <input name="file" type="file" multiple />
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div class="col-12 col-md-8">
+                                <div class="card-header bg-gradient-info">
+                                    <h4 class="card-title">Resimler<h4>
+                                </div>
+                                <div class="row" id="picturess"></div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    var elements = document.querySelectorAll('.numberZone');
+
+    function checkInput(input) {
+        if (/^\d*\,?\d*$/.test(input.value)) {
+            if (/^\d*\,?\d{0,2}$/.test(input.value)) {
+                input.oldValue = input.value;
+            } else {
+                input.value = input.oldValue || '';
+            }
+        } else {
+            input.value = input.oldValue || '';
+        }
+    }
+
+    elements.forEach(function (element) {
+        element.addEventListener('input', function () {
+            checkInput(this);
+        });
+        element.oldValue = element.value;
+    });
+
+    @{
+    var productId = product.ProductId;
+    ViewBag.Script = $@"
+        Dropzone.options.uploadForm = {{
+            maxFilesize: 1.5,
+            init: function() {{
+                this.on('success', function(file, response) {{
+                    ImageUpdate({productId});
+                }});
+            }}
+        }};
+        
+        ImageUpdate({productId});
+    ";
+}
+
+</script>

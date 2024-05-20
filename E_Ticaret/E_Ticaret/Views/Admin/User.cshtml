@@ -1,0 +1,555 @@
+﻿@{
+    @model E_Ticaret.Models.UserModel
+    ViewData["Title"] = "E-Ticaret Kullanıcı";
+
+    var user = ViewBag.User;
+}
+
+<style>
+    .dflex {
+        display: flex;
+    }
+</style>
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Kullanıcı Detayları</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item "><a asp-controller="Admin" asp-action="Index">Panel</a></li>
+                    <li class="breadcrumb-item "><a asp-controller="Admin" asp-action="Orders">Kullanıcılar</a></li>
+                    <li class="breadcrumb-item active">#@user.UserId</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="x">
+                    <div class="xs" style="margin-block-end: 100px;">
+                        <div class="row">
+                            <div class="col-md-3 col-sm-6 col-12">
+                                <div class="info-box bg-dark" style="background-image: linear-gradient(to right,#ff73ae 0%,#d04242 100%) !important;">
+                                    <span class="info-box-icon"><i class="ion ion-bag"></i></span>
+
+                                    <div class="info-box-content">
+                                        <span class="info-box-number" style="font-size: 20px;">
+                                            @{
+                                                int adet_say = 0;
+                                                foreach (var say in user.Orders)
+                                                {
+                                                    adet_say++;
+                                                }
+                                                @adet_say;
+                                            }
+                                        </span>
+
+                                        <div class="progress">
+                                            <div class="progress-bar" style="width: 100%"></div>
+                                        </div>
+                                        <span class="progress-description">
+                                            Toplam Sipariş
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-12">
+                                <div class="info-box bg-dark" style="background-image: linear-gradient(to left,#d04242 0%,#d04242 100%) !important;">
+                                    <span class="info-box-icon"><i class="far fa-comments"></i></span>
+
+                                    <div class="info-box-content">
+                                        <span class="info-box-number" style="font-size: 20px;">
+                                            @{
+                                                adet_say = 0;
+                                                foreach (var say in user.Comments)
+                                                {
+                                                    adet_say++;
+                                                }
+                                                @adet_say;
+                                            }
+                                        </span>
+
+                                        <div class="progress">
+                                            <div class="progress-bar" style="width: 100%"></div>
+                                        </div>
+                                        <span class="progress-description">
+                                            Toplam Yorum
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-12">
+                                <div class="info-box bg-dark" style="background-image: linear-gradient(to left,#d04242 0%,#d04242 100%) !important;">
+                                    <span class="info-box-icon"><i class="fas fa-map-marker-alt"></i></span>
+
+                                    <div class="info-box-content">
+                                        <span class="info-box-number" style="font-size: 20px;">
+                                            @{
+                                                adet_say = 0;
+                                                foreach (var say in user.Addresses)
+                                                {
+                                                    adet_say++;
+                                                }
+                                                @adet_say;
+                                            }
+                                        </span>
+
+                                        <div class="progress">
+                                            <div class="progress-bar" style="width: 100%"></div>
+                                        </div>
+                                        <span class="progress-description">
+                                            Toplam Adres
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-12">
+                                <div class="info-box bg-dark" style="background-image: linear-gradient(to left,#ff73ae 0%,#d04242 100%) !important;">
+                                    <span class="info-box-icon"><i class="fas fa-shopping-cart"></i></span>
+
+                                    <div class="info-box-content">
+                                        <span class="info-box-number" style="font-size: 20px;">
+                                            @{
+                                                adet_say = 0;
+                                                foreach (var say in user.Carts)
+                                                {
+                                                    adet_say++;
+                                                }
+                                                @adet_say;
+                                            }
+                                        </span>
+
+                                        <div class="progress">
+                                            <div class="progress-bar" style="width: 100%"></div>
+                                        </div>
+                                        <span class="progress-description">
+                                            Toplam Sepet Ürünü
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 col-12 d-flex align-items-stretch">
+                                <div class="card shadow" style="width: 100%;">
+                                    <div class="card-header bg-gradient-danger">
+                                        <h4 class="card-title">Kullanıcı Bilgileri</h4>
+                                    </div>
+                                    <table class="table">
+                                        <tbody>
+                                            <tr>
+                                                <th scope="row">İsim</th>
+                                                <td>:</td>
+                                                <td>@user.Name</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Soyisim</th>
+                                                <td>:</td>
+                                                <td>@user.Surname</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">E-Posta Adresi</th>
+                                                <td>:</td>
+                                                <td>@user.Email</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Telefon Numarası</th>
+                                                <td>:</td>
+                                                <td>@user.PhoneNumber</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Hesap Durumu</th>
+                                                <td>:</td>
+                                                <td>
+                                                    @if (user.Status == false)
+                                                    {
+                                                        <span class="badge badge-danger">Pasif</span>
+                                                    }
+                                                    else if (user.Status == true)
+                                                    {
+                                                        <span class="badge badge-success">Aktif</span>
+                                                    }
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Yetki Durumu</th>
+                                                <td>:</td>
+                                                <td>
+                                                    @if (user.Admin == true)
+                                                    {
+                                                        <span class="badge badge-success">Admin</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="badge badge-info">Kullanıcı</span>
+                                                    }
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-12 d-flex align-items-stretch">
+                                <div class="card shadow" style="width: 100%;">
+                                    <div class="card-header bg-gradient-info">
+                                        <h4 class="card-title">Hesap Ayarlar</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <form action="" method="post">
+                                            <div class="row">
+                                                <div class="col-12 col-md-6" style="margin-block-end: 10px;">
+                                                    <label asp-for="Name"></label>
+                                                    <input asp-for="Name" class="form-control" value="@user.Name">
+                                                </div>
+                                                <div class="col-12 col-md-6" style="margin-block-end: 10px;">
+                                                    <label asp-for="Surname"></label>
+                                                    <input asp-for="Surname" class="form-control" value="@user.Surname">
+                                                </div>
+                                                <div class="col-12 col-md-6" style="margin-block-end: 10px;">
+                                                    <label asp-for="Email"></label>
+                                                    <input asp-for="Email" class="form-control" value="@user.Email">
+                                                </div>
+                                                <div class="col-12 col-md-6" style="margin-block-end: 10px;">
+                                                    <label asp-for="PhoneNumber"></label>
+                                                    <input asp-for="PhoneNumber" class="form-control" value="@user.PhoneNumber">
+                                                </div>
+                                                <div class="col-12 col-md-6">
+                                                    <label asp-for="Status"></label>
+                                                    <select asp-for="Status" class="form-control">
+                                                        @if (user.Status == false)
+                                                        {
+                                                            <option value="false" selected>Pasif</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="false">Pasif</option>
+                                                        }
+
+                                                        @if (user.Status == true)
+                                                        {
+                                                            <option value="true" selected>Aktif</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="true">Aktif</option>
+                                                        }
+                                                    </select>
+                                                </div>
+                                                <div class="col-12 col-md-6">
+                                                    <label asp-for="Admin"></label>
+                                                    <select asp-for="Admin" class="form-control">
+                                                        @if (user.Admin == false)
+                                                        {
+                                                            <option value="false" selected>Kullanıcı</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="false">Kullanıcı</option>
+                                                        }
+
+                                                        @if (user.Admin == true)
+                                                        {
+                                                            <option value="true" selected>Admin</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="true">Admin</option>
+                                                        }
+                                                    </select>
+                                                </div>
+                                                <div class="col-12">
+                                                    <button type="submit" class="btn btn-success mt-4 btn-block" style="background-color: #061b3d;"> Güncelle</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-12 d-flex align-items-stretch">
+                                <div class="card shadow" style="width: 100%;">
+                                    <div class="card-header bg-gradient-dark">
+                                        <h4 class="card-title">Şifre Güncelleme</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <form action="" method="post">
+                                            <div class="row">
+                                                <div class="col-12" style="margin-block-end: 10px;">
+                                                    <label>E-Posta Adresi</label>
+                                                    <input type="text" class="form-control" value="@user.Email" disabled>
+                                                </div>
+                                                <div class="col-12 col-md-6">
+                                                    <label asp-for="Password"></label>
+                                                    <input asp-for="Password" class="form-control">
+                                                </div>
+                                                <div class="col-12 col-md-6">
+                                                    <label asp-for="TPassword"></label>
+                                                    <input asp-for="TPassword" class="form-control">
+                                                </div>
+                                                <div class="col-12">
+                                                    <button type="submit" class="btn btn-success mt-4 btn-block" style="background-color: #061b3d;"> Güncelle</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                        <button type="submit" class="btn btn-success mt-4 btn-block" style="background-color: #061b3d;"> Şifre Sıfırlama Bağlantısı Gönder</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 col-md-6">
+                                <div class="card">
+                                    <div class="card-header bg-gradient-primary">
+                                        <h3 class="card-title">Siparişler</h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <table id="example2" class="table table-bordered table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Sipariş Tutarı</th>
+                                                    <th>Ürünler</th>
+                                                    <th>Sipariş Tarihi</th>
+                                                    <th>Sipariş Durumu</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var order in user.Orders)
+                                                {
+                                                    <tr>
+                                                        <td>
+                                                            @order.OrderId
+                                                        </td>
+                                                        <td>
+                                                            @(Double.Parse(order.Amount.ToString()).ToString("N2")) ₺
+                                                        </td>
+                                                        <td>
+                                                            @foreach (var products in order.Carts)
+                                                            {
+                                                                var product = products.Product;
+
+                                                                @if (product.Pictures != null && product.Pictures.Count > 0)
+                                                                {
+                                                                    for (int i = 0; i < 1; i++)
+                                                                    {
+                                                                        var picture = product.Pictures[i];
+
+                                                                        <a href="/Admin/Products/@product.ProductId">
+                                                                            <img src="/img/@picture.Path" style="width: 40px;" title="@products.Quantity Adet : @product.Name" />
+                                                                            <p style="display: none;">@products.Quantity Adet : @product.Name, </p>
+                                                                        </a>
+                                                                    }
+                                                                }
+                                                            }
+                                                        </td>
+                                                        <td>
+                                                            @order.OrderDate
+                                                        </td>
+                                                        <td>
+                                                            @if (order.OrderStatus == 0)
+                                                            {
+                                                                <span class="badge badge-danger">Ödeme Bekliyor</span>
+                                                            }
+                                                            else if (order.OrderStatus == 1)
+                                                            {
+                                                                <span class="badge badge-success">Ödeme Yapıldı</span>
+                                                            }
+                                                        </td>
+                                                        <td style="display: flex;">
+                                                            <a href="/Admin/Order/@order.OrderId" style="border: unset; background: unset;">
+                                                                <i class="fa fa-eye"></i>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <div class="card">
+                                    <div class="card-header bg-gradient-primary">
+                                        <h3 class="card-title">Sepet Ürünleri</h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <table id="example2" class="table table-bordered table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Ürün</th>
+                                                    <th>Adet</th>
+                                                    <th>Tutar</th>
+                                                    <th>Eklenme Tarihi</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var cart in user.Carts)
+                                                {
+                                                    <tr>
+                                                        <td>
+                                                            @cart.CartId
+                                                        </td>
+                                                        <td>
+                                                            <a href="/Admin/Products/@cart.Product.ProductId">
+                                                                @if (cart.Product.Pictures != null && cart.Product.Pictures.Count > 0)
+                                                                {
+                                                                    for (int i = 0; i < 1; i++)
+                                                                    {
+                                                                        var picture = cart.Product.Pictures[i];
+
+                                                                        <img src="/img/@picture.Path" style="width: 40px;" />
+                                                                    }
+                                                                }
+                                                                @cart.Product.Name
+                                                            </a>
+                                                        </td>
+                                                        <td>
+                                                            @cart.Quantity
+                                                        </td>
+                                                        <td>
+                                                            @(Double.Parse((cart.Product.Price * cart.Quantity).ToString()).ToString("N2"))
+                                                        </td>
+                                                        <td>
+                                                            @cart.AddDate
+                                                        </td>
+                                                        <td>
+                                                            <form action="/Admin/Cart/@cart.CartId">
+                                                                <button type="submit" class="btn btn-danger">
+                                                                    <i class="fas fa-trash"></i>
+                                                                </button>
+                                                            </form>
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <div class="card">
+                                    <div class="card-header bg-gradient-primary">
+                                        <h3 class="card-title">Adresler</h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <table id="example3" class="table table-bordered table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>İl</th>
+                                                    <th>İlçe</th>
+                                                    <th>Posta Kodu</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var address in user.Addresses)
+                                                {
+                                                    <tr>
+                                                        <td>
+                                                            <h6>@address.AddressId</h6>
+                                                        </td>
+                                                        <td>
+                                                            <h6>@address.Province</h6>
+                                                        </td>
+                                                        <td>
+                                                            <h6>@address.District</h6>
+                                                        </td>
+                                                        <td>
+                                                            <h6>@address.PostalCode</h6>
+                                                        </td>
+                                                        <td class="dflex">
+                                                            <a href="/Admin/Address/@address.AddressId" class="btn btn-info">
+                                                                <i class="fa fa-pen"></i>
+                                                            </a>
+                                                            <form action="/Admin/Address/@address.AddressId">
+                                                                <button type="submit" class="btn btn-danger">
+                                                                    <i class="fas fa-trash"></i>
+                                                                </button>
+                                                            </form>
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <div class="card">
+                                    <div class="card-header bg-gradient-primary">
+                                        <h3 class="card-title">Yorumlar</h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <table id="example4" class="table table-bordered table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Ürün</th>
+                                                    <th>Yayınlanma Tarihi</th>
+                                                    <th>Durum</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var comment in user.Comments)
+                                                {
+                                                    <tr>
+                                                        <td>
+                                                            <h6>@comment.CommentId</h6>
+                                                        </td>
+                                                        <td>
+                                                            <a href="/Admin/Products/@comment.ProductId">
+                                                                @if (comment.Product.Pictures != null && comment.Product.Pictures.Count > 0)
+                                                                {
+                                                                    <img src="/img/@comment.Product.Pictures[0].Path" style="width: 40px;" />
+                                                                }
+                                                                @comment.Product.Name
+                                                            </a>
+                                                        </td>
+                                                        <td>
+                                                            <h6>@comment.PublishedDate</h6>
+                                                        </td>
+                                                        <td>
+                                                            @if(comment.Status == true)
+                                                            {
+                                                                <span class="badge badge-success">Aktif</span>
+                                                            }
+                                                            else
+                                                            {
+                                                                <span class="badge badge-danger">Pasif</span>
+                                                            }
+                                                        </td>
+                                                        <td class="dflex">
+                                                            <a href="/Admin/Comment/@comment.CommentId" class="btn btn-info">
+                                                                <i class="fas fa-eye"></i>
+                                                            </a>
+                                                            <form action="/Admin/Comment/@comment.CommentId">
+                                                                <button type="submit" class="btn btn-danger">
+                                                                    <i class="fas fa-trash"></i>
+                                                                </button>
+                                                            </form>
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

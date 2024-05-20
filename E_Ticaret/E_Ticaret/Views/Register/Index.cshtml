@@ -1,0 +1,52 @@
+﻿@model E_Ticaret.Models.RegisterModel
+
+@{
+    ViewData["Title"] = "Kayıt Sayfası";
+}
+<div class="container">
+    <div class="row">
+        <div class="col-3"></div>
+        <div class="col-md-6 col-12">
+            <form method="post" style="padding: 50px; background: white; border-radius: 10px; margin: 100px 0px; box-shadow: 0px 0px 300px #0000008c; border: 1px solid black;">
+                <input type="hidden" id="api_name" value="Api/User/Register" />
+                <div class="mb-3" style="text-align: center; margin-bottom: 25px !important; border-bottom: 1px solid black; padding-bottom: 25px;">
+                    <h1 style="font-size: 40px;">Kayıt Ol</h1>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Name" class="form-label"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Surname" class="form-label"></label>
+                    <input asp-for="Surname" class="form-control" />
+                    <span asp-validation-for="Surname" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label"></label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="PhoneNumber" class="form-label"></label>
+                    <input asp-for="PhoneNumber" class="form-control" />
+                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Password" class="form-label"></label>
+                    <input asp-for="Password" class="form-control" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Kayıt Ol</button>
+            </form>
+
+            @if (ViewBag.Hata != null)
+            {
+                <div class="alert alert-danger mt-4">
+                    @ViewBag.Hata
+                </div>
+            }
+        </div>
+        <div class="col-4"></div>
+    </div>
+</div>

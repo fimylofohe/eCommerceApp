@@ -1,0 +1,454 @@
+﻿@{
+    ViewData["Title"] = "E-Ticaret Kullanıcı";
+
+    var order = ViewBag.Orders;
+    var banks = ViewBag.Banks;
+}
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Sipariş Detayları</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item "><a asp-controller="Admin" asp-action="Index">Panel</a></li>
+                    <li class="breadcrumb-item "><a asp-controller="Admin" asp-action="Orders">Siparişler</a></li>
+                    <li class="breadcrumb-item active">#@order.OrderKey</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="x">
+                    <div class="xs" style="margin-block-end: 100px;">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card-header bg-gradient-danger">
+                                    <h4 class="card-title">Ödeme Bilgileri</h4>
+                                </div>
+                                <table class="table shadow">
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row">Ödeme Yöntemi</th>
+                                            <td>:</td>
+                                            <td>
+                                                @if (order.OrderPay == 1)
+                                                {
+                                                    <span>Kredi Kartı</span>
+                                                }
+                                                else if (order.OrderPay == 2)
+                                                {
+                                                    <span>Havale / EFT</span>
+                                                }
+                                                else
+                                                {
+                                                    <span>Nakit</span>
+                                                }
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Ödeme Tutarı</th>
+                                            <td>:</td>
+                                            <td>@(Double.Parse(order.Amount.ToString()).ToString("N2")) ₺</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Ödeme Durumu</th>
+                                            <td>:</td>
+                                            <td>
+                                                @if (order.OrderStatus == 0)
+                                                {
+                                                    <label class="font-weight-bold" style="color: red">Ödeme Bekleniyor</label>
+                                                }
+                                                else
+                                                {
+                                                    <label class="font-weight-bold" style="color: #009d45">Ödeme Yapıldı</label>
+                                                }
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card-header bg-gradient-danger">
+                                    <h4 class="card-title">Sipariş Bilgileri</h4>
+                                </div>
+                                <table class="table shadow">
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row">Sipariş</th>
+                                            <td>:</td>
+                                            <td><a href="/Admin/Users/@order.UserId">@order.User.NameSurname</a></td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Sipariş Durumu</th>
+                                            <td>:</td>
+                                            @if (order.OrderStatus == 0)
+                                            {
+                                                <td style="color: #061b3d;"><b>Onay Bekliyor</b></td>
+                                            }
+                                            else if (order.OrderStatus == 1)
+                                            {
+                                                <td style="color: #009d45;"><b>Onaylandı</b></td>
+                                            }
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Sipariş Tarihi</th>
+                                            <td>:</td>
+                                            <td>@order.OrderDate</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card-header bg-gradient-info">
+                                    <h4 class="card-title">Fatura Bilgileri</h4>
+                                </div>
+                                <table class="table shadow">
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row">Ad Soyad</th>
+                                            <td>:</td>
+                                            <td>@order.User.NameSurname</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Telefon</th>
+                                            <td>:</td>
+                                            <td>@order.User.PhoneNumber</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">E-Posta Adresi</th>
+                                            <td>:</td>
+                                            <td>@order.User.Email</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">İl</th>
+                                            <td>:</td>
+                                            <td>@order.Address.Province</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">İlçe</th>
+                                            <td>:</td>
+                                            <td>@order.Address.District</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Posta Kodu</th>
+                                            <td>:</td>
+                                            <td>@order.Address.PostalCode</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Adres</th>
+                                            <td>:</td>
+                                            <td>@order.Address.AddressText</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card-header bg-gradient-info">
+                                    <h4 class="card-title">Teslimat Bilgileri</h4>
+                                </div>
+                                <table class="table shadow">
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row">Ad Soyad</th>
+                                            <td>:</td>
+                                            <td>@order.User.NameSurname</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Telefon</th>
+                                            <td>:</td>
+                                            <td>@order.User.PhoneNumber</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">E-Posta Adresi</th>
+                                            <td>:</td>
+                                            <td>@order.User.Email</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">İl</th>
+                                            <td>:</td>
+                                            <td>@order.Address.Province</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">İlçe</th>
+                                            <td>:</td>
+                                            <td>@order.Address.District</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Posta Kodu</th>
+                                            <td>:</td>
+                                            <td>@order.Address.PostalCode</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Adres</th>
+                                            <td>:</td>
+                                            <td>@order.Address.AddressText</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="table-responsive mt-4 shadow" style="background: white;">
+                                    <table class="table table-bordered border text-nowrap mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th style="background: #061b3d;color: white;">Ürün Kodu</th>
+                                                <th style="background: #061b3d;color: white;">Görsel</th>
+                                                <th style="background: #061b3d;color: white;">Ürün Adı</th>
+                                                <th style="background: #061b3d;color: white;">Ürün Kategorisi</th>
+                                                <th style="background: #061b3d;color: white;">Miktar</th>
+                                                <th style="background: #061b3d;color: white;">Fiyat</th>
+                                                <th style="background: #061b3d;color: white;">Barkod</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @{
+                                                foreach (var cart in order.Carts)
+                                                {
+                                                    <tr>
+                                                        <td>@cart.Product.ProductId</td>
+                                                        <td>
+                                                            @if (cart.Product.Pictures != null)
+                                                            {
+                                                                <img src="/img/@cart.Product.Pictures[0].Path" style="border:1px solid #ddd;padding:5px;max-width:100px">
+                                                            }
+                                                        </td>
+                                                        <td>@cart.Product.Name</td>
+                                                        <td>@cart.Product.Category.Name</td>
+                                                        <td>@cart.Quantity Adet</td>
+                                                        <td>@(Double.Parse((cart.Product.Price * cart.Quantity).ToString()).ToString("N2")) ₺</td>
+                                                        <td>@cart.Product.Sku</td>
+                                                    </tr>
+                                                }
+                                            }
+
+                                            @if (order.CouponAmount != 0)
+                                            {
+                                                <tr>
+                                                    <td class="valign-middle" colspan="2" rowspan="5"></td>
+                                                    <td class="text-uppercase font-weight-semibold">
+                                                        @order.CouponHistory.Coupon.Name (
+                                                        @if (order.CouponHistory.Coupon.Type == "1")
+                                                        {
+                                                            <span>- @order.CouponHistory.Coupon.DiscountAmount ₺</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span>%@order.CouponHistory.Coupon.DiscountAmount</span>
+                                                        }
+                                                        ) İndirim
+                                                    </td>
+                                                    <td class="tx-right" colspan="4">
+                                                        <h4 class="text-primary font-weight-bold">- @(Double.Parse(order.CouponAmount.ToString()).ToString("N2")) ₺</h4>
+                                                    </td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td class="text-uppercase font-weight-semibold">Sepet Tutarı</td>
+                                                    <td class="tx-right" colspan="4">
+                                                        <h4 class="text-primary font-weight-bold">@(Double.Parse(order.TotalAmount.ToString()).ToString("N2")) ₺</h4>
+                                                    </td>
+                                                </tr>
+                                            }
+
+                                            <tr>
+                                                <td class="text-uppercase font-weight-semibold">Toplam Tutar</td>
+                                                <td class="tx-right" colspan="4">
+                                                    <h4 class="text-primary font-weight-bold">@(Double.Parse(order.Amount.ToString()).ToString("N2")) ₺</h4>
+                                                </td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            @if (order.OrderStatus == 0 && order.OrderPay == 2)
+                            {
+                                <div class="col-12">
+                                    <div class="card mt-4">
+                                        <div class="card-header bg-gradient-info">
+                                            <h4 class="card-title">Ödeme Bildirimleri</h4>
+                                        </div>
+                                        <div class="card-body" style="padding: unset;">
+                                            <div class="table-responsive" style="background: white;">
+                                                <table class="table table-bordered border text-nowrap mb-0">
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="background: #061b3d;color: white;">#</th>
+                                                            <th style="background: #061b3d;color: white;">Banka Adı</th>
+                                                            <th style="background: #061b3d;color: white;">Ödenen Tutar</th>
+                                                            <th style="background: #061b3d;color: white;">Ödeme Tarihi</th>
+                                                            <th style="background: #061b3d;color: white;">Ödeme Durumu</th>
+                                                            <th style="background: #061b3d;color: white;"></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach (var payN in order.PaymentNotifications)
+                                                        {
+                                                            <tr>
+                                                                <td>#@payN.PaymentId</td>
+                                                                <td>@payN.Bank.Name</td>
+                                                                <td><b> @(Double.Parse(payN.TotalAmount.ToString()).ToString("N2")) ₺</b></td>
+                                                                <td>@payN.PayDate</td>
+                                                                <td>
+                                                                    @if (order.OrderStatus == 0)
+                                                                    {
+                                                                        <b>Onay Bekliyor</b>
+                                                                    }
+                                                                    else if (order.OrderStatus == 1)
+                                                                    {
+                                                                        <b>Onaylandı</b>
+                                                                    }
+                                                                </td>
+                                                                <td><button class="btn btn-info" onclick="window.open('/files/@payN.Receipt')">Dekont İndir</button></td>
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="col-12">
+                                    <div class="card mt-4">
+                                        <div class="card-header bg-gradient-info">
+                                            <h4 class="card-title">Ödeme Detayı</h4>
+                                        </div>
+                                        <div class="card-body" style="padding: unset;">
+                                            <div class="table-responsive" style="background: white;">
+                                                <table class="table table-bordered border text-nowrap mb-0">
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="background: #061b3d;color: white;">#</th>
+                                                            <th style="background: #061b3d;color: white;">Ödeme Tarihi</th>
+                                                            <th style="background: #061b3d;color: white;">Ödeme Yöntemi</th>
+                                                            <th style="background: #061b3d;color: white;">Ödeme Durumu</th>
+                                                            <th style="background: #061b3d;color: white;">Toplam</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>@order.OrderId</td>
+                                                            <td>@order.OrderDate</td>
+                                                            <td>
+                                                                @if (order.OrderPay == 1)
+                                                                {
+                                                                    <b>Kredi Kartı</b>
+                                                                }
+                                                                else if (order.OrderPay == 2)
+                                                                {
+                                                                    <b>Havale / EFT</b>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <b>Nakit</b>
+                                                                }
+                                                            </td>
+                                                            <td>
+                                                                @if (order.OrderStatus == 0)
+                                                                {
+                                                                    <b>Ödeme Bekliyor</b>
+                                                                }
+                                                                else if (order.OrderStatus == 1)
+                                                                {
+                                                                    <b>Ödeme Yapıldı</b>
+                                                                }
+                                                            </td>
+                                                            <td>@(Double.Parse(order.Amount.ToString()).ToString("N2")) ₺</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <div class="row">
+                            <div class="col-12 col-md-6">
+                                <div class="card mt-4 shadow">
+                                    <div class="card-header bg-gradient-success">
+                                        <h4 class="card-title">Sipariş Notu</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        @{
+                                            if (@order.OrderNote == null)
+                                            {
+                                                <p>Sipariş Notu Bulunamadı.</p>
+                                            }
+                                            else
+                                            {
+                                                <p>@order.OrderNote</p>
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6 no-print">
+                                <div class="card mt-4 shadow">
+                                    <div class="card-header bg-gradient-dark">
+                                        <h4 class="card-title">Sipariş Güncelleme</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <form action="" method="post">
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <label>Kargo Firması</label>
+                                                    <input type="text" class="form-control" name="kargo_adi" value="" placeholder="Kargo Firması">
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label>Kargo Takip Numarası</label>
+                                                    <input type="text" class="form-control" name="kargo_takip" value="" placeholder="Kargo Takip Numarası">
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label>Sipariş Durumu</label>
+                                                    <select id="durum" name="durum" class="form-control">
+                                                        @{
+                                                            string[] data_list = { "Ödeme Bekliyor", "Ödeme Yapıldı", "Onaylanan", "Kargoya Verildi", "Teslim Edildi", "İptal/İade Edildi" };
+
+                                                            int isd = 0;
+                                                            foreach (var datac in data_list)
+                                                            {
+                                                                if (order.OrderStatus == isd)
+                                                                {
+                                                                    <option value="@isd" selected>@datac</option>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <option value="@isd">@datac</option>
+                                                                }
+                                                                isd++;
+                                                            }
+                                                        }
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <button type="submit" class="btn btn-success mt-4 btn-block" style="background-color: #061b3d;"> Siparişi Güncelle</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

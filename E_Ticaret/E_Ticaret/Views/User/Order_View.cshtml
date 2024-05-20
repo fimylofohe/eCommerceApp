@@ -1,0 +1,357 @@
+﻿@{
+    ViewData["Title"] = "E-Ticaret Kullanıcı";
+
+    var order = ViewBag.Order;
+    var banks = ViewBag.Banks;
+}
+
+<section class="breadcrumb-option">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb__text">
+                    <h4>Sipariş Görüntüle</h4>
+                    <div class="breadcrumb__links">
+                        <a asp-controller="Home" asp-action="Index">AnaSayfa</a>
+                        <a asp-controller="User" asp-action="Index">Hesabım</a>
+                        <a asp-controller="User" asp-action="Orders">Siparişlerim</a>
+                        <span>Sipariş Görüntüle</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@Html.Partial("_Navigation")
+
+<section class="shopping-cart">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="d-flex flex-column justify-content-center align-items-center" id="order-heading" style="max-width: unset;">
+                    <div class="h4">@order.OrderDate</div>
+                    <div class="pt-1">
+                        <p>#@order.OrderKey</p>
+                    </div>
+                </div>
+                @if (order.OrderStatus == 0)
+                {
+                    <div class="d-flex flex-column justify-content-center align-items-center" style="max-width: unset; background: #ff5a5a; height: 50px;">
+                        <h4 style="color: white;">Ödeme Bekliyor</h4>
+                    </div>
+                }
+                else if (order.OrderStatus == 1)
+                {
+                    <div class="d-flex flex-column justify-content-center align-items-center" style="max-width: unset; background: #009d45; height: 50px;">
+                        <h4 style="color: white;">Ödeme Yapıldı</h4>
+                    </div>
+                }
+                <div class="wrapper bg-white" style="max-width: unset;">
+                    <div class="table-responsive" style="height: 100%;">
+                        <table class="table table-borderless">
+                            <thead>
+                                <tr class="text-uppercase text-muted">
+                                    <th scope="col">Ürün</th>
+                                    <th scope="col" class="text-right">Tutar</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    foreach(var cart in order.Carts)
+                                    {
+                                        <tr>
+                                            <th scope="row">
+                                                <div class="d-flex justify-content-start align-items-center list py-1">
+                                                    <div><b>@cart.Quantity</b> Adet</div>
+                                                    <div class="mx-3">
+                                                        @if (cart.Product.Pictures != null)
+                                                        {
+                                                            <img src="/img/@cart.Product.Pictures[0].Path" class="rounded-circle" width="30" height="30">
+                                                        }
+                                                    </div>
+                                                    <div class="order-item">@cart.Product.Name</div>
+                                                </div>
+                                            </th>
+                                            <td class="text-right"><b>@(Double.Parse((cart.Product.Price * cart.Quantity).ToString()).ToString("N2")) ₺</b></td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="pt-2 border-bottom mb-3"></div>
+                    <div class="d-flex justify-content-start align-items-center pl-3">
+                        <div class="text-muted">Ödeme Yöntemi</div>
+                        <div class="ml-auto">
+                            <label>
+                                @if(order.OrderPay == 1)
+                                {
+                                    <p>Kredi Kartı</p>
+                                }
+                                else if (order.OrderPay == 2)
+                                {
+                                    <p>Havale / EFT</p>
+                                }
+                                else
+                                {
+                                    <p>Nakit</p>
+                                }
+                            </label>
+                        </div>
+                    </div>
+                    @if (order.CouponAmount != 0)
+                    {
+                        <div class="d-flex justify-content-start align-items-center pb-4 pl-3 border-bottom">
+                            <div class="text-muted" style="max-width: 150px;">
+                                <button class="text-white btn">
+                                    @order.CouponHistory.Coupon.Name
+                                    <br />
+                                    @if (order.CouponHistory.Coupon.Type == "1")
+                                    {
+                                        <span>- @order.CouponHistory.Coupon.DiscountAmount ₺</span>
+                                    }
+                                    else
+                                    {
+                                        <span>%@order.CouponHistory.Coupon.DiscountAmount</span>
+                                    }
+                                    İndirim
+                                </button>
+                            </div>
+                            <div class="ml-auto price">
+                                - @(Double.Parse(order.CouponAmount.ToString()).ToString("N2")) ₺
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-start align-items-center pl-3 py-3">
+                            <div class="text-muted">
+                                Sepet Tutarı
+                            </div>
+                            <div class="ml-auto h5">
+                                @(Double.Parse(order.TotalAmount.ToString()).ToString("N2")) ₺
+                            </div>
+                        </div>
+                    }
+                    <div class="d-flex justify-content-start align-items-center pl-3 py-3 mb-4 border-bottom">
+                        <div class="text-muted">
+                            Toplam Tutar
+                        </div>
+                        <div class="ml-auto h5">
+                            @(Double.Parse(order.Amount.ToString()).ToString("N2")) ₺
+                        </div>
+                    </div>
+                    <div class="row border rounded p-1 my-3">
+                        <div class="col-md-6 col-12 py-3" style="border-right: 1px solid #d7d7d7;">
+                            <div class="d-flex flex-column align-items start">
+                                <b>Teslimat Adresi</b>
+                                <p class="text-justify pt-2">@order.Address.AddressText</p>
+                                <p class="text-justify pt-2">@order.Address.Country - ( @order.Address.District / @order.Address.Province ) - @order.Address.PostalCode</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-12 py-3">
+                            <div class="d-flex flex-column align-items start">
+                                <b>Sipariş Notu</b>
+                                <p class="text-justify pt-2">@order.OrderNote</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <hr />
+
+                    @if (order.OrderStatus == 0 && order.OrderPay == 2)
+                    {
+                        <div class="d-flex flex-column justify-content-center align-items-center" style="max-width: unset; border: 1px solid #acacac; padding: 25px; border-radius: 10px; background: #acacac1f;">
+                            <div class="pl-3 font-weight-bold">Banka Hesapları</div>
+                            <div class="table-responsive" style="height: 100%;">
+                                <table class="table table-bordered table-striped">
+									<thead>
+										<tr>
+											<th>Banka Adı</th>
+											<th>Hesap Sahibi</th>
+											<th>Hesap No</th>
+											<th>Şube</th>
+											<th>IBAN</th>
+											<th></th>
+										</tr>
+									</thead>
+									<tbody style="text-align: center;">
+                                        @foreach (var bank in banks)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <h6>@bank.Name</h6>
+                                                </td>
+                                                <td>
+                                                    <h6>@bank.AccountName</h6>
+                                                </td>
+                                                <td>
+                                                    <h6>@bank.AccountNo</h6>
+                                                </td>
+                                                <td>
+                                                    <h6>@bank.Branch</h6>
+                                                </td>
+                                                <td>
+                                                    <h6>@bank.IBAN</h6>
+                                                </td>
+                                                <td>
+                                                    @if (order.OrderStatus == 0)
+                                                    {
+                                                        <div>
+                                                            <button class="btn btn-info" type="button" data-toggle="modal" data-target="#BankId_@bank.BankId">Ödeme Bildirimi Yap</button>
+                                                        </div>
+                                                    }
+                                                </td>
+                                            </tr>
+
+                                            <div class="modal fade" id="BankId_@bank.BankId" tabindex="-1" aria-labelledby="BankId_@(bank.BankId)Label" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="BankId_@(bank.BankId)Label">@bank.Name - Ödeme Bildirimi</h5>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <form method="post" class="form_send">
+                                                                <input style="display: none;" name="OrderId" value="@order.OrderId" />
+                                                                <input style="display: none;" name="BankId" value="@bank.BankId" />
+                                                                <div class="row">
+                                                                    <div class="col-12 col-md-6">
+                                                                        <div class="checkout__input">
+                                                                            <p>Gönderen Adı Soyadı<span>*</span></p>
+                                                                            <input type="text" name="NameSurname" required>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-12 col-md-6">
+                                                                        <div class="checkout__input">
+                                                                            <p>Ödenen Tutar<span>*</span></p>
+                                                                            <input type="text" name="TotalAmount" class="numberZone" required>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-12">
+                                                                        <div class="checkout__input">
+                                                                            <p>Dekont<span>*</span></p>
+                                                                            <input type="file" name="Receipt" required style="height: unset !important; padding: 10px !important;">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-12">
+                                                                        <div class="checkout__textarea">
+                                                                            <p>Ödeme Notu<span>*</span></p>
+                                                                            <textarea type="text" name="PayNote" required></textarea>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-12">
+                                                                        <button type="submit" class="btn btn-info btn-block" style="background-color: #2289c6;">Gönder</button>
+                                                                    </div>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+									</tbody>
+								</table>
+                            </div>
+                        </div>
+
+                        <div class="d-flex flex-column justify-content-center align-items-center" style="max-width: unset;">
+                            @foreach (var payN in order.PaymentNotifications)
+                            {
+                                <div class="d-sm-flex justify-content-between rounded my-3 subscriptions" style="width: 100%;">
+                                    <div>
+                                        <b>#@payN.PaymentId</b>
+                                    </div>
+                                    <div>@payN.Bank.Name</div>
+                                    <div><b> @(Double.Parse(payN.TotalAmount.ToString()).ToString("N2")) ₺</b></div>
+                                    <div>@payN.PayDate</div>
+                                    <div>
+                                        Durum:
+                                        @if (order.OrderStatus == 0)
+                                        {
+                                            <b>Onay Bekliyor</b>
+                                        }
+                                        else if (order.OrderStatus == 1)
+                                        {
+                                            <b>Onaylandı</b>
+                                        }
+                                    </div>
+                                    <div>
+                                        <button class="btn btn-info" onclick="window.open('/files/@payN.Receipt')">Dekont İndir</button>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="d-flex flex-column justify-content-center align-items-center" style="max-width: unset;">
+                            <div class="d-sm-flex justify-content-between rounded my-3 subscriptions" style="width: 100%;">
+                                <div>
+                                    <b>#@order.OrderId</b>
+                                </div>
+                                <div>@order.OrderDate</div>
+                                <div>
+                                    Durum:
+                                    @if (order.OrderStatus == 0)
+                                    {
+                                        <b>Ödeme Bekliyor</b>
+                                    }
+                                    else if (order.OrderStatus == 1)
+                                    {
+                                        <b>Ödeme Yapıldı</b>
+                                    }
+                                </div>
+                                <div>
+                                    Ödeme Yöntemi:
+                                    @if (order.OrderPay == 1)
+                                    {
+                                        <b>Kredi Kartı</b>
+                                    }
+                                    else if (order.OrderPay == 2)
+                                    {
+                                        <b>Havale / EFT</b>
+                                    }
+                                    else
+                                    {
+                                        <b>Nakit</b>
+                                    }
+                                </div>
+                                <div>
+                                    Toplam: <b> @(Double.Parse(order.Amount.ToString()).ToString("N2")) ₺</b>
+                                </div>
+                                @if (order.OrderStatus == 0 && order.OrderPay == 1)
+                                {
+                                    <div>
+                                        <a class="btn btn-info" href="/Pay/@order.OrderId">Ödeme Yap</a>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    var elements = document.querySelectorAll('.numberZone');
+
+    function checkInput(input) {
+        if (/^\d*\,?\d*$/.test(input.value)) {
+            if (/^\d*\,?\d{0,2}$/.test(input.value)) {
+                input.oldValue = input.value;
+            } else {
+                input.value = input.oldValue || '';
+            }
+        } else {
+            input.value = input.oldValue || '';
+        }
+    }
+
+    elements.forEach(function (element) {
+        element.addEventListener('input', function () {
+            checkInput(this);
+        });
+        element.oldValue = element.value;
+    });
+</script>

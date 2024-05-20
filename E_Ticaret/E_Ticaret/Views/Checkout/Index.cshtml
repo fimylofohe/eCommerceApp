@@ -1,0 +1,173 @@
+﻿@model Cart
+
+@{
+    ViewData["Title"] = "E-Ticaret Sipariş";
+}
+
+<section class="breadcrumb-option">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb__text">
+                    <h4>Sipariş Oluştur</h4>
+                    <div class="breadcrumb__links">
+                        <a asp-controller="Home" asp-action="Index">AnaSayfa</a>
+                        <a asp-controller="Shop" asp-action="Index">Alışveriş</a>
+                        <span>Sipariş</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="checkout spad">
+    <div class="container">
+        <div class="checkout__form">
+            <form method="post">
+                <div class="row">
+                    <div class="col-lg-8 col-md-6">
+                        <h6 class="checkout__title">Fatura Detayları</h6>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <p>Sipariş Adresi<span>*</span></p>
+                            </div>
+                            @{
+                                bool firstAddress = true;
+                                foreach (var address in ViewBag.Address)
+                                {
+                                    <div class="col-lg-6">
+                                        <div class="address_radio">
+                                            <input type="radio" name="AddressId" value="@address.AddressId" id="address_@address.AddressId" style="display: none;" @(firstAddress ? "checked" : "")>
+                                            <label for="address_@address.AddressId">
+                                                <div>
+                                                    <p>
+                                                        <b>@address.Country</b>
+                                                    </p>
+                                                    <span>
+                                                        @address.AddressText
+                                                    </span>
+                                                    <p>
+                                                        <i> @address.District / @address.Province</i>
+                                                        <spans style="float: right;">@address.PostalCode</spans>
+                                                    </p>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    firstAddress = false;
+                                }
+                            }
+                        </div>
+                        <div class="checkout__textarea">
+                            <p>Sipariş Notu<span>*</span></p>
+                            <textarea type="text" placeholder="..." name="OrderNote"></textarea>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="checkout__order">
+                            <h4 class="order__title">Sepet</h4>
+                            <div class="checkout__order__products">Ürün <span>Fiyat</span></div>
+                            <ul class="checkout__total__products">
+                                @foreach (var cart in ViewBag.Cart.Carts)
+                                {
+                                    <li>@cart.Product.Name 
+                                        <span>
+                                            @{
+                                                string proPrice = cart.Product.Price.ToString("N2");
+                                                @proPrice
+                                            } ₺
+                                        </span>
+                                        ( x @cart.Quantity )
+                                    </li>
+                                }
+                            </ul>
+                            @if (ViewBag.Cart.CTotal != 0)
+                            {
+                                <div class="checkout__order__products">Kupon <span>İndirim</span></div>
+                                <ul class="checkout__total__products">
+                                    <li>
+                                        @ViewBag.Cart.Coupon.Coupon.Name
+                                        <span>
+                                            @if (ViewBag.Cart.Coupon.Coupon.Type == "1")
+                                            {
+                                                <p>( - @ViewBag.Cart.Coupon.Coupon.DiscountAmount ₺ )</p>
+                                            }
+
+                                            @if (ViewBag.Cart.Coupon.Coupon.Type == "2")
+                                            {
+                                                <p>( - % @ViewBag.Cart.Coupon.Coupon.DiscountAmount )</p>
+                                            }
+                                        </span>
+                                    </li>
+                                </ul>
+                            }
+                            <ul class="checkout__total__all">
+                                @if (ViewBag.Cart.CTotal != 0)
+                                {
+                                    <li>
+                                        Tutar <span>
+                                            @{
+                                                string totalPrsice = ViewBag.Cart.Total.ToString("N2");
+                                                @totalPrsice
+                                            } ₺
+                                        </span>
+                                    </li>
+                                    <li>
+                                        Kupon İndirimi <span>
+                                            - @{
+                                                string totalPrcice = ViewBag.Cart.CTotal.ToString("N2");
+                                                @totalPrcice
+                                            } ₺
+                                        </span>
+                                    </li>
+                                    <li>
+                                        Toplam Tutar <span>
+                                            @{
+                                                string totalsPrice = (ViewBag.Cart.Total - ViewBag.Cart.CTotal).ToString("N2");
+                                                @totalsPrice
+                                            } ₺
+                                        </span>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li>
+                                        Toplam Tutar <span>
+                                            @{
+                                                string totalsPcrice = ViewBag.Cart.Total.ToString("N2");
+                                                @totalsPcrice
+                                            } ₺
+                                        </span>
+                                    </li>
+                                }
+                            </ul>
+                            <div class="checkout__input__checkbox">
+                                <label for="credit_card">
+                                    Kredi Kartı
+                                    <input type="radio" id="credit_card" name="OrderPay" value="1" checked>
+                                    <span class="checkmark"></span>
+                                </label>
+                            </div>
+                            <div class="checkout__input__checkbox">
+                                <label for="eft">
+                                    Havale / EFT
+                                    <input type="radio" id="eft" name="OrderPay" value="2">
+                                    <span class="checkmark"></span>
+                                </label>
+                            </div>
+                            <div class="checkout__input__checkbox">
+                                <label for="cash">
+                                    Nakit
+                                    <input type="radio" id="cash" name="OrderPay" value="3">
+                                    <span class="checkmark"></span>
+                                </label>
+                            </div>
+                            <button type="submit" class="site-btn">Ödemeye Geç</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>

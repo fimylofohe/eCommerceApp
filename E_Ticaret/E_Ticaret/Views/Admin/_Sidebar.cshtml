@@ -1,0 +1,190 @@
+﻿@{
+    string NameSurname = @User.Claims.FirstOrDefault(x => x.Type == "NameSurname")?.Value;
+    string Role = @User.Claims.FirstOrDefault(x => x.Type == "Role")?.Value;
+}
+<style>
+    nav ul li ul {
+        border-right: 1px solid white !important;
+        border-bottom: 1px solid white !important;
+        border-left: 1px solid white !important;
+        border-radius: 0px 0px 20px 20px !important;
+    }
+</style>
+<aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <a asp-controller="Admin" asp-action="Index" class="brand-link">
+        <img src="~/dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: 0.8;" />
+        <span class="brand-text font-weight-light">E-Ticaret</span>
+    </a>
+    <div class="sidebar">
+        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+            <div class="image">
+                <img src="~/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image" />
+            </div>
+            <div class="info">
+                <a asp-controller="Admin" asp-action="Index" class="d-block">
+                    @NameSurname
+                </a>
+            </div>
+        </div>
+        <nav class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+
+                <li class="nav-item">
+                    <a asp-controller="Admin" asp-action="Index" class="nav-link">
+                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                        <p>
+                            Panel
+                        </p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-shopping-cart"></i>
+                        <p>
+                            Siparişler
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="/Admin/Orders" class="nav-link">
+                                <i class="fas fa-certificate nav-icon"></i>
+                                <p>Tüm Siparişler</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/Admin/Orders/0" class="nav-link">
+                                <i class="fas fa-times nav-icon"></i>
+                                <p>Ödeme Bekliyor</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/Admin/Orders/1" class="nav-link">
+                                <i class="fas fa-check nav-icon"></i>
+                                <p>Ödeme Yapıldı</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/Admin/Orders/2" class="nav-link">
+                                <i class="fas fa-check-double nav-icon"></i>
+                                <p>Onaylandı</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/Admin/Orders/3" class="nav-link">
+                                <i class="fas fa-truck-loading nav-icon"></i>
+                                <p>Kargoya Verildi</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/Admin/Orders/4" class="nav-link">
+                                <i class="fas fa-archive nav-icon"></i>
+                                <p>Teslim Edildi</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/Admin/Orders/5" class="nav-link">
+                                <i class="fas fa-trash nav-icon"></i>
+                                <p>İptal / İade Edildi</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="nav-item">
+                    <a asp-controller="Admin" asp-action="Users" class="nav-link">
+                        <i class="nav-icon fas fa-users"></i>
+                        <p>
+                            Kullanıcılar
+                        </p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-money-bill-wave-alt"></i>
+                        <p>
+                            Ödeme Yönetimi
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="/Admin/Pay/Not" class="nav-link">
+                                <i class="fas fa-clock nav-icon"></i>
+                                <p>Ödeme Bildirimleri</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/Admin/Pay/Settings" class="nav-link">
+                                <i class="fas fa-cogs nav-icon"></i>
+                                <p>Ödeme Ayarları</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-truck-loading"></i>
+                        <p>
+                            Ürün Yönetimi
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a asp-controller="Admin" asp-action="Products" class="nav-link">
+                                <i class="fas fa-boxes nav-icon"></i>
+                                <p>Ürünler</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-controller="Admin" asp-action="Categories" class="nav-link">
+                                <i class="fas fa-th nav-icon"></i>
+                                <p>Kategoriler</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon far fa-edit"></i>
+                        <p>
+                            Site Yönetimi
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a asp-controller="Admin" asp-action="Comments" class="nav-link">
+                                <i class="fas fa-comments nav-icon"></i>
+                                <p>Yorumlar</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-controller="Admin" asp-action="Coupons" class="nav-link">
+                                <i class="fas fa-ticket-alt nav-icon"></i>
+                                <p>Kuponlar</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-controller="Admin" asp-action="Coupons" class="nav-link">
+                                <i class="fab fa-slideshare nav-icon"></i>
+                                <p>Slider</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-controller="Admin" asp-action="Coupons" class="nav-link">
+                                <i class="fas fa-clipboard-list nav-icon"></i>
+                                <p>Kampanyalar</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</aside>

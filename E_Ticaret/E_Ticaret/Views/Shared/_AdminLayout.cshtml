@@ -1,0 +1,319 @@
+﻿@{
+    string NameSurname = @User.Claims.FirstOrDefault(x => x.Type == "NameSurname")?.Value;
+    string Role = @User.Claims.FirstOrDefault(x => x.Type == "Role")?.Value;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"] - E_Ticaret</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.6.10/sweetalert2.css" integrity="sha512-JzSVRb7c802/njMbV97pjo1wuJAE/6v9CvthGTDxiaZij/TFpPQmQPTcdXyUVucsvLtJBT6YwRb5LhVxX3pQHQ==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link href="https://cdn.jsdelivr.net/gh/eliyantosarage/font-awesome-pro@main/fontawesome-pro-6.5.2-web/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" />
+    <link rel="stylesheet" href="~/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css" />
+    <link rel="stylesheet" href="~/plugins/icheck-bootstrap/icheck-bootstrap.min.css" />
+    <link rel="stylesheet" href="~/plugins/jqvmap/jqvmap.min.css" />
+    <link rel="stylesheet" href="~/dist/css/adminlte.min.css" />
+    <link rel="stylesheet" href="~/plugins/overlayScrollbars/css/OverlayScrollbars.min.css" />
+    <link rel="stylesheet" href="~/plugins/daterangepicker/daterangepicker.css" />
+    <link rel="stylesheet" href="~/plugins/summernote/summernote-bs4.min.css" />
+    <link rel="stylesheet" href="~/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
+</head>
+<body class="hold-transition sidebar-mini layout-fixed">
+    <div class="wrapper">
+        <div class="preloader flex-column justify-content-center align-items-center">
+            <img class="animation__shake" src="~/dist/img/AdminLTELogo.png" alt="AdminLTELogo" height="60" width="60" />
+        </div>
+        @Html.Partial("_Navbar")
+        @Html.Partial("_Sidebar")
+        <div class="content-wrapper">
+            @RenderBody()
+        </div>
+    </div>
+    <script src="~/plugins/jquery/jquery.min.js"></script>
+    <script src="~/plugins/jquery-ui/jquery-ui.min.js"></script>
+    <script>
+        $.widget.bridge("uibutton", $.ui.button);
+    </script>
+    <script src="~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/plugins/chart.js/Chart.min.js"></script>
+    <script src="~/plugins/sparklines/sparkline.js"></script>
+    <script src="~/plugins/jqvmap/jquery.vmap.min.js"></script>
+    <script src="~/plugins/jqvmap/maps/jquery.vmap.usa.js"></script>
+    <script src="~/plugins/jquery-knob/jquery.knob.min.js"></script>
+    <script src="~/plugins/moment/moment.min.js"></script>
+    <script src="~/plugins/daterangepicker/daterangepicker.js"></script>
+    <script src="~/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+    <script src="~/plugins/summernote/summernote-bs4.min.js"></script>
+    <script src="~/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+    <script src="~/dist/js/adminlte.js"></script>
+    <script src="~/dist/js/pages/dashboard.js"></script>
+    <script src="~/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="~/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+    <script src="~/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="~/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+    <script src="~/plugins/jszip/jszip.min.js"></script>
+    <script src="~/plugins/pdfmake/pdfmake.min.js"></script>
+    <script src="~/plugins/pdfmake/vfs_fonts.js"></script>
+    <script src="~/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+    <script src="~/plugins/datatables-buttons/js/buttons.print.min.js"></script>
+    <script src="~/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+    <script src="~/js/jquery-3.3.1.min.js"></script>
+    <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.6.10/sweetalert2.min.js" integrity="sha512-3SfkrboI1MpqQsuXTRkQO2W/PXvhnbWraSnLH2+/1yFPclTSbZ+5J8rkgLTQOOmVEYbhQff+cQlm8Qbl04CokA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        function viewStatus(type, text) {
+            if (type) {
+                Swal.fire({
+                    icon: "success",
+                    type: "success",
+                    title: text,
+                    timer: 1500
+                })
+            } else {
+                Swal.fire({
+                    icon: "error",
+                    type: "error",
+                    title: text,
+                    confirmButtonColor: "#556ee6"
+                })
+            }
+        }
+
+        function formatNumber(number) {
+            return number.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+        }
+
+        $("form").submit(function (e) {
+            var form = $(this);
+            var formData = new FormData(form[0]);
+
+            var formDataObject = {};
+            formData.forEach(function (value, key) {
+                formDataObject[key] = value;
+            });
+
+            var form_btn = form.find('button');
+            form_btn.attr('disabled', true);
+
+            Swal.fire("İşlem Gerçekleştiriliyor!", "", "warning");
+
+            e.preventDefault();
+
+            const token = JSON.parse(localStorage.getItem("token"));
+
+            $.ajax({
+                url: $(this).attr("action"),
+                method: "POST",
+                dataType: "JSON",
+                data: formDataObject,
+                success: function (data) {
+                    viewStatus(data.status, data.msg);
+                    form_btn.attr('disabled', false);
+                },
+                error: function (xhr, status, error) {
+                    viewStatus(false, "Sunucu Hatası");
+                    form_btn.attr('disabled', false);
+                }
+            });
+        });
+    </script>
+    <script>
+        function DeleteImage(id, product_id) {
+            Swal.fire({
+                title: 'Silmek Emin misiniz ?',
+                text: "Evete bastığınızda resim silinecektir!",
+                icon: 'warning',
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Evet, Sil!',
+                showCancelButton: true,
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        url: "/Admin/Image/" + id,
+                        method: "DELETE",
+                        dataType: "JSON",
+                        success: function (data) {
+                            viewStatus(data.status, data.msg);
+                            ImageUpdate(product_id);
+                        }
+                    });
+                }
+            });
+        }
+
+        function ImageUpdate(id) {
+            $.ajax({
+                url: "/Admin/Images/" + id,
+                method: "GET",
+                dataType: "JSON",
+                success: function (data) {
+                    var tBody = $('#picturess');
+                    tBody.empty();
+                    for (var i = 0; i < data.length; i++) {
+                        var image = data[i];
+
+                        var tRow = $('<div class="col-12 col-md-3"><div class="card"><img src="/img/' + image.path + '" style = "width: 100%;" /><button class="btn btn-danger" onclick = "DeleteImage(' + image.pictureId + ', ' + image.productId + ')" > Sil </button></div></div>');
+
+                        tBody.append(tRow);
+                    }
+                }
+            });
+        }
+
+        @Html.Raw(ViewBag.Script)
+    </script>
+    <script>
+        $(function () {
+            $("#example1").DataTable({
+                "responsive": true,
+                "lengthChange": false,
+                "autoWidth": false,
+                "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+            }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+        });
+
+        $(function () {
+            $("#example2").DataTable({
+                "responsive": true,
+                "lengthChange": false,
+                "autoWidth": false
+            }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+        });
+
+        $(function () {
+            $("#example3").DataTable({
+                "responsive": true,
+                "lengthChange": false,
+                "autoWidth": false
+            }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+        });
+
+        $(function () {
+            $("#example4").DataTable({
+                "responsive": true,
+                "lengthChange": false,
+                "autoWidth": false
+            }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+        });
+    </script>
+    <script>
+        $(function () {
+            var data = @Html.Raw(ViewBag.Datas);
+
+            var monthlyEarnings = data.chartEarningsMonthly;
+            var monthNames = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
+
+            var monthlyEarningData = [];
+            for (var i = 0; i < monthlyEarnings.length; i++) {
+                var data_veri = monthlyEarnings[i];
+
+                monthlyEarningData.push(data_veri);
+            }
+
+            var monthlyEarningCanvas = $('#areaChart').get(0).getContext('2d');
+            var monthlyEarningChart = new Chart(monthlyEarningCanvas, {
+                type: 'line',
+                data: {
+                    labels: monthNames,
+                    datasets: [{
+                        label: 'Aylık Kazanç',
+                        backgroundColor: 'rgba(60,141,188,0.9)',
+                        borderColor: 'rgba(60,141,188,0.8)',
+                        pointRadius: true,
+                        pointColor: '#3b8bba',
+                        pointStrokeColor: 'rgba(60,141,188,1)',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: 'rgba(60,141,188,1)',
+                        data: monthlyEarningData
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    responsive: true,
+                    legend: {
+                        display: false
+                    },
+                    scales: {
+                        xAxes: [{
+                            gridLines: {
+                                display: false,
+                            }
+                        }],
+                        yAxes: [{
+                            gridLines: {
+                                display: false,
+                            },
+                            ticks: {
+                                callback: function (value, index, values) {
+                                    return value + '₺';
+                                }
+                            }
+                        }]
+                    }
+                }
+            });
+        });
+
+        $(function () {
+            var data = @Html.Raw(ViewBag.Datas);
+
+            var monthlyOrders = data.orderMonthlyCounts;
+            var monthNames = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
+
+            var monthlyOrderData = [];
+            for (var i = 0; i < monthlyOrders.length; i++) {
+                var data_veri = monthlyOrders[i];
+
+                monthlyOrderData.push(data_veri);
+            }
+
+            var monthlyEarningCanvas = $('#areaCharts').get(0).getContext('2d');
+            var monthlyEarningChart = new Chart(monthlyEarningCanvas, {
+                type: 'line',
+                data: {
+                    labels: monthNames,
+                    datasets: [{
+                        label: 'Aylık Sipariş',
+                        backgroundColor: '#fff',
+                        borderColor: 'rgba(60,141,188,0.8)',
+                        pointRadius: false,
+                        pointColor: '#3b8bba',
+                        pointStrokeColor: 'rgba(60,141,188,1)',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: 'rgba(60,141,188,1)',
+                        data: monthlyOrderData
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    responsive: true,
+                    legend: {
+                        display: false
+                    },
+                    scales: {
+                        xAxes: [{
+                            gridLines: {
+                                display: false,
+                            }
+                        }],
+                        yAxes: [{
+                            gridLines: {
+                                display: false,
+                            }
+                        }]
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

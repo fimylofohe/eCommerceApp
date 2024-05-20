@@ -1,0 +1,76 @@
+﻿@model List<Product>
+
+@{
+    ViewData["Title"] = "E-Ticaret";
+}
+
+<section class="hero">
+    <div class="hero__slider owl-carousel">
+        @foreach (var slider in ViewBag.Slider as List<Slider>)
+        {
+            <div class="hero__items set-bg" data-setbg="img/@slider.BackgroundImg">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-xl-5 col-lg-7 col-md-8">
+                            <div class="hero__text">
+                                <h6>@slider.SubTitle</h6>
+                                <h2>@slider.Title</h2>
+                                <p>@slider.Description</p>
+                                <a href="@slider.ButtonUrl" class="primary-btn">@slider.ButtonTitle <span class="arrow_right"></span></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</section>
+
+<section class="banner spad">
+    <div class="container">
+        <div class="row">
+            
+        </div>
+    </div>
+</section>
+
+
+<section class="product spad">
+    <div class="container">
+        <div class="row product__filter">
+            @foreach (var product in ViewBag.Products.Products as List<Product>)
+            {
+                <div class="col-lg-3 col-md-6 col-sm-6 col-md-6 col-sm-6 mix new-arrivals">
+                    <div class="product__item sale" style="border: 1px solid black; border-radius: 5px; padding: 15px;">
+                        @if (product.Pictures != null && product.Pictures.Any())
+                        {
+                            <a href="Product/Detail/@product.ProductId">
+                                <div class="product__item__pic set-bg" data-setbg="img/@product.Pictures[0].Path">
+                                    <span class="label" style="margin: -15px;">@product.Category.Name</span>
+                                </div>
+                            </a>
+                        }
+                        else
+                        {
+                            <div class="product__item__pic set-bg" data-setbg="">
+                                <span class="label">@product.Category.Name</span>
+                            </div>
+                        }
+                        <div class="product__item__text">
+                            <h6>@product.Name</h6>
+                            <a href="#" class="add-cart">+ Sepete Ekle</a>
+                            <div class="rating">
+                                <i class="fa fa-star-o"></i>
+                                <i class="fa fa-star-o"></i>
+                                <i class="fa fa-star-o"></i>
+                                <i class="fa fa-star-o"></i>
+                                <i class="fa fa-star-o"></i>
+                            </div>
+                            <h5>@(product.Price.HasValue ? Double.Parse(product.Price.ToString()).ToString("N2") : "") ₺</h5>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>

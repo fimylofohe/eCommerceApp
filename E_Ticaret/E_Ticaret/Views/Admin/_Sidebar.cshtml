@@ -93,12 +93,27 @@
                 </li>
 
                 <li class="nav-item">
-                    <a asp-controller="Admin" asp-action="Users" class="nav-link">
-                        <i class="nav-icon fas fa-users"></i>
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-user"></i>
                         <p>
-                            Kullanıcılar
+                            Kullanıcı Yönetimi
+                            <i class="fas fa-angle-left right"></i>
                         </p>
                     </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="/Admin/Users" class="nav-link">
+                                <i class="fas fa-users nav-icon"></i>
+                                <p>Kullanıcılar</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/Admin/Addresses" class="nav-link">
+                                <i class="fas fa-cogs nav-icon"></i>
+                                <p>Adresler</p>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
 
                 <li class="nav-item">

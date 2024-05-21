@@ -10,6 +10,9 @@ namespace E_Ticaret.DTO
         [JsonPropertyName("publishedDate")]
         public DateTime PublishedDate { get; set; }
 
+        [JsonPropertyName("text")]
+        public string? Text { get; set; }
+
         [JsonPropertyName("status")]
         public bool Status { get; set; }
 

@@ -1,0 +1,140 @@
+﻿@{
+    ViewData["Title"] = "E-Ticaret Adres";
+
+    var address = ViewBag.Address;
+}
+
+<style>
+    .dflex {
+        display: flex;
+    }
+</style>
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Adres Detayları</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item "><a asp-controller="Admin" asp-action="Index">Panel</a></li>
+                    <li class="breadcrumb-item "><a asp-controller="Admin" asp-action="Addresses">Adresler</a></li>
+                    <li class="breadcrumb-item active">#@address.AddressId</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="x">
+                    <div class="xs" style="margin-block-end: 100px;">
+                        <div class="row">
+                            <div class="col-md-6 col-12 d-flex align-items-stretch">
+                                <div class="card shadow" style="width: 100%;">
+                                    <div class="card-header bg-gradient-danger">
+                                        <h4 class="card-title">Kullanıcı Bilgileri</h4>
+                                    </div>
+                                    <table class="table">
+                                        <tbody>
+                                            <tr>
+                                                <th scope="row">İsim</th>
+                                                <td>:</td>
+                                                <td>@address.User.Name</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Soyisim</th>
+                                                <td>:</td>
+                                                <td>@address.User.Surname</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">E-Posta Adresi</th>
+                                                <td>:</td>
+                                                <td>@address.User.Email</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Telefon Numarası</th>
+                                                <td>:</td>
+                                                <td>@address.User.PhoneNumber</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Hesap Durumu</th>
+                                                <td>:</td>
+                                                <td>
+                                                    @if (address.User.Status == false)
+                                                    {
+                                                        <span class="badge badge-danger">Pasif</span>
+                                                    }
+                                                    else if (address.User.Status == true)
+                                                    {
+                                                        <span class="badge badge-success">Aktif</span>
+                                                    }
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Yetki Durumu</th>
+                                                <td>:</td>
+                                                <td>
+                                                    @if (address.User.Admin == true)
+                                                    {
+                                                        <span class="badge badge-success">Admin</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="badge badge-info">Kullanıcı</span>
+                                                    }
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-12 d-flex align-items-stretch">
+                                <div class="card shadow" style="width: 100%;">
+                                    <div class="card-header bg-gradient-success">
+                                        <h4 class="card-title">Adres Bilgileri</h4>
+                                    </div>
+                                    <table class="table">
+                                        <tbody>
+                                            <tr>
+                                                <th scope="row">Ülke</th>
+                                                <td>:</td>
+                                                <td>@address.Country</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">İl</th>
+                                                <td>:</td>
+                                                <td>@address.Province</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">İlçe</th>
+                                                <td>:</td>
+                                                <td>@address.District</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Posta Kodu</th>
+                                                <td>:</td>
+                                                <td>@address.PostalCode</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Açık Adres</th>
+                                                <td>:</td>
+                                                <td>
+                                                    <p>@address.AddressText</p>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

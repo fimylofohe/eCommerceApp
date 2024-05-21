@@ -280,6 +280,22 @@
                                     <div class="card-body">
                                         <form action="" method="post">
                                             <div class="row">
+                                                <div class="col-12 col-md-6" style="margin-block-end: 10px; display:none;">
+                                                    <label asp-for="Name"></label>
+                                                    <input asp-for="Name" class="form-control" value="@user.Name">
+                                                </div>
+                                                <div class="col-12 col-md-6" style="margin-block-end: 10px; display:none;">
+                                                    <label asp-for="Surname"></label>
+                                                    <input asp-for="Surname" class="form-control" value="@user.Surname">
+                                                </div>
+                                                <div class="col-12 col-md-6" style="margin-block-end: 10px; display:none;">
+                                                    <label asp-for="Email"></label>
+                                                    <input asp-for="Email" class="form-control" value="@user.Email">
+                                                </div>
+                                                <div class="col-12 col-md-6" style="margin-block-end: 10px; display:none;">
+                                                    <label asp-for="PhoneNumber"></label>
+                                                    <input asp-for="PhoneNumber" class="form-control" value="@user.PhoneNumber">
+                                                </div>
                                                 <div class="col-12" style="margin-block-end: 10px;">
                                                     <label>E-Posta Adresi</label>
                                                     <input type="text" class="form-control" value="@user.Email" disabled>
@@ -469,9 +485,9 @@
                                                         </td>
                                                         <td class="dflex">
                                                             <a href="/Admin/Address/@address.AddressId" class="btn btn-info">
-                                                                <i class="fa fa-pen"></i>
+                                                                <i class="fas fa-eye"></i>
                                                             </a>
-                                                            <form action="/Admin/Address/@address.AddressId">
+                                                            <form action="/Admin/Addressd/@address.AddressId">
                                                                 <button type="submit" class="btn btn-danger">
                                                                     <i class="fas fa-trash"></i>
                                                                 </button>

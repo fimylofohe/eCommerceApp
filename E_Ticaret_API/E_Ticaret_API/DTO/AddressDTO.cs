@@ -7,6 +7,7 @@ namespace E_Ticaret_API.DTO
     {
         public int AddressId { get; set; }
         public int UserId { get; set; }
+        public UserDTO User { get; set; } = new UserDTO();
         public string? AddressText { get; set; }
         public string? Province { get; set; }
         public string? District { get; set; }

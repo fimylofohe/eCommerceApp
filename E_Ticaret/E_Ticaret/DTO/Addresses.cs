@@ -12,6 +12,9 @@ namespace E_Ticaret.DTO
         [JsonPropertyName("userId")]
         public int UserId { get; set; }
 
+        [JsonPropertyName("user")]
+        public User User { get; set; } = new User();
+
         [JsonPropertyName("addressText")]
         public string? AddressText { get; set; }
 

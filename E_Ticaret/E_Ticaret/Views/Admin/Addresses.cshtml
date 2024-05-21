@@ -1,0 +1,94 @@
+﻿@{
+    ViewData["Title"] = "Admin Panel";
+    var addresses = ViewBag.Addresses;
+}
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Adresler</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item "><a href="/Admin">Panel</a></li>
+                    <li class="breadcrumb-item active">Adresler</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-gradient-info">
+                        <h3 class="card-title">Adresler</h3>
+                    </div>
+                    <div class="card-body">
+                        <table id="example1" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Kullanıcı</th>
+                                    <th>Ülke</th>
+                                    <th>İl</th>
+                                    <th>İlçe</th>
+                                    <th>Posta Kodu</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var address in addresses)
+                                {
+                                    <tr>
+                                        <td>
+                                            @address.AddressId
+                                        </td>
+                                        <td>
+                                            <a href="/Admin/User/@address.UserId">@address.User.NameSurname</a>
+                                        </td>
+                                        <td>
+                                            @address.Country
+                                        </td>
+                                        <td>
+                                            @address.Province
+                                        </td>
+                                        <td>
+                                            @address.District
+                                        </td>
+                                        <td>
+                                            @address.PostalCode
+                                        </td>
+                                        <td style="display: flex;">
+                                            <a href="/Admin/Address/@address.AddressId" class="btn btn-info">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <form action="/Admin/Addressd/@address.AddressId">
+                                                <button type="submit" class="btn btn-danger">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Kullanıcı</th>
+                                    <th>Ülke</th>
+                                    <th>İl</th>
+                                    <th>İlçe</th>
+                                    <th>Posta Kodu</th>
+                                    <th></th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

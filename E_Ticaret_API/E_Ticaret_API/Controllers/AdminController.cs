@@ -18,6 +18,7 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
 using static Azure.Core.HttpHeader;
+using System.Net;
 
 namespace E_Ticaret_API.Controllers
 {
@@ -770,6 +771,79 @@ namespace E_Ticaret_API.Controllers
             return Unauthorized();
         }
 
+        [HttpGet("Addresses")]
+        public async Task<IActionResult> GetAddresses()
+        {
+            if (await CheckAdmin() == true)
+            {
+                var addresses = await _context.Addresses
+                        .OrderBy(p => p.AddressId)
+                        .Select(p => new AddressDTO
+                        {
+                            AddressId = p.AddressId,
+                            UserId = p.UserId,
+                            User = _context.Users.Where(c => c.UserId == p.UserId).Select(u => new UserDTO
+                            {
+                                UserId = u.UserId,
+                                Name = u.Name,
+                                Surname = u.Surname,
+                                Email = u.Email,
+                                PhoneNumber = u.PhoneNumber,
+                                Status = u.Status,
+                                Admin = u.Admin
+
+                            }).FirstOrDefault(),
+                            AddressText = p.AddressText,
+                            Province = p.Province,
+                            District = p.District,
+                            Country = p.Country,
+                            PostalCode = p.PostalCode,
+                        })
+                        .ToListAsync();
+
+                return Ok(addresses);
+            }
+
+            return Unauthorized();
+        }
+
+        [HttpGet("Address/{id}")]
+        public async Task<IActionResult> GetAddress(int id)
+        {
+            if (await CheckAdmin() == true)
+            {
+                var address = await _context.Addresses
+                        .OrderBy(p => p.AddressId)
+                        .Where(p => p.AddressId == id)
+                        .Select(p => new AddressDTO
+                        {
+                            AddressId = p.AddressId,
+                            UserId = p.UserId,
+                            User = _context.Users.Where(c => c.UserId == p.UserId).Select(u => new UserDTO
+                            {
+                                UserId = u.UserId,
+                                Name = u.Name,
+                                Surname = u.Surname,
+                                Email = u.Email,
+                                PhoneNumber = u.PhoneNumber,
+                                Status = u.Status,
+                                Admin = u.Admin
+
+                            }).FirstOrDefault(),
+                            AddressText = p.AddressText,
+                            Province = p.Province,
+                            District = p.District,
+                            Country = p.Country,
+                            PostalCode = p.PostalCode,
+                        })
+                        .FirstOrDefaultAsync();
+
+                return Ok(address);
+            }
+
+            return Unauthorized();
+        }
+
         [HttpGet("Products")]
         public async Task<IActionResult> Products()
         {
@@ -1075,6 +1149,63 @@ namespace E_Ticaret_API.Controllers
                 }).ToListAsync();
 
                 return Ok(comments);
+            }
+
+            return Unauthorized();
+        }
+
+        [HttpGet("Comment/{id}")]
+        public async Task<IActionResult> GetComment(int id)
+        {
+            if (await CheckAdmin() == true)
+            {
+                var comment = await _context.Comments.OrderBy(p => p.CommentId).Where(p => p.CommentId == id).Select(comment => new CommentDTO
+                {
+                    CommentId = comment.CommentId,
+                    Text = comment.Text,
+                    PublishedDate = comment.PublishedDate,
+                    Status = comment.Status,
+                    ProductId = comment.ProductId,
+                    UserId = comment.UserId,
+                    Product = _context.Products.Where(product => product.ProductId == comment.ProductId).Select(product => new ProductDTO
+                    {
+                        ProductId = product.ProductId,
+                        CategoryId = product.CategoryId,
+                        SKU = product.SKU,
+                        Name = product.Name,
+                        Description = product.Description,
+                        Price = product.Price,
+                        Stock = product.Stock,
+                        Status = product.Status,
+                        Category = new CategoryDTO
+                        {
+                            CategoryId = product.Category.CategoryId,
+                            Name = product.Category.Name,
+                            Status = product.Category.Status
+                        },
+                        Pictures = product.Pictures.Where(pic => pic.ProductId == comment.ProductId).Select(pic => new PictureDTO
+                        {
+                            PictureId = pic.PictureId,
+                            Path = pic.Path
+                        }).ToList(),
+                        Comments = product.Comments.Where(commentc => commentc.ProductId == comment.ProductId).Select(commentc => new CommentDTO
+                        {
+                            CommentId = commentc.CommentId
+                        }).ToList()
+                    }).FirstOrDefault(),
+                    User = _context.Users.Where(user => user.UserId == comment.UserId).Select(user => new UserDTO
+                    {
+                        UserId = user.UserId,
+                        Name = user.Name,
+                        Surname = user.Surname,
+                        Email = user.Email,
+                        PhoneNumber = user.PhoneNumber,
+                        Status = user.Status,
+                        Admin = user.Admin
+                    }).FirstOrDefault()
+                }).FirstOrDefaultAsync();
+
+                return Ok(comment);
             }
 
             return Unauthorized();

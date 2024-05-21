@@ -224,6 +224,7 @@ namespace E_Ticaret.Controllers
                     using (var response = await httpClient.PutAsync("https://localhost:7279/Api/Admin/User/" + id, httpContent))
                     {
                         var apiResponse = await response.Content.ReadAsStringAsync();
+                        return Ok(apiResponse);
                         var api_data = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
 
                         return Json(new { status = api_data.Status, msg = api_data.Msg });
@@ -506,6 +507,64 @@ namespace E_Ticaret.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [HttpGet("Admin/Addresses")]
+        public async Task<IActionResult> Addresses()
+        {
+            if (await CheckAdmin() == true)
+            {
+                var addresses = new List<Addresses>();
+
+                using (var httpClient = new HttpClient())
+                {
+                    string token = Request.Cookies["token"];
+                    if (!string.IsNullOrEmpty(token))
+                    {
+                        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                    }
+
+                    using (var response = await httpClient.GetAsync("https://localhost:7279/Api/Admin/Addresses"))
+                    {
+                        string apiResponse = await response.Content.ReadAsStringAsync();
+                        addresses = JsonSerializer.Deserialize<List<Addresses>>(apiResponse);
+                    }
+                }
+
+                ViewBag.Addresses = addresses;
+                return View("Addresses");
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet("Admin/Address/{id}")]
+        public async Task<IActionResult> Address(int id)
+        {
+            if (await CheckAdmin() == true)
+            {
+                var address = new Addresses();
+
+                using (var httpClient = new HttpClient())
+                {
+                    string token = Request.Cookies["token"];
+                    if (!string.IsNullOrEmpty(token))
+                    {
+                        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                    }
+
+                    using (var response = await httpClient.GetAsync("https://localhost:7279/Api/Admin/Address/" + id))
+                    {
+                        string apiResponse = await response.Content.ReadAsStringAsync();
+                        address = JsonSerializer.Deserialize<Addresses>(apiResponse);
+                    }
+                }
+
+                ViewBag.Address = address;
+                return View("Address");
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
         [HttpGet("Admin/Comments")]
         public async Task<IActionResult> Comments()
         {
@@ -530,6 +589,35 @@ namespace E_Ticaret.Controllers
 
                 ViewBag.Comments = comments;
                 return View("Comments");
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet("Admin/Comment/{id}")]
+        public async Task<IActionResult> Comment(int id)
+        {
+            if (await CheckAdmin() == true)
+            {
+                var comment = new Comment();
+
+                using (var httpClient = new HttpClient())
+                {
+                    string token = Request.Cookies["token"];
+                    if (!string.IsNullOrEmpty(token))
+                    {
+                        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                    }
+
+                    using (var response = await httpClient.GetAsync("https://localhost:7279/Api/Admin/Comment/" + id))
+                    {
+                        string apiResponse = await response.Content.ReadAsStringAsync();
+                        comment = JsonSerializer.Deserialize<Comment>(apiResponse);
+                    }
+                }
+
+                ViewBag.Comment = comment;
+                return View("Comment");
             }
 
             return RedirectToAction("Index", "Home");

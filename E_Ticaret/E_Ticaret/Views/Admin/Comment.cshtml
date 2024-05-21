@@ -1,0 +1,198 @@
+﻿@{
+    ViewData["Title"] = "E-Ticaret Yorum";
+
+    var comment = ViewBag.Comment;
+}
+
+<style>
+    .dflex {
+        display: flex;
+    }
+</style>
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Yorum Detayları</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item "><a asp-controller="Admin" asp-action="Index">Panel</a></li>
+                    <li class="breadcrumb-item "><a asp-controller="Admin" asp-action="Comments">Yorumlar</a></li>
+                    <li class="breadcrumb-item active">#@comment.CommentId</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="x">
+                    <div class="xs" style="margin-block-end: 100px;">
+                        <div class="row">
+                            <div class="col-md-4 col-12 d-flex align-items-stretch">
+                                <div class="card shadow" style="width: 100%;">
+                                    <div class="card-header bg-gradient-danger">
+                                        <h4 class="card-title">Kullanıcı Bilgileri</h4>
+                                    </div>
+                                    <table class="table">
+                                        <tbody>
+                                            <tr>
+                                                <th scope="row">İsim</th>
+                                                <td>:</td>
+                                                <td>@comment.User.Name</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Soyisim</th>
+                                                <td>:</td>
+                                                <td>@comment.User.Surname</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">E-Posta Adresi</th>
+                                                <td>:</td>
+                                                <td><a href="/Admin/User/@comment.UserId">@comment.User.Email</a></td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Telefon Numarası</th>
+                                                <td>:</td>
+                                                <td>@comment.User.PhoneNumber</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Hesap Durumu</th>
+                                                <td>:</td>
+                                                <td>
+                                                    @if (comment.User.Status == false)
+                                                    {
+                                                        <span class="badge badge-danger">Pasif</span>
+                                                    }
+                                                    else if (comment.User.Status == true)
+                                                    {
+                                                        <span class="badge badge-success">Aktif</span>
+                                                    }
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Yetki Durumu</th>
+                                                <td>:</td>
+                                                <td>
+                                                    @if (comment.User.Admin == true)
+                                                    {
+                                                        <span class="badge badge-success">Admin</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="badge badge-info">Kullanıcı</span>
+                                                    }
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-12 d-flex align-items-stretch">
+                                <div class="card shadow" style="width: 100%;">
+                                    <div class="card-header bg-gradient-danger">
+                                        <h4 class="card-title">Ürün Bilgileri</h4>
+                                    </div>
+                                    <table class="table">
+                                        <tbody>
+                                            <tr>
+                                                <th scope="row">Başlık</th>
+                                                <td>:</td>
+                                                <td><a href="/Admin/Product/@comment.Product.ProductId">@comment.Product.Name</a></td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Kategori</th>
+                                                <td>:</td>
+                                                <td><a href="/Admin/Category/@comment.Product.Category.CategoryId">@comment.Product.Category.Name</a></td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">SKU</th>
+                                                <td>:</td>
+                                                <td>@comment.Product.Sku</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Fiyat</th>
+                                                <td>:</td>
+                                                <td>@(Double.Parse(comment.Product.Price.ToString()).ToString("N2")) ₺</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Stok</th>
+                                                <td>:</td>
+                                                <td>@comment.Product.Stock</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Durum</th>
+                                                <td>:</td>
+                                                <td>
+                                                    @if (comment.Product.Status == false)
+                                                    {
+                                                        <span class="badge badge-danger">Pasif</span>
+                                                    }
+                                                    else if (comment.Product.Status == true)
+                                                    {
+                                                        <span class="badge badge-success">Aktif</span>
+                                                    }
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-12 d-flex align-items-stretch">
+                                <div class="card shadow" style="width: 100%;">
+                                    <div class="card-header bg-gradient-dark">
+                                        <h4 class="card-title">Yorum Güncelleme</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <form action="" method="post">
+                                            <div class="row">
+                                                <div class="col-12" style="margin-block-end: 10px;">
+                                                    <label>Yorum Metni</label>
+                                                    <textarea name="Text" class="form-control">@comment.Text</textarea>
+                                                </div>
+                                                <div class="col-12 col-md-6" style="margin-block-end: 10px;">
+                                                    <label>Yorum Tarihi</label>
+                                                    <input type="text" class="form-control" value="@comment.PublishedDate" disabled>
+                                                </div>
+                                                <div class="col-12 col-md-6" style="margin-block-end: 10px;">
+                                                    <label>Durumu</label>
+                                                    <select name="Status" class="form-control">
+                                                        @if (comment.Status == false)
+                                                        {
+                                                            <option value="false" selected>Pasif</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="false">Pasif</option>
+                                                        }
+
+                                                        @if (comment.Status == true)
+                                                        {
+                                                            <option value="true" selected>Aktif</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="true">Aktif</option>
+                                                        }
+                                                    </select>
+                                                </div>
+                                                <div class="col-12">
+                                                    <button type="submit" class="btn btn-success mt-4 btn-block" style="background-color: #061b3d;"> Güncelle</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

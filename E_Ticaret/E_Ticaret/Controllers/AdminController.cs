@@ -742,6 +742,42 @@ namespace E_Ticaret.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [HttpPost("Admin/Comment/{id}")]
+        public async Task<IActionResult> SetComment(CommentModel Form, int id)
+        {
+            if (await CheckAdmin() == true)
+            {
+                dynamic settings = await Tools.SettingAsync();
+                ViewBag.Setting = settings;
+                string site_url = await Tools.GetUrl(HttpContext);
+                ViewBag.SiteUrl = site_url;
+                string api_url = settings.api_url;
+
+                var jsonModel = JsonSerializer.Serialize(Form);
+
+                var httpContent = new StringContent(jsonModel, Encoding.UTF8, "application/json");
+
+                using (var httpClient = new HttpClient())
+                {
+                    string token = Request.Cookies["token"];
+                    if (!string.IsNullOrEmpty(token))
+                    {
+                        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                    }
+
+                    using (var response = await httpClient.PutAsync(api_url + "/Api/Admin/Comment/" + id, httpContent))
+                    {
+                        string apiResponse = await response.Content.ReadAsStringAsync();
+                        var api_data = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
+
+                        return Json(new { status = api_data.Status, msg = api_data.Msg });
+                    }
+                }
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
         [HttpPost("Admin/Cart/{id}")]
         public async Task<IActionResult> CartDel(int id)
         {

@@ -1211,6 +1211,30 @@ namespace E_Ticaret_API.Controllers
             return Unauthorized();
         }
 
+        [HttpPut("Comment/{id}")]
+        public async Task<IActionResult> EditComment(CommentModel Form, int id)
+        {
+            if (await CheckAdmin() == true)
+            {
+                var commentItem = await _context.Comments.FirstOrDefaultAsync(c => c.CommentId == id);
+
+                if (commentItem == null)
+                {
+                    return NotFound();
+                }
+
+                commentItem.Text = Form.Text;
+                commentItem.Status = Form.Status;
+
+                _context.Comments.Update(commentItem);
+                await _context.SaveChangesAsync();
+
+                return Ok(new { status = true, msg = "Yorum Bilgileri Güncellendi" });
+            }
+
+            return Unauthorized();
+        }
+
         [HttpDelete("Cart/{id}")]
         public async Task<IActionResult> DeleteCart(int id)
         {

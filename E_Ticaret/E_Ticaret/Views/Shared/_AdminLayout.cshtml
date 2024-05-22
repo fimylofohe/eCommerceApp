@@ -126,6 +126,31 @@
         });
     </script>
     <script>
+        $(document).on('click', '.delete_btn', function (e) {
+            e.preventDefault();
+            Swal.fire({
+                title: 'Silmek İstediğinize Emin misiniz ?',
+                text: "Evete bastığınızda silinecektir!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Evet, Sil!'
+            }).then((result) => {
+                if (result.value) {
+                    Swal.fire("İşlem Gerçekleştiriliyor!", "", "warning");
+                    $.ajax({
+                        url: $(this).attr("href"),
+                        success: function () {
+                            Swal.fire("Başarıyla Silindi!", "", "success");
+
+                            location.reload();
+                        }
+                    })
+                }
+            })
+        });
+
         function DeleteImage(id, product_id) {
             Swal.fire({
                 title: 'Silmek Emin misiniz ?',

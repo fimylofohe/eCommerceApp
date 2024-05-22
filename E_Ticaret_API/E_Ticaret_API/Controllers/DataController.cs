@@ -2,6 +2,7 @@
 using E_Ticaret_API.DTO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Dynamic;
 using static Azure.Core.HttpHeader;
 
 namespace E_Ticaret_API.Controllers
@@ -15,6 +16,20 @@ namespace E_Ticaret_API.Controllers
         public DataController(DataContext context)
         {
             _context = context;
+        }
+
+        [HttpGet("Setting")]
+        public async Task<IActionResult> Setting()
+        {
+            var settings = await _context.Settings.ToListAsync();
+            var expandoObject = new ExpandoObject() as IDictionary<string, object>;
+
+            foreach (var setting in settings)
+            {
+                expandoObject[setting.Mkey] = setting.Mval;
+            }
+
+            return Ok(expandoObject);
         }
 
         [HttpGet("Slider")]

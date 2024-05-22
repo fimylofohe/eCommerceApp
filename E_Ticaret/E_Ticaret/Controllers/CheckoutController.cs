@@ -27,6 +27,12 @@ namespace E_Ticaret.Controllers
         {
             Tools.CheckToken(HttpContext);
 
+            dynamic settings = await Tools.SettingAsync();
+            ViewBag.Setting = settings;
+            string site_url = await Tools.GetUrl(HttpContext);
+            ViewBag.SiteUrl = site_url;
+            string api_url = settings.api_url;
+
             if (User.Identity!.IsAuthenticated)
             {
                 var carts = new Cart();
@@ -40,13 +46,13 @@ namespace E_Ticaret.Controllers
                         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                     }
 
-                    using (var response = await httpClient.GetAsync("https://localhost:7279/Api/Cart"))
+                    using (var response = await httpClient.GetAsync(api_url + "/Api/Cart"))
                     {
                         string apiResponse = await response.Content.ReadAsStringAsync();
                         carts = JsonSerializer.Deserialize<Cart>(apiResponse);
                     }
 
-                    using (var response = await httpClient.GetAsync("https://localhost:7279/Api/User/Address"))
+                    using (var response = await httpClient.GetAsync(api_url + "/Api/User/Address"))
                     {
                         string apiResponse = await response.Content.ReadAsStringAsync();
                         address = JsonSerializer.Deserialize<List<Addresses>>(apiResponse);
@@ -72,6 +78,12 @@ namespace E_Ticaret.Controllers
         [HttpPost]
         public async Task<IActionResult> Index(CheckoutModel Form)
         {
+            dynamic settings = await Tools.SettingAsync();
+            ViewBag.Setting = settings;
+            string site_url = await Tools.GetUrl(HttpContext);
+            ViewBag.SiteUrl = site_url;
+            string api_url = settings.api_url;
+
             var jsonModel = JsonSerializer.Serialize(Form);
 
             var httpContent = new StringContent(jsonModel, Encoding.UTF8, "application/json");
@@ -83,7 +95,7 @@ namespace E_Ticaret.Controllers
                 {
                     httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-                    using (var response = await httpClient.PostAsync("https://localhost:7279/Api/Cart/Checkout", httpContent))
+                    using (var response = await httpClient.PostAsync(api_url + "/Api/Cart/Checkout", httpContent))
                     {
                         if (response.IsSuccessStatusCode)
                         {

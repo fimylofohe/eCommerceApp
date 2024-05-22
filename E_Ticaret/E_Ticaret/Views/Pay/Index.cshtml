@@ -1,7 +1,8 @@
 ﻿@{
     ViewData["Title"] = "E-Ticaret Sipariş";
     var order = ViewBag.Order;
-    bool testCart = true;
+    var setting = ViewBag.Setting;
+    string site_url = ViewBag.SiteUrl;
 }
 @Html.Raw(ViewBag.Iyzico)
 <section class="breadcrumb-option">
@@ -23,7 +24,7 @@
 
 <section class="checkout spad">
     <div class="container">
-        @if (testCart)
+        @if (setting.iyzico_test == "true")
         {
             <p class="text-white" style="background: black; text-align: center; border-radius: 10px; padding: 15px;">
                 <strong class="text-white"><span class="text-danger">TEST MODU AKTİF</span> Sandbox Test Ortamı Kart Bilgileri</strong><br>

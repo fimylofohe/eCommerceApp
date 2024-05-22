@@ -9,6 +9,9 @@ using E_Ticaret.DTO;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using System.Net.Http;
+using Newtonsoft.Json.Linq;
+using System.Dynamic;
 
 namespace E_Ticaret.Helpers
 {
@@ -39,6 +42,36 @@ namespace E_Ticaret.Helpers
                     }
                 }
             }
+        }
+
+        public static async Task<dynamic> SettingAsync()
+        {
+            using (var httpClient = new HttpClient())
+            {
+                using (var response = await httpClient.GetAsync("https://localhost:7279/Api/Data/Setting"))
+                {
+                    string apiResponse = await response.Content.ReadAsStringAsync();
+                    var settings = JsonSerializer.Deserialize<Dictionary<string, string>>(apiResponse);
+
+                    var expandoObject = new ExpandoObject() as IDictionary<string, object>;
+
+                    foreach (var setting in settings)
+                    {
+                        expandoObject[setting.Key] = setting.Value;
+                    }
+
+                    return expandoObject;
+                }
+            }
+        }
+
+        public static async Task<string> GetUrl(HttpContext httpContext)
+        {
+            var request = httpContext.Request;
+            var protocol = request.IsHttps ? "https://" : "http://";
+            var siteUrl = $"{protocol}{request.Host}";
+
+            return siteUrl;
         }
     }
 }

@@ -29,6 +29,12 @@ namespace E_Ticaret.Controllers
         {
             if (await CheckAdmin() == true)
             {
+                dynamic settings = await Tools.SettingAsync();
+                ViewBag.Setting = settings;
+                string site_url = await Tools.GetUrl(HttpContext);
+                ViewBag.SiteUrl = site_url;
+                string api_url = settings.api_url;
+
                 using (var httpClient = new HttpClient())
                 {
                     string token = Request.Cookies["token"];
@@ -37,7 +43,7 @@ namespace E_Ticaret.Controllers
                         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                     }
 
-                    using (var response = await httpClient.GetAsync("https://localhost:7279/Api/Admin/Datas"))
+                    using (var response = await httpClient.GetAsync(api_url + "/Api/Admin/Datas"))
                     {
                         string apiResponse = await response.Content.ReadAsStringAsync();
                         JObject jsonResponse = JObject.Parse(apiResponse);
@@ -56,6 +62,12 @@ namespace E_Ticaret.Controllers
         {
             if (await CheckAdmin() == true)
             {
+                dynamic settings = await Tools.SettingAsync();
+                ViewBag.Setting = settings;
+                string site_url = await Tools.GetUrl(HttpContext);
+                ViewBag.SiteUrl = site_url;
+                string api_url = settings.api_url;
+
                 var orders = new List<Orders>();
 
                 using (var httpClient = new HttpClient())
@@ -66,7 +78,7 @@ namespace E_Ticaret.Controllers
                         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                     }
 
-                    using (var response = await httpClient.GetAsync("https://localhost:7279/Api/Admin/Orders/10"))
+                    using (var response = await httpClient.GetAsync(api_url + "/Api/Admin/Orders/10"))
                     {
                         string apiResponse = await response.Content.ReadAsStringAsync();
                         orders = JsonSerializer.Deserialize<List<Orders>>(apiResponse);
@@ -85,6 +97,12 @@ namespace E_Ticaret.Controllers
         {
             if (await CheckAdmin() == true)
             {
+                dynamic settings = await Tools.SettingAsync();
+                ViewBag.Setting = settings;
+                string site_url = await Tools.GetUrl(HttpContext);
+                ViewBag.SiteUrl = site_url;
+                string api_url = settings.api_url;
+
                 var orders = new List<Orders>();
 
                 using (var httpClient = new HttpClient())
@@ -95,7 +113,7 @@ namespace E_Ticaret.Controllers
                         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                     }
 
-                    using (var response = await httpClient.GetAsync("https://localhost:7279/Api/Admin/Orders/" + status))
+                    using (var response = await httpClient.GetAsync(api_url + "/Api/Admin/Orders/" + status))
                     {
                         string apiResponse = await response.Content.ReadAsStringAsync();
                         orders = JsonSerializer.Deserialize<List<Orders>>(apiResponse);
@@ -114,6 +132,12 @@ namespace E_Ticaret.Controllers
         {
             if (await CheckAdmin() == true)
             {
+                dynamic settings = await Tools.SettingAsync();
+                ViewBag.Setting = settings;
+                string site_url = await Tools.GetUrl(HttpContext);
+                ViewBag.SiteUrl = site_url;
+                string api_url = settings.api_url;
+
                 var orders = new Orders();
                 var banks = new List<Bank>();
 
@@ -125,13 +149,13 @@ namespace E_Ticaret.Controllers
                         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                     }
 
-                    using (var response = await httpClient.GetAsync("https://localhost:7279/Api/Admin/Order/" + id))
+                    using (var response = await httpClient.GetAsync(api_url + "/Api/Admin/Order/" + id))
                     {
                         string apiResponse = await response.Content.ReadAsStringAsync();
                         orders = JsonSerializer.Deserialize<Orders>(apiResponse);
                     }
 
-                    using (var response = await httpClient.GetAsync("https://localhost:7279/Api/Data/Banks/"))
+                    using (var response = await httpClient.GetAsync(api_url + "/Api/Data/Banks/"))
                     {
                         string apiResponse = await response.Content.ReadAsStringAsync();
                         banks = JsonSerializer.Deserialize<List<Bank>>(apiResponse);
@@ -151,6 +175,12 @@ namespace E_Ticaret.Controllers
         {
             if (await CheckAdmin() == true)
             {
+                dynamic settings = await Tools.SettingAsync();
+                ViewBag.Setting = settings;
+                string site_url = await Tools.GetUrl(HttpContext);
+                ViewBag.SiteUrl = site_url;
+                string api_url = settings.api_url;
+
                 var users = new List<User>();
 
                 using (var httpClient = new HttpClient())
@@ -161,7 +191,7 @@ namespace E_Ticaret.Controllers
                         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                     }
 
-                    using (var response = await httpClient.GetAsync("https://localhost:7279/Api/Admin/Users"))
+                    using (var response = await httpClient.GetAsync(api_url + "/Api/Admin/Users"))
                     {
                         string apiResponse = await response.Content.ReadAsStringAsync();
                         users = JsonSerializer.Deserialize<List<User>>(apiResponse);
@@ -180,6 +210,12 @@ namespace E_Ticaret.Controllers
         {
             if (await CheckAdmin() == true)
             {
+                dynamic settings = await Tools.SettingAsync();
+                ViewBag.Setting = settings;
+                string site_url = await Tools.GetUrl(HttpContext);
+                ViewBag.SiteUrl = site_url;
+                string api_url = settings.api_url;
+
                 var user = new User();
 
                 using (var httpClient = new HttpClient())
@@ -190,7 +226,7 @@ namespace E_Ticaret.Controllers
                         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                     }
 
-                    using (var response = await httpClient.GetAsync("https://localhost:7279/Api/Admin/User/" + id))
+                    using (var response = await httpClient.GetAsync(api_url + "/Api/Admin/User/" + id))
                     {
                         string apiResponse = await response.Content.ReadAsStringAsync();
                         user = JsonSerializer.Deserialize<User>(apiResponse);
@@ -209,6 +245,12 @@ namespace E_Ticaret.Controllers
         {
             if (await CheckAdmin() == true)
             {
+                dynamic settings = await Tools.SettingAsync();
+                ViewBag.Setting = settings;
+                string site_url = await Tools.GetUrl(HttpContext);
+                ViewBag.SiteUrl = site_url;
+                string api_url = settings.api_url;
+
                 var jsonModel = JsonSerializer.Serialize(Form);
 
                 var httpContent = new StringContent(jsonModel, Encoding.UTF8, "application/json");
@@ -221,10 +263,9 @@ namespace E_Ticaret.Controllers
                         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                     }
 
-                    using (var response = await httpClient.PutAsync("https://localhost:7279/Api/Admin/User/" + id, httpContent))
+                    using (var response = await httpClient.PutAsync(api_url + "/Api/Admin/User/" + id, httpContent))
                     {
                         var apiResponse = await response.Content.ReadAsStringAsync();
-                        return Ok(apiResponse);
                         var api_data = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
 
                         return Json(new { status = api_data.Status, msg = api_data.Msg });
@@ -240,6 +281,12 @@ namespace E_Ticaret.Controllers
         {
             if (await CheckAdmin() == true)
             {
+                dynamic settings = await Tools.SettingAsync();
+                ViewBag.Setting = settings;
+                string site_url = await Tools.GetUrl(HttpContext);
+                ViewBag.SiteUrl = site_url;
+                string api_url = settings.api_url;
+
                 var products = new List<DTO.Product>();
 
                 using (var httpClient = new HttpClient())
@@ -250,7 +297,7 @@ namespace E_Ticaret.Controllers
                         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                     }
 
-                    using (var response = await httpClient.GetAsync("https://localhost:7279/Api/Admin/Products"))
+                    using (var response = await httpClient.GetAsync(api_url + "/Api/Admin/Products"))
                     {
                         string apiResponse = await response.Content.ReadAsStringAsync();
                         products = JsonSerializer.Deserialize<List<DTO.Product>>(apiResponse);
@@ -269,6 +316,12 @@ namespace E_Ticaret.Controllers
         {
             if (await CheckAdmin() == true)
             {
+                dynamic settings = await Tools.SettingAsync();
+                ViewBag.Setting = settings;
+                string site_url = await Tools.GetUrl(HttpContext);
+                ViewBag.SiteUrl = site_url;
+                string api_url = settings.api_url;
+
                 var categories = new List<Category>();
 
                 using (var httpClient = new HttpClient())
@@ -279,13 +332,13 @@ namespace E_Ticaret.Controllers
                         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                     }
 
-                    using (var response = await httpClient.GetAsync("https://localhost:7279/Api/Admin/Categories"))
+                    using (var response = await httpClient.GetAsync(api_url + "/Api/Admin/Categories"))
                     {
                         string apiResponse = await response.Content.ReadAsStringAsync();
                         categories = JsonSerializer.Deserialize<List<Category>>(apiResponse);
                     }
 
-                    using (var response = await httpClient.GetAsync("https://localhost:7279/Api/Admin/Product/" + id))
+                    using (var response = await httpClient.GetAsync(api_url + "/Api/Admin/Product/" + id))
                     {
                         var apiResponse = await response.Content.ReadAsStringAsync();
                         var product = JsonSerializer.Deserialize<DTO.Product>(apiResponse);
@@ -305,6 +358,12 @@ namespace E_Ticaret.Controllers
         {
             if (await CheckAdmin() == true)
             {
+                dynamic settings = await Tools.SettingAsync();
+                ViewBag.Setting = settings;
+                string site_url = await Tools.GetUrl(HttpContext);
+                ViewBag.SiteUrl = site_url;
+                string api_url = settings.api_url;
+
                 var jsonModel = JsonSerializer.Serialize(Form);
 
                 var httpContent = new StringContent(jsonModel, Encoding.UTF8, "application/json");
@@ -317,7 +376,7 @@ namespace E_Ticaret.Controllers
                         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                     }
 
-                    using (var response = await httpClient.PutAsync("https://localhost:7279/Api/Admin/Product/" + id, httpContent))
+                    using (var response = await httpClient.PutAsync(api_url + "/Api/Admin/Product/" + id, httpContent))
                     {
                         var apiResponse = await response.Content.ReadAsStringAsync();
                         var api_data = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
@@ -335,6 +394,12 @@ namespace E_Ticaret.Controllers
         {
             if (await CheckAdmin() == true)
             {
+                dynamic settings = await Tools.SettingAsync();
+                ViewBag.Setting = settings;
+                string site_url = await Tools.GetUrl(HttpContext);
+                ViewBag.SiteUrl = site_url;
+                string api_url = settings.api_url;
+
                 using (var httpClient = new HttpClient())
                 {
                     string token = Request.Cookies["token"];
@@ -343,7 +408,7 @@ namespace E_Ticaret.Controllers
                         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                     }
 
-                    using (var response = await httpClient.GetAsync("https://localhost:7279/Api/Admin/Images/" + id))
+                    using (var response = await httpClient.GetAsync(api_url + "/Api/Admin/Images/" + id))
                     {
                         var apiResponse = await response.Content.ReadAsStringAsync();
                         var picture = JsonSerializer.Deserialize<List<Picture>>(apiResponse);
@@ -361,6 +426,12 @@ namespace E_Ticaret.Controllers
         {
             if (await CheckAdmin() == true)
             {
+                dynamic settings = await Tools.SettingAsync();
+                ViewBag.Setting = settings;
+                string site_url = await Tools.GetUrl(HttpContext);
+                ViewBag.SiteUrl = site_url;
+                string api_url = settings.api_url;
+
                 var extent = Path.GetExtension(file.FileName);
                 var randomName = ($"{Guid.NewGuid()}{extent}");
                 var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\img", randomName);
@@ -382,7 +453,7 @@ namespace E_Ticaret.Controllers
                         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                     }
 
-                    using (var response = await httpClient.PostAsync("https://localhost:7279/Api/Admin/Image/" + id, httpContent))
+                    using (var response = await httpClient.PostAsync(api_url + "/Api/Admin/Image/" + id, httpContent))
                     {
                         var apiResponse = await response.Content.ReadAsStringAsync();
                         var api_data = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
@@ -400,6 +471,12 @@ namespace E_Ticaret.Controllers
         {
             if (await CheckAdmin() == true)
             {
+                dynamic settings = await Tools.SettingAsync();
+                ViewBag.Setting = settings;
+                string site_url = await Tools.GetUrl(HttpContext);
+                ViewBag.SiteUrl = site_url;
+                string api_url = settings.api_url;
+
                 using (var httpClient = new HttpClient())
                 {
                     string token = Request.Cookies["token"];
@@ -408,7 +485,7 @@ namespace E_Ticaret.Controllers
                         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                     }
 
-                    using (var response = await httpClient.DeleteAsync("https://localhost:7279/Api/Admin/Image/" + id))
+                    using (var response = await httpClient.DeleteAsync(api_url + "/Api/Admin/Image/" + id))
                     {
                         var apiResponse = await response.Content.ReadAsStringAsync();
                         var api_data = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
@@ -426,6 +503,12 @@ namespace E_Ticaret.Controllers
         {
             if (await CheckAdmin() == true)
             {
+                dynamic settings = await Tools.SettingAsync();
+                ViewBag.Setting = settings;
+                string site_url = await Tools.GetUrl(HttpContext);
+                ViewBag.SiteUrl = site_url;
+                string api_url = settings.api_url;
+
                 var categories = new List<Category>();
 
                 using (var httpClient = new HttpClient())
@@ -436,7 +519,7 @@ namespace E_Ticaret.Controllers
                         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                     }
 
-                    using (var response = await httpClient.GetAsync("https://localhost:7279/Api/Admin/Categories"))
+                    using (var response = await httpClient.GetAsync(api_url + "/Api/Admin/Categories"))
                     {
                         string apiResponse = await response.Content.ReadAsStringAsync();
                         categories = JsonSerializer.Deserialize<List<Category>>(apiResponse);
@@ -455,6 +538,12 @@ namespace E_Ticaret.Controllers
         {
             if (await CheckAdmin() == true)
             {
+                dynamic settings = await Tools.SettingAsync();
+                ViewBag.Setting = settings;
+                string site_url = await Tools.GetUrl(HttpContext);
+                ViewBag.SiteUrl = site_url;
+                string api_url = settings.api_url;
+
                 using (var httpClient = new HttpClient())
                 {
                     string token = Request.Cookies["token"];
@@ -463,7 +552,7 @@ namespace E_Ticaret.Controllers
                         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                     }
 
-                    using (var response = await httpClient.GetAsync("https://localhost:7279/Api/Admin/Category/" + id))
+                    using (var response = await httpClient.GetAsync(api_url + "/Api/Admin/Category/" + id))
                     {
                         var apiResponse = await response.Content.ReadAsStringAsync();
                         var category = JsonSerializer.Deserialize<Category>(apiResponse);
@@ -482,6 +571,12 @@ namespace E_Ticaret.Controllers
         {
             if (await CheckAdmin() == true)
             {
+                dynamic settings = await Tools.SettingAsync();
+                ViewBag.Setting = settings;
+                string site_url = await Tools.GetUrl(HttpContext);
+                ViewBag.SiteUrl = site_url;
+                string api_url = settings.api_url;
+
                 var jsonModel = JsonSerializer.Serialize(Form);
 
                 var httpContent = new StringContent(jsonModel, Encoding.UTF8, "application/json");
@@ -494,7 +589,7 @@ namespace E_Ticaret.Controllers
                         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                     }
 
-                    using (var response = await httpClient.PutAsync("https://localhost:7279/Api/Admin/Category/" + id, httpContent))
+                    using (var response = await httpClient.PutAsync(api_url + "/Api/Admin/Category/" + id, httpContent))
                     {
                         var apiResponse = await response.Content.ReadAsStringAsync();
                         var api_data = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
@@ -512,6 +607,12 @@ namespace E_Ticaret.Controllers
         {
             if (await CheckAdmin() == true)
             {
+                dynamic settings = await Tools.SettingAsync();
+                ViewBag.Setting = settings;
+                string site_url = await Tools.GetUrl(HttpContext);
+                ViewBag.SiteUrl = site_url;
+                string api_url = settings.api_url;
+
                 var addresses = new List<Addresses>();
 
                 using (var httpClient = new HttpClient())
@@ -522,7 +623,7 @@ namespace E_Ticaret.Controllers
                         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                     }
 
-                    using (var response = await httpClient.GetAsync("https://localhost:7279/Api/Admin/Addresses"))
+                    using (var response = await httpClient.GetAsync(api_url + "/Api/Admin/Addresses"))
                     {
                         string apiResponse = await response.Content.ReadAsStringAsync();
                         addresses = JsonSerializer.Deserialize<List<Addresses>>(apiResponse);
@@ -541,6 +642,12 @@ namespace E_Ticaret.Controllers
         {
             if (await CheckAdmin() == true)
             {
+                dynamic settings = await Tools.SettingAsync();
+                ViewBag.Setting = settings;
+                string site_url = await Tools.GetUrl(HttpContext);
+                ViewBag.SiteUrl = site_url;
+                string api_url = settings.api_url;
+
                 var address = new Addresses();
 
                 using (var httpClient = new HttpClient())
@@ -551,7 +658,7 @@ namespace E_Ticaret.Controllers
                         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                     }
 
-                    using (var response = await httpClient.GetAsync("https://localhost:7279/Api/Admin/Address/" + id))
+                    using (var response = await httpClient.GetAsync(api_url + "/Api/Admin/Address/" + id))
                     {
                         string apiResponse = await response.Content.ReadAsStringAsync();
                         address = JsonSerializer.Deserialize<Addresses>(apiResponse);
@@ -570,6 +677,12 @@ namespace E_Ticaret.Controllers
         {
             if (await CheckAdmin() == true)
             {
+                dynamic settings = await Tools.SettingAsync();
+                ViewBag.Setting = settings;
+                string site_url = await Tools.GetUrl(HttpContext);
+                ViewBag.SiteUrl = site_url;
+                string api_url = settings.api_url;
+
                 var comments = new List<Comment>();
 
                 using (var httpClient = new HttpClient())
@@ -580,7 +693,7 @@ namespace E_Ticaret.Controllers
                         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                     }
 
-                    using (var response = await httpClient.GetAsync("https://localhost:7279/Api/Admin/Comments"))
+                    using (var response = await httpClient.GetAsync(api_url + "/Api/Admin/Comments"))
                     {
                         string apiResponse = await response.Content.ReadAsStringAsync();
                         comments = JsonSerializer.Deserialize<List<Comment>>(apiResponse);
@@ -599,6 +712,12 @@ namespace E_Ticaret.Controllers
         {
             if (await CheckAdmin() == true)
             {
+                dynamic settings = await Tools.SettingAsync();
+                ViewBag.Setting = settings;
+                string site_url = await Tools.GetUrl(HttpContext);
+                ViewBag.SiteUrl = site_url;
+                string api_url = settings.api_url;
+
                 var comment = new Comment();
 
                 using (var httpClient = new HttpClient())
@@ -609,7 +728,7 @@ namespace E_Ticaret.Controllers
                         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                     }
 
-                    using (var response = await httpClient.GetAsync("https://localhost:7279/Api/Admin/Comment/" + id))
+                    using (var response = await httpClient.GetAsync(api_url + "/Api/Admin/Comment/" + id))
                     {
                         string apiResponse = await response.Content.ReadAsStringAsync();
                         comment = JsonSerializer.Deserialize<Comment>(apiResponse);
@@ -628,6 +747,12 @@ namespace E_Ticaret.Controllers
         {
             if (await CheckAdmin() == true)
             {
+                dynamic settings = await Tools.SettingAsync();
+                ViewBag.Setting = settings;
+                string site_url = await Tools.GetUrl(HttpContext);
+                ViewBag.SiteUrl = site_url;
+                string api_url = settings.api_url;
+
                 using (var httpClient = new HttpClient())
                 {
                     string token = Request.Cookies["token"];
@@ -636,7 +761,7 @@ namespace E_Ticaret.Controllers
                         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                     }
 
-                    using (var response = await httpClient.DeleteAsync("https://localhost:7279/Api/Admin/Cart/" + id))
+                    using (var response = await httpClient.DeleteAsync(api_url + "/Api/Admin/Cart/" + id))
                     {
                         var apiResponse = await response.Content.ReadAsStringAsync();
                         var api_data = JsonSerializer.Deserialize<ApiStatus>(apiResponse);

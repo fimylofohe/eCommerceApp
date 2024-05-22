@@ -28,6 +28,12 @@ namespace E_Ticaret.Controllers
         {
             Tools.CheckToken(HttpContext);
 
+            dynamic settings = await Tools.SettingAsync();
+            ViewBag.Setting = settings;
+            string site_url = await Tools.GetUrl(HttpContext);
+            ViewBag.SiteUrl = site_url;
+            string api_url = settings.api_url;
+
             if (User.Identity!.IsAuthenticated)
             {
                 return BadRequest();
@@ -40,7 +46,7 @@ namespace E_Ticaret.Controllers
 
                 using (var httpClient = new HttpClient())
                 {
-                    using (var response = await httpClient.PostAsync("https://localhost:7279/Api/User/Register", httpContent))
+                    using (var response = await httpClient.PostAsync(api_url + "/Api/User/Register", httpContent))
                     {
                         if (response.IsSuccessStatusCode)
                         {

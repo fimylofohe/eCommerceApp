@@ -27,11 +27,17 @@ namespace E_Ticaret.Controllers
             Tools.GenerateGuestToken(HttpContext);
             Tools.CheckToken(HttpContext);
 
+            dynamic settings = await Tools.SettingAsync();
+            ViewBag.Setting = settings;
+            string site_url = await Tools.GetUrl(HttpContext);
+            ViewBag.SiteUrl = site_url;
+            string api_url = settings.api_url;
+
             var shop = new Shop();
 
             using (var httpClient = new HttpClient())
             {
-                using (var response = await httpClient.GetAsync("https://localhost:7279/Api/Data/Products/" + page + "?cat=" + cat))
+                using (var response = await httpClient.GetAsync(api_url + "/Api/Data/Products/" + page + "?cat=" + cat))
                 {
                     string apiResponse = await response.Content.ReadAsStringAsync();
                     shop = JsonSerializer.Deserialize<Shop>(apiResponse);
@@ -42,7 +48,7 @@ namespace E_Ticaret.Controllers
 
             using (var httpClient = new HttpClient())
             {
-                using (var response = await httpClient.GetAsync("https://localhost:7279/Api/Data/Categories"))
+                using (var response = await httpClient.GetAsync(api_url + "/Api/Data/Categories"))
                 {
                     string apiResponse = await response.Content.ReadAsStringAsync();
                     categories = JsonSerializer.Deserialize<List<Category>>(apiResponse);

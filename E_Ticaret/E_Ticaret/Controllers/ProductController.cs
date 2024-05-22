@@ -23,11 +23,17 @@ namespace E_Ticaret.Controllers
             Tools.GenerateGuestToken(HttpContext);
             Tools.CheckToken(HttpContext);
 
+            dynamic settings = await Tools.SettingAsync();
+            ViewBag.Setting = settings;
+            string site_url = await Tools.GetUrl(HttpContext);
+            ViewBag.SiteUrl = site_url;
+            string api_url = settings.api_url;
+
             var products = new Product();
 
             using (var httpClient = new HttpClient())
             {
-                using (var response = await httpClient.GetAsync("https://localhost:7279/Api/Data/Product/" + id))
+                using (var response = await httpClient.GetAsync(api_url + "/Api/Data/Product/" + id))
                 {
                     string apiResponse = await response.Content.ReadAsStringAsync();
                     products = JsonSerializer.Deserialize<Product>(apiResponse);

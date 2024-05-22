@@ -41,6 +41,12 @@ namespace E_Ticaret.Controllers
         {
             Tools.CheckToken(HttpContext);
 
+            dynamic settings = await Tools.SettingAsync();
+            ViewBag.Setting = settings;
+            string site_url = await Tools.GetUrl(HttpContext);
+            ViewBag.SiteUrl = site_url;
+            string api_url = settings.api_url;
+
             if (User.Identity!.IsAuthenticated)
             {
                 var address = new List<Addresses>();
@@ -53,7 +59,7 @@ namespace E_Ticaret.Controllers
                         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                     }
 
-                    using (var response = await httpClient.GetAsync("https://localhost:7279/Api/User/Address"))
+                    using (var response = await httpClient.GetAsync(api_url + "/Api/User/Address"))
                     {
                         string apiResponse = await response.Content.ReadAsStringAsync();
                         address = JsonSerializer.Deserialize<List<Addresses>>(apiResponse);
@@ -90,6 +96,12 @@ namespace E_Ticaret.Controllers
         {
             Tools.CheckToken(HttpContext);
 
+            dynamic settings = await Tools.SettingAsync();
+            ViewBag.Setting = settings;
+            string site_url = await Tools.GetUrl(HttpContext);
+            ViewBag.SiteUrl = site_url;
+            string api_url = settings.api_url;
+
             if (User.Identity!.IsAuthenticated)
             {
                 var address = new Addresses();
@@ -102,7 +114,7 @@ namespace E_Ticaret.Controllers
                         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                     }
 
-                    using (var response = await httpClient.GetAsync("https://localhost:7279/Api/User/Address/" + id))
+                    using (var response = await httpClient.GetAsync(api_url + "/Api/User/Address/" + id))
                     {
                         string apiResponse = await response.Content.ReadAsStringAsync();
                         address = JsonSerializer.Deserialize<Addresses>(apiResponse);
@@ -124,6 +136,12 @@ namespace E_Ticaret.Controllers
         {
             Tools.CheckToken(HttpContext);
 
+            dynamic settings = await Tools.SettingAsync();
+            ViewBag.Setting = settings;
+            string site_url = await Tools.GetUrl(HttpContext);
+            ViewBag.SiteUrl = site_url;
+            string api_url = settings.api_url;
+
             if (User.Identity!.IsAuthenticated)
             {
                 var orders = new List<Orders>();
@@ -136,7 +154,7 @@ namespace E_Ticaret.Controllers
                         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                     }
 
-                    using (var response = await httpClient.GetAsync("https://localhost:7279/Api/User/Orders"))
+                    using (var response = await httpClient.GetAsync(api_url + "/Api/User/Orders"))
                     {
                         string apiResponse = await response.Content.ReadAsStringAsync();
                         orders = JsonSerializer.Deserialize<List<Orders>>(apiResponse);
@@ -158,6 +176,12 @@ namespace E_Ticaret.Controllers
         {
             Tools.CheckToken(HttpContext);
 
+            dynamic settings = await Tools.SettingAsync();
+            ViewBag.Setting = settings;
+            string site_url = await Tools.GetUrl(HttpContext);
+            ViewBag.SiteUrl = site_url;
+            string api_url = settings.api_url;
+
             if (User.Identity!.IsAuthenticated)
             {
                 var order = new Orders();
@@ -172,13 +196,13 @@ namespace E_Ticaret.Controllers
                         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                     }
 
-                    using (var response = await httpClient.GetAsync("https://localhost:7279/Api/User/Orders/" + id))
+                    using (var response = await httpClient.GetAsync(api_url + "/Api/User/Orders/" + id))
                     {
                         string apiResponse = await response.Content.ReadAsStringAsync();
                         order = JsonSerializer.Deserialize<Orders>(apiResponse);
                     }
 
-                    using (var response = await httpClient.GetAsync("https://localhost:7279/Api/Data/Banks/"))
+                    using (var response = await httpClient.GetAsync(api_url + "/Api/Data/Banks/"))
                     {
                         string apiResponse = await response.Content.ReadAsStringAsync();
                         banks = JsonSerializer.Deserialize<List<Bank>>(apiResponse);
@@ -200,6 +224,12 @@ namespace E_Ticaret.Controllers
         public async Task<IActionResult> OrdersPost(IFormFile Receipt, PayNotModel Form, int id = 0)
         {
             Tools.CheckToken(HttpContext);
+
+            dynamic settings = await Tools.SettingAsync();
+            ViewBag.Setting = settings;
+            string site_url = await Tools.GetUrl(HttpContext);
+            ViewBag.SiteUrl = site_url;
+            string api_url = settings.api_url;
 
             if (Receipt != null)
             {
@@ -226,7 +256,7 @@ namespace E_Ticaret.Controllers
                         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                     }
 
-                    using (var response = await httpClient.PostAsync("https://localhost:7279/Api/User/Orders/" + id, httpContent))
+                    using (var response = await httpClient.PostAsync(api_url + "/Api/User/Orders/" + id, httpContent))
                     {
                         if (response.IsSuccessStatusCode)
                         {

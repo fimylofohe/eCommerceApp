@@ -32,6 +32,12 @@ namespace E_Ticaret.Controllers
         {
             Tools.CheckToken(HttpContext);
 
+            dynamic settings = await Tools.SettingAsync();
+            ViewBag.Setting = settings;
+            string site_url = await Tools.GetUrl(HttpContext);
+            ViewBag.SiteUrl = site_url;
+            string api_url = settings.api_url;
+
             if (User.Identity!.IsAuthenticated)
             {
                 var remoteIpAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
@@ -48,7 +54,7 @@ namespace E_Ticaret.Controllers
                         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                     }
 
-                    using (var response = await httpClient.GetAsync("https://localhost:7279/Api/User/Orders/" + id))
+                    using (var response = await httpClient.GetAsync(api_url + "/Api/User/Orders/" + id))
                     {
                         string apiResponse = await response.Content.ReadAsStringAsync();
                         order = JsonSerializer.Deserialize<Orders>(apiResponse);
@@ -56,9 +62,16 @@ namespace E_Ticaret.Controllers
                 }
 
                 Options options = new Options();
-                options.ApiKey = "sandbox-o1vhmzSLiHkDSfR5OMlp99ssR47xCrLJ";
-                options.SecretKey = "NWhxYI2RCXVa64IGMXatIvqdTHUU6ZMQ";
-                options.BaseUrl = "https://sandbox-api.iyzipay.com";
+                options.ApiKey = settings.iyzico_apikey;
+                options.SecretKey = settings.iyzico_secretkey;
+                if(settings.iyzico_test == "true")
+                {
+                    options.BaseUrl = "https://sandbox-api.iyzipay.com";
+                }
+                else
+                {
+                    options.BaseUrl = "https://api.iyzipay.com";
+                }
 
                 CreateCheckoutFormInitializeRequest request = new CreateCheckoutFormInitializeRequest();
                 request.Locale = Locale.TR.ToString();
@@ -68,7 +81,7 @@ namespace E_Ticaret.Controllers
                 request.Currency = Currency.TRY.ToString();
                 request.BasketId = order.OrderKey;
                 request.PaymentGroup = PaymentGroup.PRODUCT.ToString();
-                request.CallbackUrl = "https://localhost:7059/Pay/" + order.OrderId;
+                request.CallbackUrl = site_url + "/Pay/" + order.OrderId;
 
                 DateTime date = DateTime.ParseExact(DateTime.Now.ToString(), "dd.MM.yyyy HH:mm:ss", null);
                 string outputDate = date.ToString("yyyy-MM-dd HH:mm:ss");
@@ -134,11 +147,24 @@ namespace E_Ticaret.Controllers
         [HttpPost("Pay/{id}")]
         public async Task<IActionResult> OrdersPost(RetrieveCheckoutFormRequest model, int id = 0)
         {
+            dynamic settings = await Tools.SettingAsync();
+            ViewBag.Setting = settings;
+            string site_url = await Tools.GetUrl(HttpContext);
+            ViewBag.SiteUrl = site_url;
+            string api_url = settings.api_url;
+
             string data = "";
             Options options = new Options();
-            options.ApiKey = "sandbox-o1vhmzSLiHkDSfR5OMlp99ssR47xCrLJ";
-            options.SecretKey = "NWhxYI2RCXVa64IGMXatIvqdTHUU6ZMQ";
-            options.BaseUrl = "https://sandbox-api.iyzipay.com";
+            options.ApiKey = settings.iyzico_apikey;
+            options.SecretKey = settings.iyzico_secretkey;
+            if (settings.iyzico_test == "true")
+            {
+                options.BaseUrl = "https://sandbox-api.iyzipay.com";
+            }
+            else
+            {
+                options.BaseUrl = "https://api.iyzipay.com";
+            }
             data = model.Token;
             RetrieveCheckoutFormRequest request = new RetrieveCheckoutFormRequest();
             request.Token = data;
@@ -156,7 +182,7 @@ namespace E_Ticaret.Controllers
 
                     var httpContent = new StringContent(jsonModel, Encoding.UTF8, "application/json");
 
-                    using (var response = await httpClient.PutAsync("https://localhost:7279/Api/User/Orders/" + id, httpContent))
+                    using (var response = await httpClient.PutAsync(api_url + "/Api/User/Orders/" + id, httpContent))
                     {
                         if (response.IsSuccessStatusCode)
                         {

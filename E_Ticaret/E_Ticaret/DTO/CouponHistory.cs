@@ -16,6 +16,12 @@ namespace E_Ticaret.DTO
         [JsonPropertyName("coupon")]
         public Coupon Coupon { get; set; } = new Coupon()!;
 
+        [JsonPropertyName("userId")]
+        public int UserId { get; set; }
+
+        [JsonPropertyName("user")]
+        public User User { get; set; } = new User()!;
+
         [JsonPropertyName("status")]
         public bool Status { get; set; }
     }

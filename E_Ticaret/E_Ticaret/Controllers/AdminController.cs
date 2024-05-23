@@ -778,6 +778,150 @@ namespace E_Ticaret.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [HttpGet("Admin/CommentDelete/{id}")]
+        public async Task<IActionResult> DeleteComment(int id)
+        {
+            if (await CheckAdmin() == true)
+            {
+                dynamic settings = await Tools.SettingAsync();
+                ViewBag.Setting = settings;
+                string site_url = await Tools.GetUrl(HttpContext);
+                ViewBag.SiteUrl = site_url;
+                string api_url = settings.api_url;
+
+                using (var httpClient = new HttpClient())
+                {
+                    string token = Request.Cookies["token"];
+                    if (!string.IsNullOrEmpty(token))
+                    {
+                        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                    }
+
+                    using (var response = await httpClient.DeleteAsync(api_url + "/Api/Admin/Comment/" + id))
+                    {
+                        string apiResponse = await response.Content.ReadAsStringAsync();
+                        var api_data = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
+
+                        return Json(new { status = api_data.Status, msg = api_data.Msg });
+                    }
+                }
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet("Admin/Coupons")]
+        public async Task<IActionResult> Coupons()
+        {
+            if (await CheckAdmin() == true)
+            {
+                dynamic settings = await Tools.SettingAsync();
+                ViewBag.Setting = settings;
+                string site_url = await Tools.GetUrl(HttpContext);
+                ViewBag.SiteUrl = site_url;
+                string api_url = settings.api_url;
+
+                var coupons = new List<Coupon>();
+
+                using (var httpClient = new HttpClient())
+                {
+                    string token = Request.Cookies["token"];
+                    if (!string.IsNullOrEmpty(token))
+                    {
+                        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                    }
+
+                    using (var response = await httpClient.GetAsync(api_url + "/Api/Admin/Coupons"))
+                    {
+                        string apiResponse = await response.Content.ReadAsStringAsync();
+                        coupons = JsonSerializer.Deserialize<List<Coupon>>(apiResponse);
+                    }
+                }
+
+                ViewBag.Coupons = coupons;
+                return View("Coupons");
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet("Admin/Coupon/{id}")]
+        public async Task<IActionResult> Coupon(int id)
+        {
+            if (await CheckAdmin() == true)
+            {
+                dynamic settings = await Tools.SettingAsync();
+                ViewBag.Setting = settings;
+                string site_url = await Tools.GetUrl(HttpContext);
+                ViewBag.SiteUrl = site_url;
+                string api_url = settings.api_url;
+
+                var coupon = new Coupon();
+                var couponHistory = new List<CouponHistory>();
+
+                using (var httpClient = new HttpClient())
+                {
+                    string token = Request.Cookies["token"];
+                    if (!string.IsNullOrEmpty(token))
+                    {
+                        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                    }
+
+                    using (var response = await httpClient.GetAsync(api_url + "/Api/Admin/Coupon/" + id))
+                    {
+                        var coupon_histor = await httpClient.GetAsync(api_url + "/Api/Admin/CouponHistory/" + id);
+                        string coupon_historc = await coupon_histor.Content.ReadAsStringAsync();
+                        couponHistory = JsonSerializer.Deserialize<List<CouponHistory>>(coupon_historc);
+
+                        string apiResponse = await response.Content.ReadAsStringAsync();
+                        coupon = JsonSerializer.Deserialize<Coupon>(apiResponse);
+                    }
+                }
+
+                ViewBag.Coupon = coupon;
+                ViewBag.CouponHistory = couponHistory;
+                return View("Coupon");
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpPost("Admin/Coupon/{id}")]
+        public async Task<IActionResult> SetCoupon(CouponsModel Form, int id)
+        {
+            if (await CheckAdmin() == true)
+            {
+                dynamic settings = await Tools.SettingAsync();
+                ViewBag.Setting = settings;
+                string site_url = await Tools.GetUrl(HttpContext);
+                ViewBag.SiteUrl = site_url;
+                string api_url = settings.api_url;
+
+                var jsonModel = JsonSerializer.Serialize(Form);
+
+                var httpContent = new StringContent(jsonModel, Encoding.UTF8, "application/json");
+
+                using (var httpClient = new HttpClient())
+                {
+                    string token = Request.Cookies["token"];
+                    if (!string.IsNullOrEmpty(token))
+                    {
+                        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                    }
+
+                    using (var response = await httpClient.PutAsync(api_url + "/Api/Admin/Coupon/" + id, httpContent))
+                    {
+                        string apiResponse = await response.Content.ReadAsStringAsync();
+                        var api_data = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
+
+                        return Json(new { status = api_data.Status, msg = api_data.Msg });
+                    }
+                }
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
         [HttpPost("Admin/Cart/{id}")]
         public async Task<IActionResult> CartDel(int id)
         {

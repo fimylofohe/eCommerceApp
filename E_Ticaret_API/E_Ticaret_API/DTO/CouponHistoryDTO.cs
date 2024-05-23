@@ -8,6 +8,7 @@ namespace E_Ticaret_API.DTO
         public int CouponId { get; set; }
         public CouponDTO Coupon { get; set; } = null!;
         public int UserId { get; set; }
+        public UserDTO User { get; set; } = null!;
         public int OrderId { get; set; }
         public bool Status { get; set; }
     }

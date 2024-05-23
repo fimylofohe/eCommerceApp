@@ -1235,6 +1235,141 @@ namespace E_Ticaret_API.Controllers
             return Unauthorized();
         }
 
+        [HttpDelete("Comment/{id}")]
+        public async Task<IActionResult> DeleteComment(int id)
+        {
+            if (await CheckAdmin() == true)
+            {
+                var commentItem = await _context.Comments.FirstOrDefaultAsync(c => c.CommentId == id);
+
+                if (commentItem == null)
+                {
+                    return NotFound();
+                }
+
+                _context.Comments.Remove(commentItem);
+                await _context.SaveChangesAsync();
+
+                return Ok(new { status = true, msg = "Yorum Silindi." + "<meta http-equiv='refresh' content='2;'>" });
+            }
+
+            return Unauthorized();
+        }
+
+        [HttpGet("Coupons")]
+        public async Task<IActionResult> Coupons()
+        {
+            if (await CheckAdmin() == true)
+            {
+                var coupons = await _context.Coupons.OrderBy(p => p.CouponId).Select(coupon => new CouponDTO
+                {
+                    CouponId = coupon.CouponId,
+                    Name = coupon.Name,
+                    Type = coupon.Type,
+                    DiscountAmount = coupon.DiscountAmount,
+                    CouponCode = coupon.CouponCode,
+                    ValidityDate = coupon.ValidityDate,
+                    SingleUse = coupon.SingleUse,
+                    Status = coupon.Status
+                }).ToListAsync();
+
+                return Ok(coupons);
+            }
+
+            return Unauthorized();
+        }
+
+        [HttpGet("Coupon/{id}")]
+        public async Task<IActionResult> GetCoupon(int id)
+        {
+            if (await CheckAdmin() == true)
+            {
+                var coupon = await _context.Coupons.OrderBy(p => p.CouponId).Where(p => p.CouponId == id).Select(coupon => new CouponDTO
+                {
+                    CouponId = coupon.CouponId,
+                    Name = coupon.Name,
+                    Type = coupon.Type,
+                    DiscountAmount = coupon.DiscountAmount,
+                    CouponCode = coupon.CouponCode,
+                    ValidityDate = coupon.ValidityDate,
+                    SingleUse = coupon.SingleUse,
+                    Status = coupon.Status
+                }).FirstOrDefaultAsync();
+
+                return Ok(coupon);
+            }
+
+            return Unauthorized();
+        }
+
+        [HttpPut("Coupon/{id}")]
+        public async Task<IActionResult> EditCoupon(CouponsModel Form, int id)
+        {
+            if (await CheckAdmin() == true)
+            {
+                var couponItem = await _context.Coupons.FirstOrDefaultAsync(c => c.CouponId == id);
+
+                if (couponItem == null)
+                {
+                    return NotFound();
+                }
+
+                couponItem.Name = Form.Name;
+                couponItem.Type = Form.Type;
+                couponItem.DiscountAmount = Form.DiscountAmount;
+                couponItem.CouponCode = Form.CouponCode;
+                couponItem.ValidityDate = Form.ValidityDate;
+                couponItem.SingleUse = Form.SingleUse;
+                couponItem.Status = Form.Status;
+
+                _context.Coupons.Update(couponItem);
+                await _context.SaveChangesAsync();
+
+                return Ok(new { status = true, msg = "Kupon Bilgileri Güncellendi" });
+            }
+
+            return Unauthorized();
+        }
+
+        [HttpGet("CouponHistory/{id}")]
+        public async Task<IActionResult> GetCouponHistory(int id)
+        {
+            if (await CheckAdmin() == true)
+            {
+                var coupon_history = await _context.CouponHistorys.OrderBy(p => p.CouponHistoryId).Where(p => p.CouponId == id).Select(p => new CouponHistoryDTO
+                {
+                    CouponHistoryId = p.CouponHistoryId,
+                    CouponId = p.CouponId,
+                    UserId = p.UserId,
+                    OrderId = p.OrderId,
+                    Status = p.Status,
+                    Coupon = _context.Coupons.OrderBy(c => c.CouponId).Where(c => c.CouponId == id).Select(c => new CouponDTO
+                    {
+                        CouponId = p.Coupon.CouponId,
+                        Name = p.Coupon.Name,
+                        Type = p.Coupon.Type,
+                        DiscountAmount = p.Coupon.DiscountAmount,
+                        CouponCode = p.Coupon.CouponCode,
+                        ValidityDate = p.Coupon.ValidityDate,
+                    }).FirstOrDefault(),
+                    User = _context.Users.Where(user => user.UserId == p.UserId).Select(user => new UserDTO
+                    {
+                        UserId = user.UserId,
+                        Name = user.Name,
+                        Surname = user.Surname,
+                        Email = user.Email,
+                        PhoneNumber = user.PhoneNumber,
+                        Status = user.Status,
+                        Admin = user.Admin
+                    }).FirstOrDefault()
+                }).ToListAsync();
+
+                return Ok(coupon_history);
+            }
+
+            return Unauthorized();
+        }
+
         [HttpDelete("Cart/{id}")]
         public async Task<IActionResult> DeleteCart(int id)
         {

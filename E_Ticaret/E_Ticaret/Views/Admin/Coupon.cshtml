@@ -1,0 +1,275 @@
+﻿@{
+    ViewData["Title"] = "E-Ticaret Yorum";
+
+    var coupon = ViewBag.Coupon;
+    var couponHistory = ViewBag.CouponHistory;
+}
+
+<style>
+    .dflex {
+        display: flex;
+    }
+</style>
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Kupon Detayları</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item "><a asp-controller="Admin" asp-action="Index">Panel</a></li>
+                    <li class="breadcrumb-item "><a asp-controller="Admin" asp-action="Coupons">Kuponlar</a></li>
+                    <li class="breadcrumb-item active">#@coupon.CouponId</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="x">
+                    <div class="xs" style="margin-block-end: 100px;">
+                        <div class="row">
+                            <div class="col-md-4 col-12 d-flex align-items-stretch">
+                                <div class="card shadow" style="width: 100%;">
+                                    <div class="card-header bg-gradient-danger">
+                                        <h4 class="card-title">Kupon Bilgileri</h4>
+                                    </div>
+                                    <table class="table">
+                                        <tbody>
+                                            <tr>
+                                                <th scope="row">Başlık</th>
+                                                <td>:</td>
+                                                <td>@coupon.Name</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Tip</th>
+                                                <td>:</td>
+                                                <td>
+                                                    @if (coupon.Type == "1")
+                                                    {
+                                                        <span class="badge badge-success">Normal</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="badge badge-danger">Yüzde</span>
+                                                    }
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Oran</th>
+                                                <td>:</td>
+                                                <td>
+                                                    @if (coupon.Type == "1")
+                                                    {
+                                                        <span>- @coupon.DiscountAmount ₺ İndirim</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span>%@coupon.DiscountAmount İndirim</span>
+                                                    }
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Son Kullanım Tarihi</th>
+                                                <td>:</td>
+                                                <td>@coupon.ValidityDate</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Tek Kullanımlık</th>
+                                                <td>:</td>
+                                                <td>
+                                                    @if (coupon.SingleUse == true)
+                                                    {
+                                                        <span class="badge badge-success">Tek Kullanımlık</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="badge badge-danger">Birden Fazla Kullanım</span>
+                                                    }
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Durum</th>
+                                                <td>:</td>
+                                                <td>
+                                                    @if (coupon.Status == true)
+                                                    {
+                                                        <span class="badge badge-success">Aktif</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="badge badge-danger">Pasif</span>
+                                                    }
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col-md-8 col-12 d-flex align-items-stretch">
+                                <div class="card shadow" style="width: 100%;">
+                                    <div class="card-header bg-gradient-dark">
+                                        <h4 class="card-title">Kupon Güncelleme</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <form action="" method="post">
+                                            <div class="row">
+                                                <div class="col-12 col-md-4" style="margin-block-end: 10px;">
+                                                    <label>Başlık</label>
+                                                    <input type="text" class="form-control" name="Name" value="@coupon.Name">
+                                                </div>
+
+                                                <div class="col-12 col-md-4" style="margin-block-end: 10px;">
+                                                    <label>Kupon Kodu</label>
+                                                    <input type="text" class="form-control" name="CouponCode" value="@coupon.CouponCode">
+                                                </div>
+
+                                                <div class="col-12 col-md-4" style="margin-block-end: 10px;">
+                                                    <label>Son Kullanım Tarihi</label>
+                                                    <input type="text" class="form-control" name="ValidityDate" value="@coupon.ValidityDate">
+                                                </div>
+
+                                                <div class="col-12 col-md-3" style="margin-block-end: 10px;">
+                                                    <label>Tip</label>
+                                                    <select name="Type" class="form-control">
+                                                        @if (coupon.Type == "1")
+                                                        {
+                                                            <option value="1" selected>Normal</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="1">Normal</option>
+                                                        }
+
+                                                        @if (coupon.Type == "2")
+                                                        {
+                                                            <option value="2" selected>Yüzde</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="2">Yüzde</option>
+                                                        }
+                                                    </select>
+                                                </div>
+
+                                                <div class="col-12 col-md-3" style="margin-block-end: 10px;">
+                                                    <label>İndirim Miktarı</label>
+                                                    <input type="number" class="form-control" name="DiscountAmount" value="@coupon.DiscountAmount">
+                                                </div>
+
+                                                <div class="col-12 col-md-3" style="margin-block-end: 10px;">
+                                                    <label>Tek Kullanım</label>
+                                                    <select name="SingleUse" class="form-control">
+                                                        @if (coupon.SingleUse == true)
+                                                        {
+                                                            <option value="true" selected>Aktif</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="true">Aktif</option>
+                                                        }
+
+                                                        @if (coupon.SingleUse == false)
+                                                        {
+                                                            <option value="false" selected>Pasif</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="false">Pasif</option>
+                                                        }
+                                                    </select>
+                                                </div>
+
+                                                <div class="col-12 col-md-3" style="margin-block-end: 10px;">
+                                                    <label>Durum</label>
+                                                    <select name="Status" class="form-control">
+                                                        @if (coupon.Status == false)
+                                                        {
+                                                            <option value="false" selected>Pasif</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="false">Pasif</option>
+                                                        }
+
+                                                        @if (coupon.Status == true)
+                                                        {
+                                                            <option value="true" selected>Aktif</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="true">Aktif</option>
+                                                        }
+                                                    </select>
+                                                </div>
+
+                                                <div class="col-12">
+                                                    <button type="submit" class="btn btn-success mt-4 btn-block" style="background-color: #061b3d;"> Güncelle</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-header bg-gradient-primary">
+                                        <h3 class="card-title">Kupon Kullanım Geçmişi</h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <table id="example3" class="table table-bordered table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Kullanıcı</th>
+                                                    <th>Sipariş</th>
+                                                    <th>Durum</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var cHistory in couponHistory)
+                                                {
+                                                    <tr>
+                                                        <td>
+                                                            <h6>@cHistory.CouponHistoryId</h6>
+                                                        </td>
+                                                        <td>
+                                                            <h6>
+                                                                <a href="/Admin/User/@cHistory.UserId">@cHistory.User.NameSurname</a>
+                                                            </h6>
+                                                        </td>
+                                                        <td>
+                                                            <h6>
+                                                                <a href="/Admin/Order/@cHistory.OrderId">#@cHistory.OrderId Numaralı Sipariş</a>
+                                                            </h6>
+                                                        </td>
+                                                        <td>
+                                                            @if (cHistory.Status == true)
+                                                            {
+                                                                <span class="badge badge-success">Kullanılmamış</span>
+                                                            }
+                                                            else
+                                                            {
+                                                                <span class="badge badge-danger">Kullanılmış</span>
+                                                            }
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

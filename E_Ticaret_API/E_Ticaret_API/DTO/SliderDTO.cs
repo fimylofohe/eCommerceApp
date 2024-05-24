@@ -9,5 +9,6 @@
         public string? ButtonTitle { get; set; }
         public string? ButtonUrl { get; set; }
         public string? BackgroundImg { get; set; }
+        public bool Status { get; set; }
     }
 }

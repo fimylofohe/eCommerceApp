@@ -1391,6 +1391,146 @@ namespace E_Ticaret_API.Controllers
             return Unauthorized();
         }
 
+        [HttpGet("Sliders")]
+        public async Task<IActionResult> GetSliders()
+        {
+            if (await CheckAdmin() == true)
+            {
+                var sliders = await _context.Slider
+                    .OrderBy(p => p.SliderId)
+                    .Select(p => new SliderDTO
+                    {
+                        SliderId = p.SliderId,
+                        Title = p.Title,
+                        SubTitle = p.SubTitle,
+                        Description = p.Description,
+                        ButtonTitle = p.ButtonTitle,
+                        ButtonUrl = p.ButtonUrl,
+                        BackgroundImg = p.BackgroundImg,
+                        Status = p.Status
+                    })
+                    .ToListAsync();
+
+                return Ok(sliders);
+            }
+
+            return Unauthorized();
+        }
+
+        [HttpGet("Slider/{id}")]
+        public async Task<IActionResult> GetSlider(int id)
+        {
+            if (await CheckAdmin() == true)
+            {
+                var slider = await _context.Slider
+                    .OrderBy(p => p.SliderId)
+                    .Where(p => p.SliderId == id)
+                    .Select(p => new SliderDTO
+                    {
+                        SliderId = p.SliderId,
+                        Title = p.Title,
+                        SubTitle = p.SubTitle,
+                        Description = p.Description,
+                        ButtonTitle = p.ButtonTitle,
+                        ButtonUrl = p.ButtonUrl,
+                        BackgroundImg = p.BackgroundImg,
+                        Status = p.Status
+                    })
+                    .FirstOrDefaultAsync();
+
+                return Ok(slider);
+            }
+
+            return Unauthorized();
+        }
+
+        [HttpPut("Slider/{id}")]
+        public async Task<IActionResult> SetSlider(SliderModel Form, int id = 0)
+        {
+            if (await CheckAdmin() == true)
+            {
+                var sliderItem = await _context.Slider.FirstOrDefaultAsync(c => c.SliderId == id);
+
+                if (sliderItem == null)
+                {
+                    return NotFound();
+                }
+
+                if (Form.BackgroundImg == null)
+                {
+                    sliderItem.Title = Form.Title;
+                    sliderItem.SubTitle = Form.SubTitle;
+                    sliderItem.Description = Form.Description;
+                    sliderItem.ButtonTitle = Form.ButtonTitle;
+                    sliderItem.ButtonUrl = Form.ButtonUrl;
+                    sliderItem.Status = Form.Status;
+                }
+                else
+                {
+                    sliderItem.Title = Form.Title;
+                    sliderItem.SubTitle = Form.SubTitle;
+                    sliderItem.Description = Form.Description;
+                    sliderItem.ButtonTitle = Form.ButtonTitle;
+                    sliderItem.ButtonUrl = Form.ButtonUrl;
+                    sliderItem.Status = Form.Status;
+                    sliderItem.BackgroundImg = Form.BackgroundImg;
+                }
+
+                _context.Slider.Update(sliderItem);
+                await _context.SaveChangesAsync();
+
+                return Ok(new { status = true, msg = "Slider Bilgileri Güncellendi" + "<meta http-equiv='refresh' content='2;'>" });
+            }
+
+            return Unauthorized();
+        }
+
+        [HttpPost("Slider")]
+        public async Task<IActionResult> AddSlider(SliderModel Form)
+        {
+            if (await CheckAdmin() == true)
+            {
+                var sliderItem = new Slider
+                {
+                    Title = Form.Title,
+                    SubTitle = Form.SubTitle,
+                    Description = Form.Description,
+                    ButtonTitle = Form.ButtonTitle,
+                    ButtonUrl = Form.ButtonUrl,
+                    Status = Form.Status,
+                    BackgroundImg = Form.BackgroundImg,
+                };
+
+                _context.Slider.Add(sliderItem);
+                await _context.SaveChangesAsync();
+
+                return Json(new { status = true, msg = "Slider Eklendi" + "<meta http-equiv='refresh' content='2;URL=/Admin/Sliders'>" });
+            }
+
+            return Unauthorized();
+        }
+
+        [HttpDelete("Slider/{id}")]
+        public async Task<IActionResult> DeleteSlider(int id)
+        {
+            if (await CheckAdmin() == true)
+            {
+                var sliderItem = await _context.Slider.FirstOrDefaultAsync(c => c.SliderId == id);
+
+                if (sliderItem == null)
+                {
+                    return NotFound();
+                }
+
+                _context.Slider.Remove(sliderItem);
+                await _context.SaveChangesAsync();
+
+                return Ok(new { status = true, msg = "Slider Silindi." + "<meta http-equiv='refresh' content='1;'>" });
+            }
+
+            return Unauthorized();
+        }
+
         private User ValidateToken(string token)
         {
             var tokenHandler = new JwtSecurityTokenHandler();

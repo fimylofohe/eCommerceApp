@@ -1,17 +1,17 @@
 ﻿@{
     ViewData["Title"] = "Admin Panel";
-    var comments = ViewBag.Comments;
+    var sliders = ViewBag.Sliders;
 }
 <div class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1 class="m-0">Yorumlar</h1>
+                <h1 class="m-0">Slider</h1>
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item "><a asp-controller="Admin" asp-action="Index">Panel</a></li>
-                    <li class="breadcrumb-item active">Yorumlar</li>
+                    <li class="breadcrumb-item active">Slider</li>
                 </ol>
             </div>
         </div>
@@ -24,57 +24,52 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header bg-gradient-info">
-                        <h3 class="card-title">Yorumlar</h3>
+                        <h3 class="card-title">Slider</h3>
+                        <a class="btn btn-light" href="/Admin/Slider/Add" style="float: right;">Slider Ekle</a>
                     </div>
                     <div class="card-body">
                         <table id="example1" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Ürün</th>
-                                    <th>Kullanıcı</th>
-                                    <th>Yayınlanma Tarihi</th>
+                                    <th>Görsel</th>
+                                    <th>Başlık</th>
+                                    <th>Alt Başlık</th>
                                     <th>Durum</th>
                                     <th></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var comment in comments)
+                                @foreach (var slider in sliders)
                                 {
                                     <tr>
                                         <td>
-                                            @comment.CommentId
+                                            @slider.SliderId
                                         </td>
                                         <td>
-                                            <a href="/Admin/Products/@comment.ProductId">
-                                                @if (comment.Product.Pictures != null && comment.Product.Pictures.Count > 0)
-                                                {
-                                                    <img src="/img/@comment.Product.Pictures[0].Path" style="width: 40px;" />
-                                                }
-                                                @comment.Product.Name
-                                            </a>
+                                            <img src="/img/@slider.BackgroundImg" style="width: 100px;" />
                                         </td>
                                         <td>
-                                            <a href="/Admin/User/@comment.UserId">@comment.User.NameSurname</a>
+                                            @slider.Title
                                         </td>
                                         <td>
-                                            @comment.PublishedDate
+                                            @slider.SubTitle
                                         </td>
                                         <td>
-                                            @if (comment.Status == true)
-                                            {
-                                                <span class="badge badge-success">Aktif</span>
-                                            }
-                                            else
+                                            @if (slider.Status == false)
                                             {
                                                 <span class="badge badge-danger">Pasif</span>
                                             }
+                                            else
+                                            {
+                                                <span class="badge badge-success">Aktif</span>
+                                            }
                                         </td>
                                         <td style="display: flex;">
-                                            <a href="/Admin/Comment/@comment.CommentId" class="btn btn-info">
+                                            <a href="/Admin/Slider/@slider.SliderId" class="btn btn-info">
                                                 <i class="fas fa-eye"></i>
                                             </a>
-                                            <a href="/Admin/Comment/@comment.CommentId" class="btn btn-danger delete_btn">
+                                            <a href="/Admin/Slider/@slider.SliderId" class="btn btn-danger delete_btn">
                                                 <i class="fas fa-trash"></i>
                                             </a>
                                         </td>
@@ -84,9 +79,9 @@
                             <tfoot>
                                 <tr>
                                     <th>#</th>
-                                    <th>Ürün</th>
-                                    <th>Kullanıcı</th>
-                                    <th>Yayınlanma Tarihi</th>
+                                    <th>Görsel</th>
+                                    <th>Başlık</th>
+                                    <th>Alt Başlık</th>
                                     <th>Durum</th>
                                     <th></th>
                                 </tr>

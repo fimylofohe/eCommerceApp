@@ -778,7 +778,7 @@ namespace E_Ticaret.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        [HttpGet("Admin/CommentDelete/{id}")]
+        [HttpGet("Admin/Comment/{id}")]
         public async Task<IActionResult> DeleteComment(int id)
         {
             if (await CheckAdmin() == true)
@@ -857,7 +857,7 @@ namespace E_Ticaret.Controllers
                 string api_url = settings.api_url;
 
                 var coupon = new Coupon();
-                var couponHistory = new List<CouponHistory>();
+                var couponHistory = new List<CouponHistory>(); 
 
                 using (var httpClient = new HttpClient())
                 {
@@ -944,6 +944,267 @@ namespace E_Ticaret.Controllers
                     using (var response = await httpClient.DeleteAsync(api_url + "/Api/Admin/Cart/" + id))
                     {
                         var apiResponse = await response.Content.ReadAsStringAsync();
+                        var api_data = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
+
+                        return Json(new { status = api_data.Status, msg = api_data.Msg });
+                    }
+                }
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet("Admin/Sliders")]
+        public async Task<IActionResult> Sliders()
+        {
+            if (await CheckAdmin() == true)
+            {
+                dynamic settings = await Tools.SettingAsync();
+                ViewBag.Setting = settings;
+                string site_url = await Tools.GetUrl(HttpContext);
+                ViewBag.SiteUrl = site_url;
+                string api_url = settings.api_url;
+
+                var sliders = new List<Slider>();
+
+                using (var httpClient = new HttpClient())
+                {
+                    string token = Request.Cookies["token"];
+                    if (!string.IsNullOrEmpty(token))
+                    {
+                        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                    }
+
+                    using (var response = await httpClient.GetAsync(api_url + "/Api/Admin/Sliders"))
+                    {
+                        string apiResponse = await response.Content.ReadAsStringAsync();
+                        sliders = JsonSerializer.Deserialize<List<Slider>>(apiResponse);
+                    }
+                }
+
+                ViewBag.Sliders = sliders;
+                return View("Sliders");
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet("Admin/Slider/Add")]
+        public async Task<IActionResult> AddSlider()
+        {
+            if (await CheckAdmin() == true)
+            {
+                return View("SliderAdd");
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpPost("Admin/Slider/Add")]
+        public async Task<IActionResult> AddSliderc(IFormFile BackgroundImg, SliderModel Form)
+        {
+            if (await CheckAdmin() == true)
+            {
+                dynamic settings = await Tools.SettingAsync();
+                ViewBag.Setting = settings;
+                string site_url = await Tools.GetUrl(HttpContext);
+                ViewBag.SiteUrl = site_url;
+                string api_url = settings.api_url;
+
+                if (BackgroundImg != null)
+                {
+                    var extent = Path.GetExtension(BackgroundImg.FileName);
+                    var randomName = ($"{Guid.NewGuid()}{extent}");
+                    var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\img", randomName);
+
+                    using (var stream = new FileStream(path, FileMode.Create))
+                    {
+                        await BackgroundImg.CopyToAsync(stream);
+                    }
+
+                    Form.BackgroundImg = randomName;
+
+                    var jsonModel = JsonSerializer.Serialize(Form);
+
+                    var httpContent = new StringContent(jsonModel, Encoding.UTF8, "application/json");
+
+                    using (var httpClient = new HttpClient())
+                    {
+                        string token = Request.Cookies["token"];
+                        if (!string.IsNullOrEmpty(token))
+                        {
+                            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                        }
+
+                        using (var response = await httpClient.PostAsync(api_url + "/Api/Admin/Slider/", httpContent))
+                        {
+                            string apiResponse = await response.Content.ReadAsStringAsync();
+                            var api_data = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
+
+                            return Json(new { status = api_data.Status, msg = api_data.Msg });
+                        }
+                    }
+                }
+                else
+                {
+                    Form.BackgroundImg = "default-slider.jpg";
+
+                    var jsonModel = JsonSerializer.Serialize(Form);
+
+                    var httpContent = new StringContent(jsonModel, Encoding.UTF8, "application/json");
+
+                    using (var httpClient = new HttpClient())
+                    {
+                        string token = Request.Cookies["token"];
+                        if (!string.IsNullOrEmpty(token))
+                        {
+                            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                        }
+
+                        using (var response = await httpClient.PostAsync(api_url + "/Api/Admin/Slider/", httpContent))
+                        {
+                            string apiResponse = await response.Content.ReadAsStringAsync();
+                            var api_data = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
+
+                            return Json(new { status = api_data.Status, msg = api_data.Msg });
+                        }
+                    }
+                }
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet("Admin/Slider/{id}")]
+        public async Task<IActionResult> GetSlider(int id)
+        {
+            if (await CheckAdmin() == true)
+            {
+                dynamic settings = await Tools.SettingAsync();
+                ViewBag.Setting = settings;
+                string site_url = await Tools.GetUrl(HttpContext);
+                ViewBag.SiteUrl = site_url;
+                string api_url = settings.api_url;
+
+                var slider = new Slider();
+
+                using (var httpClient = new HttpClient())
+                {
+                    string token = Request.Cookies["token"];
+                    if (!string.IsNullOrEmpty(token))
+                    {
+                        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                    }
+
+                    using (var response = await httpClient.GetAsync(api_url + "/Api/Admin/Slider/" + id))
+                    {
+                        string apiResponse = await response.Content.ReadAsStringAsync();
+                        slider = JsonSerializer.Deserialize<Slider>(apiResponse);
+                    }
+                }
+
+                ViewBag.Slider = slider;
+                return View("Slider");
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpPost("Admin/Slider/{id}")]
+        public async Task<IActionResult> SetSlider(IFormFile BackgroundImg, SliderModel Form, int id = 0)
+        {
+            if (await CheckAdmin() == true)
+            {
+                dynamic settings = await Tools.SettingAsync();
+                ViewBag.Setting = settings;
+                string site_url = await Tools.GetUrl(HttpContext);
+                ViewBag.SiteUrl = site_url;
+                string api_url = settings.api_url;
+
+                if (BackgroundImg != null)
+                {
+                    var extent = Path.GetExtension(BackgroundImg.FileName);
+                    var randomName = ($"{Guid.NewGuid()}{extent}");
+                    var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\img", randomName);
+
+                    using (var stream = new FileStream(path, FileMode.Create))
+                    {
+                        await BackgroundImg.CopyToAsync(stream);
+                    }
+
+                    Form.BackgroundImg = randomName;
+
+                    var jsonModel = JsonSerializer.Serialize(Form);
+
+                    var httpContent = new StringContent(jsonModel, Encoding.UTF8, "application/json");
+
+                    using (var httpClient = new HttpClient())
+                    {
+                        string token = Request.Cookies["token"];
+                        if (!string.IsNullOrEmpty(token))
+                        {
+                            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                        }
+
+                        using (var response = await httpClient.PutAsync(api_url + "/Api/Admin/Slider/" + id, httpContent))
+                        {
+                            string apiResponse = await response.Content.ReadAsStringAsync();
+                            var api_data = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
+
+                            return Json(new { status = api_data.Status, msg = api_data.Msg });
+                        }
+                    }
+                }
+                else
+                {
+                    var jsonModel = JsonSerializer.Serialize(Form);
+
+                    var httpContent = new StringContent(jsonModel, Encoding.UTF8, "application/json");
+
+                    using (var httpClient = new HttpClient())
+                    {
+                        string token = Request.Cookies["token"];
+                        if (!string.IsNullOrEmpty(token))
+                        {
+                            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                        }
+
+                        using (var response = await httpClient.PutAsync(api_url + "/Api/Admin/Slider/" + id, httpContent))
+                        {
+                            string apiResponse = await response.Content.ReadAsStringAsync();
+                            var api_data = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
+
+                            return Json(new { status = api_data.Status, msg = api_data.Msg });
+                        }
+                    }
+                }
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpDelete("Admin/Slider/{id}")]
+        public async Task<IActionResult> DeleteSlider(int id)
+        {
+            if (await CheckAdmin() == true)
+            {
+                dynamic settings = await Tools.SettingAsync();
+                ViewBag.Setting = settings;
+                string site_url = await Tools.GetUrl(HttpContext);
+                ViewBag.SiteUrl = site_url;
+                string api_url = settings.api_url;
+
+                using (var httpClient = new HttpClient())
+                {
+                    string token = Request.Cookies["token"];
+                    if (!string.IsNullOrEmpty(token))
+                    {
+                        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                    }
+
+                    using (var response = await httpClient.DeleteAsync(api_url + "/Api/Admin/Slider/" + id))
+                    {
+                        string apiResponse = await response.Content.ReadAsStringAsync();
                         var api_data = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
 
                         return Json(new { status = api_data.Status, msg = api_data.Msg });

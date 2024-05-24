@@ -24,5 +24,8 @@ namespace E_Ticaret.DTO
 
         [JsonPropertyName("backgroundImg")]
         public string? BackgroundImg { get; set; }
+
+        [JsonPropertyName("status")]
+        public bool Status { get; set; }
     }
 }

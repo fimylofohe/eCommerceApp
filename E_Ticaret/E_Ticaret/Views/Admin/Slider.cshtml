@@ -1,0 +1,176 @@
+﻿@{
+    @model E_Ticaret.Models.SliderModel
+
+    ViewData["Title"] = "E-Ticaret Slider";
+
+    var slider = ViewBag.Slider;
+}
+
+<style>
+    .dflex {
+        display: flex;
+    }
+</style>
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Slider Detayları</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item "><a asp-controller="Admin" asp-action="Index">Panel</a></li>
+                    <li class="breadcrumb-item "><a asp-controller="Admin" asp-action="Sliders">Slider</a></li>
+                    <li class="breadcrumb-item active">#@slider.SliderId</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="x">
+                    <div class="xs" style="margin-block-end: 100px;">
+                        <div class="row">
+                            <div class="col-md-4 col-12">
+                                <div class="card shadow" style="width: 100%;">
+                                    <div class="card-header bg-gradient-danger">
+                                        <h4 class="card-title">Slider Bilgileri</h4>
+                                    </div>
+                                    <table class="table">
+                                        <tbody>
+                                            <tr>
+                                                <th scope="row">Slider Görseli</th>
+                                                <td>:</td>
+                                                <td><img src="/img/@slider.BackgroundImg" style="width: 100%;" /></td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Başlık</th>
+                                                <td>:</td>
+                                                <td>@slider.Title</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Alt Başlık</th>
+                                                <td>:</td>
+                                                <td>@slider.SubTitle</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Açıklama</th>
+                                                <td>:</td>
+                                                <td>@slider.Description</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Buton Başlığı</th>
+                                                <td>:</td>
+                                                <td>@slider.ButtonTitle</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Buton Url</th>
+                                                <td>:</td>
+                                                <td><a href="@slider.ButtonUrl">@slider.ButtonUrl</a></td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Durum</th>
+                                                <td>:</td>
+                                                <td>
+                                                    @if (slider.Status == true)
+                                                    {
+                                                        <span class="badge badge-success">Aktif</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="badge badge-danger">Pasif</span>
+                                                    }
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col-md-8 col-12">
+                                <div class="card shadow" style="width: 100%;">
+                                    <div class="card-header bg-gradient-dark">
+                                        <h4 class="card-title">Slider Güncelleme</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <form action="" method="post" class="form_send">
+                                            <div class="row">
+                                                
+                                                <div class="col-12 col-md-4" style="margin-block-end: 10px;">
+                                                    <label for="BackgroundImg">
+                                                        <img src="/img/@slider.BackgroundImg" style="width: 100%;" id="BackgroundImgFile" />
+                                                    </label>
+                                                    <input name="BackgroundImg" id="BackgroundImg" type="file" class="form-control">
+                                                </div>
+
+                                                <div class="col-12 col-md-8">
+                                                    <div class="row">
+                                                        <div class="col-12 col-md-4" style="margin-block-end: 10px;">
+                                                            <label asp-for="Title"></label>
+                                                            <input asp-for="Title" class="form-control" value="@slider.Title">
+                                                        </div>
+
+                                                        <div class="col-12 col-md-4" style="margin-block-end: 10px;">
+                                                            <label asp-for="SubTitle"></label>
+                                                            <input asp-for="SubTitle" class="form-control" value="@slider.SubTitle">
+                                                        </div>
+
+                                                        <div class="col-12 col-md-4" style="margin-block-end: 10px;">
+                                                            <label asp-for="Description"></label>
+                                                            <input asp-for="Description" class="form-control" value="@slider.Description">
+                                                        </div>
+
+                                                        <div class="col-12 col-md-4" style="margin-block-end: 10px;">
+                                                            <label asp-for="ButtonTitle"></label>
+                                                            <input asp-for="ButtonTitle" class="form-control" value="@slider.ButtonTitle">
+                                                        </div>
+
+                                                        <div class="col-12 col-md-4" style="margin-block-end: 10px;">
+                                                            <label asp-for="ButtonUrl"></label>
+                                                            <input asp-for="ButtonUrl" class="form-control" value="@slider.ButtonUrl">
+                                                        </div>
+
+                                                        <div class="col-12 col-md-4" style="margin-block-end: 10px;">
+                                                            <label asp-for="Status">Durum</label>
+                                                            <select asp-for="Status" class="form-control">
+                                                                @if (slider.Status == false)
+                                                                {
+                                                                    <option value="false" selected>Pasif</option>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <option value="false">Pasif</option>
+                                                                }
+
+                                                                @if (slider.Status == true)
+                                                                {
+                                                                    <option value="true" selected>Aktif</option>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <option value="true">Aktif</option>
+                                                                }
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-12">
+                                                    <button type="submit" class="btn btn-success mt-4 btn-block" style="background-color: #061b3d;"> Güncelle</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

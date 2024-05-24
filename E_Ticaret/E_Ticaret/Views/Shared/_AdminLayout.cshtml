@@ -10,7 +10,7 @@
     <title>@ViewData["Title"] - E_Ticaret</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.6.10/sweetalert2.css" integrity="sha512-JzSVRb7c802/njMbV97pjo1wuJAE/6v9CvthGTDxiaZij/TFpPQmQPTcdXyUVucsvLtJBT6YwRb5LhVxX3pQHQ==" crossorigin="anonymous" referrerpolicy="no-referrer">
-    <link href="https://cdn.jsdelivr.net/gh/eliyantosarage/font-awesome-pro@main/fontawesome-pro-6.5.2-web/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/fontawesome/css/all.css" rel="stylesheet">
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" />
     <link rel="stylesheet" href="~/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css" />
     <link rel="stylesheet" href="~/plugins/icheck-bootstrap/icheck-bootstrap.min.css" />
@@ -91,6 +91,56 @@
             return number.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
         }
 
+        $(".form_send").submit(function (e) {
+            var form = $(this);
+            var formData = new FormData(form[0]);
+
+            var form_btn = form.find('button');
+            form_btn.attr('disabled', true);
+
+            Swal.fire("İşlem Gerçekleştiriliyor!", "", "warning");
+
+            e.preventDefault();
+
+            if (localStorage.getItem("token")) {
+                const token = JSON.parse(localStorage.getItem("token"));
+
+                $.ajax({
+                    url: $(this).attr("action"),
+                    method: "POST",
+                    dataType: "JSON",
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        viewStatus(data.status, data.msg);
+                        form_btn.attr('disabled', false);
+                    },
+                    error: function (xhr, status, error) {
+                        viewStatus(false, "Sunucu Hatası");
+                        form_btn.attr('disabled', false);
+                    }
+                });
+            } else {
+                $.ajax({
+                    url: $(this).attr("action"),
+                    method: "POST",
+                    dataType: "JSON",
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        viewStatus(data.status, data.msg);
+                        form_btn.attr('disabled', false);
+                    },
+                    error: function (xhr, status, error) {
+                        viewStatus(false, "Sunucu Hatası");
+                        form_btn.attr('disabled', false);
+                    }
+                });
+            }
+        });
+
         $("form").submit(function (e) {
             var form = $(this);
             var formData = new FormData(form[0]);
@@ -124,8 +174,7 @@
                 }
             });
         });
-    </script>
-    <script>
+
         $(document).on('click', '.delete_btn', function (e) {
             e.preventDefault();
             Swal.fire({
@@ -141,6 +190,7 @@
                     Swal.fire("İşlem Gerçekleştiriliyor!", "", "warning");
                     $.ajax({
                         url: $(this).attr("href"),
+                        method: "DELETE",
                         success: function () {
                             Swal.fire("Başarıyla Silindi!", "", "success");
 
@@ -150,7 +200,8 @@
                 }
             })
         });
-
+    </script>
+    <script>
         function DeleteImage(id, product_id) {
             Swal.fire({
                 title: 'Silmek Emin misiniz ?',
@@ -195,6 +246,17 @@
         }
 
         @Html.Raw(ViewBag.Script)
+
+        document.getElementById('BackgroundImg').addEventListener('change', function (event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById('BackgroundImgFile').src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        });
     </script>
     <script>
         $(function () {

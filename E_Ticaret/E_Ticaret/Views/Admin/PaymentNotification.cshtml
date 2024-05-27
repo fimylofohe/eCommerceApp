@@ -1,0 +1,204 @@
+﻿@{
+    ViewData["Title"] = "E-Ticaret Kullanıcı";
+
+    var paymentNotification = ViewBag.PaymentNotification;
+
+    var order = paymentNotification.Order;
+}
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Ödeme Bildirimleri</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item "><a asp-controller="Admin" asp-action="Index">Panel</a></li>
+                    <li class="breadcrumb-item "><a asp-controller="Admin" asp-action="PaymentNotifications">Ödeme Bildirimleri</a></li>
+                    <li class="breadcrumb-item active">#@paymentNotification.PaymentId</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="x">
+                    <div class="xs" style="margin-block-end: 100px;">
+                        <div class="row">
+                            <div class="col-12 col-md-4">
+                                <div class="card-header bg-gradient-danger">
+                                    <h4 class="card-title">Sipariş Bilgileri</h4>
+                                </div>
+                                <table class="table shadow">
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row">Sipariş</th>
+                                            <td>:</td>
+                                            <td><a href="/Admin/User/@order.UserId">@order.User.NameSurname</a></td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Sipariş Durumu</th>
+                                            <td>:</td>
+                                            @if (order.OrderStatus == 0)
+                                            {
+                                                <td style="color: #061b3d;"><b>Onay Bekliyor</b></td>
+                                            }
+                                            else if (order.OrderStatus == 1)
+                                            {
+                                                <td style="color: #009d45;"><b>Onaylandı</b></td>
+                                            }
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Sipariş Tarihi</th>
+                                            <td>:</td>
+                                            <td>@order.OrderDate</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Ödeme Yöntemi</th>
+                                            <td>:</td>
+                                            <td>
+                                                @if (order.OrderPay == 1)
+                                                {
+                                                    <span>Kredi Kartı</span>
+                                                }
+                                                else if (order.OrderPay == 2)
+                                                {
+                                                    <span>Havale / EFT</span>
+                                                }
+                                                else
+                                                {
+                                                    <span>Nakit</span>
+                                                }
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Ödeme Tutarı</th>
+                                            <td>:</td>
+                                            <td>@(Double.Parse(order.Amount.ToString()).ToString("N2")) ₺</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Ödeme Durumu</th>
+                                            <td>:</td>
+                                            <td>
+                                                @if (order.OrderStatus == 0)
+                                                {
+                                                    <label class="font-weight-bold" style="color: red">Ödeme Bekleniyor</label>
+                                                }
+                                                else
+                                                {
+                                                    <label class="font-weight-bold" style="color: #009d45">Ödeme Yapıldı</label>
+                                                }
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="col-12 col-md-4">
+                                <div class="card-header bg-gradient-info">
+                                    <h4 class="card-title">Ödeme Bildirimi Bilgileri</h4>
+                                </div>
+                                <table class="table shadow">
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row">İsim Soyisim</th>
+                                            <td>:</td>
+                                            <td>@paymentNotification.NameSurname</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Ödeme Notu</th>
+                                            <td>:</td>
+                                            <td>@paymentNotification.PayNote</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Ödeme Tarihi</th>
+                                            <td>:</td>
+                                            <td>@paymentNotification.PayDate</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Dekont</th>
+                                            <td>:</td>
+                                            <td><button class="btn btn-info" onclick="window.open('/files/@paymentNotification.Receipt')">Dekont İndir</button></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="col-12 col-md-4">
+                                <div class="card-header bg-gradient-success">
+                                    <h4 class="card-title">Ödeme Bildirimi Güncelle</h4>
+                                </div>
+                                <table class="table shadow">
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row">#</th>
+                                            <td>:</td>
+                                            <td>#@paymentNotification.PaymentId</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Banka Adı</th>
+                                            <td>:</td>
+                                            <td>@paymentNotification.Bank.Name</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Ödenen Tutar</th>
+                                            <td>:</td>
+                                            <td><b> @(Double.Parse(paymentNotification.TotalAmount.ToString()).ToString("N2")) ₺</b></td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Ödeme Durumu</th>
+                                            <td>:</td>
+                                            <td>
+                                                @if (paymentNotification.Status == false)
+                                                {
+                                                    <b>Onay Bekliyor</b>
+                                                }
+                                                else if (paymentNotification.Status == true)
+                                                {
+                                                    <b>Onaylandı</b>
+                                                }
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">İşlem</th>
+                                            <td>:</td>
+                                            <td>
+                                                <form action="" method="post">
+                                                    <select class="form-control" name="Status" required="" onchange="document.getElementById('submitButton').click();">
+                                                        @if (paymentNotification.Status == false)
+                                                        {
+                                                            <option value="false" selected>Pasif</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="false">Pasif</option>
+                                                        }
+
+                                                        @if (paymentNotification.Status == true)
+                                                        {
+                                                            <option value="true" selected>Aktif</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="true">Aktif</option>
+                                                        }
+                                                    </select>
+                                                    <button type="submit" class="btn btn-success btn-block" style="margin-top: 10px; display: none;" id="submitButton">Güncelle</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

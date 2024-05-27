@@ -10,6 +10,9 @@ namespace E_Ticaret.DTO
         [JsonPropertyName("orderId")]
         public int? OrderId { get; set; }
 
+        [JsonPropertyName("order")]
+        public Orders Order { get; set; } = null!;
+
         [JsonPropertyName("bankId")]
         public int? BankId { get; set; }
 

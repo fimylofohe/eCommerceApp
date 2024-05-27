@@ -1036,7 +1036,7 @@ namespace E_Ticaret.Controllers
                             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                         }
 
-                        using (var response = await httpClient.PostAsync(api_url + "/Api/Admin/Slider/", httpContent))
+                        using (var response = await httpClient.PostAsync(api_url + "/Api/Admin/Slider", httpContent))
                         {
                             string apiResponse = await response.Content.ReadAsStringAsync();
                             var api_data = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
@@ -1061,7 +1061,7 @@ namespace E_Ticaret.Controllers
                             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                         }
 
-                        using (var response = await httpClient.PostAsync(api_url + "/Api/Admin/Slider/", httpContent))
+                        using (var response = await httpClient.PostAsync(api_url + "/Api/Admin/Slider", httpContent))
                         {
                             string apiResponse = await response.Content.ReadAsStringAsync();
                             var api_data = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
@@ -1208,6 +1208,385 @@ namespace E_Ticaret.Controllers
                         var api_data = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
 
                         return Json(new { status = api_data.Status, msg = api_data.Msg });
+                    }
+                }
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet("Admin/PaymentNotifications")]
+        public async Task<IActionResult> PaymentNotifications()
+        {
+            if (await CheckAdmin() == true)
+            {
+                dynamic settings = await Tools.SettingAsync();
+                ViewBag.Setting = settings;
+                string site_url = await Tools.GetUrl(HttpContext);
+                ViewBag.SiteUrl = site_url;
+                string api_url = settings.api_url;
+
+                var paymentNotifications = new List<PaymentNotification>();
+
+                using (var httpClient = new HttpClient())
+                {
+                    string token = Request.Cookies["token"];
+                    if (!string.IsNullOrEmpty(token))
+                    {
+                        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                    }
+
+                    using (var response = await httpClient.GetAsync(api_url + "/Api/Admin/PaymentNotifications"))
+                    {
+                        string apiResponse = await response.Content.ReadAsStringAsync();
+                        paymentNotifications = JsonSerializer.Deserialize<List<PaymentNotification>>(apiResponse);
+                    }
+                }
+
+                ViewBag.PaymentNotifications = paymentNotifications;
+                return View("PaymentNotifications");
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet("Admin/PaymentNotification/{id}")]
+        public async Task<IActionResult> GetPaymentNotification(int id)
+        {
+            if (await CheckAdmin() == true)
+            {
+                dynamic settings = await Tools.SettingAsync();
+                ViewBag.Setting = settings;
+                string site_url = await Tools.GetUrl(HttpContext);
+                ViewBag.SiteUrl = site_url;
+                string api_url = settings.api_url;
+
+                var paymentNotification = new PaymentNotification();
+
+                using (var httpClient = new HttpClient())
+                {
+                    string token = Request.Cookies["token"];
+                    if (!string.IsNullOrEmpty(token))
+                    {
+                        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                    }
+
+                    using (var response = await httpClient.GetAsync(api_url + "/Api/Admin/PaymentNotification/" + id))
+                    {
+                        string apiResponse = await response.Content.ReadAsStringAsync();
+                        paymentNotification = JsonSerializer.Deserialize<PaymentNotification>(apiResponse);
+                    }
+                }
+
+                ViewBag.PaymentNotification = paymentNotification;
+                return View("PaymentNotification");
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpPost("Admin/PaymentNotification/{id}")]
+        public async Task<IActionResult> SetPaymentNotification(StatusModel Form, int id = 0)
+        {
+            if (await CheckAdmin() == true)
+            {
+                dynamic settings = await Tools.SettingAsync();
+                ViewBag.Setting = settings;
+                string site_url = await Tools.GetUrl(HttpContext);
+                ViewBag.SiteUrl = site_url;
+                string api_url = settings.api_url;
+
+                var jsonModel = JsonSerializer.Serialize(Form);
+
+                var httpContent = new StringContent(jsonModel, Encoding.UTF8, "application/json");
+
+                using (var httpClient = new HttpClient())
+                {
+                    string token = Request.Cookies["token"];
+                    if (!string.IsNullOrEmpty(token))
+                    {
+                        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                    }
+
+                    using (var response = await httpClient.PutAsync(api_url + "/Api/Admin/PaymentNotification/" + id, httpContent))
+                    {
+                        string apiResponse = await response.Content.ReadAsStringAsync();
+                        var api_data = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
+
+                        return Json(new { status = api_data.Status, msg = api_data.Msg });
+                    }
+                }
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpDelete("Admin/PaymentNotification/{id}")]
+        public async Task<IActionResult> DeletePaymentNotification(int id)
+        {
+            if (await CheckAdmin() == true)
+            {
+                dynamic settings = await Tools.SettingAsync();
+                ViewBag.Setting = settings;
+                string site_url = await Tools.GetUrl(HttpContext);
+                ViewBag.SiteUrl = site_url;
+                string api_url = settings.api_url;
+
+                using (var httpClient = new HttpClient())
+                {
+                    string token = Request.Cookies["token"];
+                    if (!string.IsNullOrEmpty(token))
+                    {
+                        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                    }
+
+                    using (var response = await httpClient.DeleteAsync(api_url + "/Api/Admin/PaymentNotification/" + id))
+                    {
+                        string apiResponse = await response.Content.ReadAsStringAsync();
+                        var api_data = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
+
+                        return Json(new { status = api_data.Status, msg = api_data.Msg });
+                    }
+                }
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet("Admin/Banks")]
+        public async Task<IActionResult> Banks()
+        {
+            if (await CheckAdmin() == true)
+            {
+                dynamic settings = await Tools.SettingAsync();
+                ViewBag.Setting = settings;
+                string site_url = await Tools.GetUrl(HttpContext);
+                ViewBag.SiteUrl = site_url;
+                string api_url = settings.api_url;
+
+                var banks = new List<Bank>();
+
+                using (var httpClient = new HttpClient())
+                {
+                    string token = Request.Cookies["token"];
+                    if (!string.IsNullOrEmpty(token))
+                    {
+                        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                    }
+
+                    using (var response = await httpClient.GetAsync(api_url + "/Api/Admin/Banks"))
+                    {
+                        string apiResponse = await response.Content.ReadAsStringAsync();
+                        banks = JsonSerializer.Deserialize<List<Bank>>(apiResponse);
+                    }
+                }
+
+                ViewBag.Banks = banks;
+                return View("Banks");
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet("Admin/Bank/Add")]
+        public async Task<IActionResult> AddBank()
+        {
+            if (await CheckAdmin() == true)
+            {
+                return View("BankAdd");
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpPost("Admin/Bank/Add")]
+        public async Task<IActionResult> AddBank(BankModel Form)
+        {
+            if (await CheckAdmin() == true)
+            {
+                dynamic settings = await Tools.SettingAsync();
+                ViewBag.Setting = settings;
+                string site_url = await Tools.GetUrl(HttpContext);
+                ViewBag.SiteUrl = site_url;
+                string api_url = settings.api_url;
+
+                var jsonModel = JsonSerializer.Serialize(Form);
+
+                var httpContent = new StringContent(jsonModel, Encoding.UTF8, "application/json");
+
+                using (var httpClient = new HttpClient())
+                {
+                    string token = Request.Cookies["token"];
+                    if (!string.IsNullOrEmpty(token))
+                    {
+                        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                    }
+
+                    using (var response = await httpClient.PostAsync(api_url + "/Api/Admin/Bank", httpContent))
+                    {
+                        string apiResponse = await response.Content.ReadAsStringAsync();
+                        var api_data = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
+
+                        return Json(new { status = api_data.Status, msg = api_data.Msg });
+                    }
+                }
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet("Admin/Bank/{id}")]
+        public async Task<IActionResult> GetBank(int id)
+        {
+            if (await CheckAdmin() == true)
+            {
+                dynamic settings = await Tools.SettingAsync();
+                ViewBag.Setting = settings;
+                string site_url = await Tools.GetUrl(HttpContext);
+                ViewBag.SiteUrl = site_url;
+                string api_url = settings.api_url;
+
+                var bank = new Bank();
+
+                using (var httpClient = new HttpClient())
+                {
+                    string token = Request.Cookies["token"];
+                    if (!string.IsNullOrEmpty(token))
+                    {
+                        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                    }
+
+                    using (var response = await httpClient.GetAsync(api_url + "/Api/Admin/Bank/" + id))
+                    {
+                        string apiResponse = await response.Content.ReadAsStringAsync();
+                        bank = JsonSerializer.Deserialize<Bank>(apiResponse);
+                    }
+                }
+
+                ViewBag.Bank = bank;
+                return View("Bank");
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpPost("Admin/Bank/{id}")]
+        public async Task<IActionResult> SetBank(BankModel Form, int id = 0)
+        {
+            if (await CheckAdmin() == true)
+            {
+                dynamic settings = await Tools.SettingAsync();
+                ViewBag.Setting = settings;
+                string site_url = await Tools.GetUrl(HttpContext);
+                ViewBag.SiteUrl = site_url;
+                string api_url = settings.api_url;
+
+                var jsonModel = JsonSerializer.Serialize(Form);
+
+                var httpContent = new StringContent(jsonModel, Encoding.UTF8, "application/json");
+
+                using (var httpClient = new HttpClient())
+                {
+                    string token = Request.Cookies["token"];
+                    if (!string.IsNullOrEmpty(token))
+                    {
+                        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                    }
+
+                    using (var response = await httpClient.PutAsync(api_url + "/Api/Admin/Bank/" + id, httpContent))
+                    {
+                        string apiResponse = await response.Content.ReadAsStringAsync();
+                        var api_data = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
+
+                        return Json(new { status = api_data.Status, msg = api_data.Msg });
+                    }
+                }
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpDelete("Admin/Bank/{id}")]
+        public async Task<IActionResult> DeleteBank(int id)
+        {
+            if (await CheckAdmin() == true)
+            {
+                dynamic settings = await Tools.SettingAsync();
+                ViewBag.Setting = settings;
+                string site_url = await Tools.GetUrl(HttpContext);
+                ViewBag.SiteUrl = site_url;
+                string api_url = settings.api_url;
+
+                using (var httpClient = new HttpClient())
+                {
+                    string token = Request.Cookies["token"];
+                    if (!string.IsNullOrEmpty(token))
+                    {
+                        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                    }
+
+                    using (var response = await httpClient.DeleteAsync(api_url + "/Api/Admin/Bank/" + id))
+                    {
+                        string apiResponse = await response.Content.ReadAsStringAsync();
+                        var api_data = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
+
+                        return Json(new { status = api_data.Status, msg = api_data.Msg });
+                    }
+                }
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet("Admin/Settings")]
+        public async Task<IActionResult> Settings()
+        {
+            if (await CheckAdmin() == true)
+            {
+                dynamic settings = await Tools.SettingAsync();
+                ViewBag.Setting = settings;
+                string site_url = await Tools.GetUrl(HttpContext);
+                ViewBag.SiteUrl = site_url;
+                string api_url = settings.api_url;
+
+                return View("Settings");
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpPost("Admin/Settings")]
+        [Consumes("application/json")]
+        public async Task<IActionResult> SetSettings([FromForm] IFormCollection formCollection)
+        {
+            if (await CheckAdmin() == true)
+            {
+                dynamic settings = await Tools.SettingAsync();
+                ViewBag.Setting = settings;
+                string site_url = await Tools.GetUrl(HttpContext);
+                ViewBag.SiteUrl = site_url;
+                string api_url = settings.api_url;
+
+                var jsonModel = JsonSerializer.Serialize(formCollection);
+                var httpContent = new StringContent(jsonModel, Encoding.UTF8, "application/json");
+
+                return Ok(formCollection);
+
+                using (var httpClient = new HttpClient())
+                {
+                    string token = Request.Cookies["token"];
+                    if (!string.IsNullOrEmpty(token))
+                    {
+                        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                    }
+
+                    using (var response = await httpClient.PostAsync(api_url + "/Api/Admin/Settings", httpContent))
+                    {
+                        string apiResponse = await response.Content.ReadAsStringAsync();
+                        return Ok(formCollection);
+                        var apiData = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
+
+                        return Ok(new { status = apiData.Status, msg = apiData.Msg });
                     }
                 }
             }

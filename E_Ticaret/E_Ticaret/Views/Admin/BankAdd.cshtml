@@ -1,0 +1,88 @@
+﻿@{
+    @model E_Ticaret.Models.BankModel
+
+    ViewData["Title"] = "E-Ticaret Banka Hesabı Ekle";
+
+    var bank = ViewBag.Bank;
+}
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Banka Hesabı Ekle</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item "><a asp-controller="Admin" asp-action="Index">Panel</a></li>
+                    <li class="breadcrumb-item "><a asp-controller="Admin" asp-action="Banks">Banka Hesapları</a></li>
+                    <li class="breadcrumb-item active">Banka Hesabı Ekle</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="x">
+                    <div class="xs" style="margin-block-end: 100px;">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card shadow" style="width: 100%;">
+                                    <div class="card-header bg-gradient-dark">
+                                        <h4 class="card-title">Banka Hesabı Ekle</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <form action="" method="post">
+                                            <div class="row">
+                                                <div class="col-12 col-md-4" style="margin-block-end: 10px;">
+                                                    <label asp-for="Name"></label>
+                                                    <input asp-for="Name" class="form-control">
+                                                </div>
+
+                                                <div class="col-12 col-md-4" style="margin-block-end: 10px;">
+                                                    <label asp-for="AccountName"></label>
+                                                    <input asp-for="AccountName" class="form-control">
+                                                </div>
+
+                                                <div class="col-12 col-md-4" style="margin-block-end: 10px;">
+                                                    <label asp-for="AccountNo"></label>
+                                                    <input asp-for="AccountNo" class="form-control">
+                                                </div>
+
+                                                <div class="col-12 col-md-4" style="margin-block-end: 10px;">
+                                                    <label asp-for="Branch"></label>
+                                                    <input asp-for="Branch" class="form-control">
+                                                </div>
+
+                                                <div class="col-12 col-md-4" style="margin-block-end: 10px;">
+                                                    <label asp-for="IBAN"></label>
+                                                    <input asp-for="IBAN" class="form-control">
+                                                </div>
+
+                                                <div class="col-12 col-md-4" style="margin-block-end: 10px;">
+                                                    <label asp-for="Status">Durum</label>
+                                                    <select asp-for="Status" class="form-control">
+                                                        <option value="true" selected>Aktif</option>
+                                                        <option value="false">Pasif</option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="col-12">
+                                                    <button type="submit" class="btn btn-success mt-4 btn-block" style="background-color: #061b3d;"> Ekle</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

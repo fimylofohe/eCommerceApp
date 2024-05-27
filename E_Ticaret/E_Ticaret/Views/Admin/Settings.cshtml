@@ -1,0 +1,124 @@
+﻿@{
+    ViewData["Title"] = "E-Ticaret Ayarlar";
+
+    var setting = ViewBag.Setting;
+}
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Banka Hesapları</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item "><a asp-controller="Admin" asp-action="Index">Panel</a></li>
+                    <li class="breadcrumb-item active">Ayarlar</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <form action="" method="post" class="form_send">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="x">
+                        <div class="xs" style="margin-block-end: 100px;">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="card card-primary card-tabs">
+                                        <div class="card-header p-0 pt-1">
+                                            <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
+                                                <li class="nav-item">
+                                                    <a class="nav-link active" id="custom-tabs-one-setting-tab" data-toggle="pill" href="#custom-tabs-one-setting" role="tab" aria-controls="custom-tabs-one-setting" aria-selected="true">Genel Ayarlar</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link" id="custom-tabs-one-payment-tab" data-toggle="pill" href="#custom-tabs-one-payment" role="tab" aria-controls="custom-tabs-one-payment" aria-selected="false">Ödeme Ayarları</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="tab-content" id="custom-tabs-one-tabContent">
+                                        <div class="tab-pane fade show active" id="custom-tabs-one-setting" role="tabpanel" aria-labelledby="custom-tabs-one-setting-tab">
+                                            <div class="card shadow" style="width: 100%;">
+                                                <div class="card-header bg-gradient-dark">
+                                                    <h4 class="card-title">Banka Hesabı Güncelle</h4>
+                                                </div>
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="col-12 col-md-4" style="margin-block-end: 10px;">
+                                                            <label>API URL</label>
+                                                            <input class="form-control" name="api_url" value="@setting.api_url">
+                                                        </div>
+
+                                                        <div class="col-12">
+                                                            <button type="submit" class="btn btn-success mt-4 btn-block" style="background-color: #061b3d;"> Güncelle</button>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="custom-tabs-one-payment" role="tabpanel" aria-labelledby="custom-tabs-one-payment-tab">
+                                            <div class="card shadow" style="width: 100%;">
+                                                <div class="card-header bg-gradient-warning">
+                                                    <h4 class="card-title">Ödeme Ayarları</h4>
+                                                </div>
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="col-12 col-md-4" style="margin-block-end: 10px;">
+                                                            <label>İyzico API Key</label>
+                                                            <input class="form-control" name="iyzico_apikey" value="@setting.iyzico_apikey">
+                                                        </div>
+
+                                                        <div class="col-12 col-md-4" style="margin-block-end: 10px;">
+                                                            <label>İyzico Secret Key</label>
+                                                            <input class="form-control" name="iyzico_secretkey" value="@setting.iyzico_secretkey">
+                                                        </div>
+
+                                                        <div class="col-12 col-md-4" style="margin-block-end: 10px;">
+                                                            <label>İyzico Test Modu</label>
+                                                            <select class="form-control" name="iyzico_test">
+                                                                @if (setting.iyzico_test == "false")
+                                                                {
+                                                                    <option value="false" selected>Pasif</option>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <option value="false">Pasif</option>
+                                                                }
+
+                                                                @if (setting.iyzico_test == "true")
+                                                                {
+                                                                    <option value="true" selected>Aktif</option>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <option value="true">Aktif</option>
+                                                                }
+                                                            </select>
+                                                        </div>
+
+                                                        <div class="col-12">
+                                                            <button type="submit" class="btn btn-success mt-4 btn-block" style="background-color: #061b3d;"> Güncelle</button>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>

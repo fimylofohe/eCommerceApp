@@ -1531,6 +1531,480 @@ namespace E_Ticaret_API.Controllers
             return Unauthorized();
         }
 
+        [HttpGet("PaymentNotifications")]
+        public async Task<IActionResult> GetPaymentNotifications()
+        {
+            if (await CheckAdmin() == true)
+            {
+                var paymentNotifications = await _context.PaymentNotifications
+                    .OrderBy(p => p.PaymentId)
+                    .Select(p => new PaymentNotificationDTO
+                    {
+                        PaymentId = p.PaymentId,
+                        OrderId = p.OrderId,
+                        BankId = p.BankId,
+                        NameSurname = p.NameSurname,
+                        TotalAmount = p.TotalAmount,
+                        Receipt = p.Receipt,
+                        PayNote = p.PayNote,
+                        PayDate = p.PayDate,
+                        Status = p.Status,
+                        Bank = _context.Banks.Where(bank => bank.BankId == p.BankId).Select(bank => new BankDTO
+                        {
+                            BankId = bank.BankId,
+                            Name = bank.Name,
+                            AccountName = bank.AccountName,
+                            AccountNo = bank.AccountNo,
+                            Branch = bank.Branch,
+                            IBAN = bank.IBAN,
+                            Status = bank.Status
+                        }).FirstOrDefault(),
+                        Order = _context.Orders.Where(order => order.OrderId == p.OrderId).Select(order => new OrderDTO
+                        {
+                            OrderId = order.OrderId,
+                            AddressId = order.AddressId,
+                            Address = new AddressDTO
+                            {
+                                AddressId = order.Address.AddressId,
+                                AddressText = order.Address.AddressText,
+                                Province = order.Address.Province,
+                                District = order.Address.District,
+                                Country = order.Address.Country,
+                                PostalCode = order.Address.PostalCode,
+                            },
+                            UserId = order.UserId,
+                            User = new UserDTO
+                            {
+                                Name = order.User.Name,
+                                Surname = order.User.Surname,
+                                Email = order.User.Email,
+                                PhoneNumber = order.User.PhoneNumber,
+                            },
+                            OrderKey = order.OrderKey,
+                            Amount = order.Amount,
+                            CouponAmount = order.CouponAmount,
+                            TotalAmount = order.TotalAmount,
+                            CouponHistoryId = order.CouponHistoryId,
+                            CouponHistory = order.CouponHistoryId == null ? null : new CouponHistoryDTO
+                            {
+                                CouponHistoryId = order.CouponHistory.CouponHistoryId,
+                                CouponId = order.CouponHistory.CouponId,
+                                Coupon = new CouponDTO
+                                {
+                                    CouponId = order.CouponHistory.Coupon.CouponId,
+                                    Name = order.CouponHistory.Coupon.Name,
+                                    Type = order.CouponHistory.Coupon.Type,
+                                    DiscountAmount = order.CouponHistory.Coupon.DiscountAmount,
+                                    CouponCode = order.CouponHistory.Coupon.CouponCode,
+                                    ValidityDate = order.CouponHistory.Coupon.ValidityDate,
+                                },
+                            },
+                            OrderNote = order.OrderNote,
+                            OrderPay = order.OrderPay,
+                            OrderDate = order.OrderDate,
+                            OrderStatus = order.OrderStatus,
+                            Status = order.Status,
+                            Carts = order.Carts.Select(cart => new CartDTO
+                            {
+                                CartId = cart.CartId,
+                                ProductId = cart.ProductId,
+                                Quantity = cart.Quantity,
+                                Product = new ProductDTO
+                                {
+                                    ProductId = cart.Product.ProductId,
+                                    CategoryId = cart.Product.CategoryId,
+                                    SKU = cart.Product.SKU,
+                                    Name = cart.Product.Name,
+                                    Description = cart.Product.Description,
+                                    Price = cart.Product.Price,
+                                    Stock = cart.Product.Stock,
+                                    Status = cart.Product.Status,
+                                    Category = new CategoryDTO
+                                    {
+                                        CategoryId = cart.Product.Category.CategoryId,
+                                        Name = cart.Product.Category.Name,
+                                        Status = cart.Product.Category.Status
+                                    },
+                                    Pictures = cart.Product.Pictures.Where(pic => pic.ProductId == cart.ProductId).Select(pic => new PictureDTO
+                                    {
+                                        PictureId = pic.PictureId,
+                                        Path = pic.Path
+                                    }).ToList(),
+                                    Comments = cart.Product.Comments.Where(comment => comment.ProductId == cart.ProductId).Select(comment => new CommentDTO
+                                    {
+                                        CommentId = comment.CommentId
+                                    }).ToList()
+                                },
+                            }).ToList(),
+                            PaymentNotifications = order.PaymentNotifications.Where(payN => payN.OrderId == order.OrderId).Select(payN => new PaymentNotificationDTO
+                            {
+                                PaymentId = payN.PaymentId,
+                                OrderId = payN.OrderId,
+                                BankId = payN.BankId,
+                                Bank = new BankDTO
+                                {
+                                    Name = payN.Bank.Name,
+                                    AccountName = payN.Bank.AccountName,
+                                    AccountNo = payN.Bank.AccountNo,
+                                    Branch = payN.Bank.Branch,
+                                    IBAN = payN.Bank.IBAN,
+                                },
+                                NameSurname = payN.NameSurname,
+                                TotalAmount = payN.TotalAmount,
+                                Receipt = payN.Receipt,
+                                PayNote = payN.PayNote,
+                                PayDate = payN.PayDate,
+                                Status = payN.Status,
+                            }).ToList(),
+                        }).FirstOrDefault(),
+                    }).ToListAsync();
+
+                return Ok(paymentNotifications);
+            }
+
+            return Unauthorized();
+        }
+
+        [HttpGet("PaymentNotification/{id}")]
+        public async Task<IActionResult> GetPaymentNotification(int id)
+        {
+            if (await CheckAdmin() == true)
+            {
+                var paymentNotification = await _context.PaymentNotifications
+                    .OrderBy(p => p.PaymentId)
+                    .Where(p => p.PaymentId == id)
+                    .Select(p => new PaymentNotificationDTO
+                    {
+                        PaymentId = p.PaymentId,
+                        OrderId = p.OrderId,
+                        BankId = p.BankId,
+                        NameSurname = p.NameSurname,
+                        TotalAmount = p.TotalAmount,
+                        Receipt = p.Receipt,
+                        PayNote = p.PayNote,
+                        PayDate = p.PayDate,
+                        Status = p.Status,
+                        Bank = _context.Banks.Where(bank => bank.BankId == p.BankId).Select(bank => new BankDTO
+                        {
+                            BankId = bank.BankId,
+                            Name = bank.Name,
+                            AccountName = bank.AccountName,
+                            AccountNo = bank.AccountNo,
+                            Branch = bank.Branch,
+                            IBAN = bank.IBAN,
+                            Status = bank.Status
+                        }).FirstOrDefault(),
+                        Order = _context.Orders.Where(order => order.OrderId == p.OrderId).Select(order => new OrderDTO
+                        {
+                            OrderId = order.OrderId,
+                            AddressId = order.AddressId,
+                            Address = new AddressDTO
+                            {
+                                AddressId = order.Address.AddressId,
+                                AddressText = order.Address.AddressText,
+                                Province = order.Address.Province,
+                                District = order.Address.District,
+                                Country = order.Address.Country,
+                                PostalCode = order.Address.PostalCode,
+                            },
+                            UserId = order.UserId,
+                            User = new UserDTO
+                            {
+                                Name = order.User.Name,
+                                Surname = order.User.Surname,
+                                Email = order.User.Email,
+                                PhoneNumber = order.User.PhoneNumber,
+                            },
+                            OrderKey = order.OrderKey,
+                            Amount = order.Amount,
+                            CouponAmount = order.CouponAmount,
+                            TotalAmount = order.TotalAmount,
+                            CouponHistoryId = order.CouponHistoryId,
+                            CouponHistory = order.CouponHistoryId == null ? null : new CouponHistoryDTO
+                            {
+                                CouponHistoryId = order.CouponHistory.CouponHistoryId,
+                                CouponId = order.CouponHistory.CouponId,
+                                Coupon = new CouponDTO
+                                {
+                                    CouponId = order.CouponHistory.Coupon.CouponId,
+                                    Name = order.CouponHistory.Coupon.Name,
+                                    Type = order.CouponHistory.Coupon.Type,
+                                    DiscountAmount = order.CouponHistory.Coupon.DiscountAmount,
+                                    CouponCode = order.CouponHistory.Coupon.CouponCode,
+                                    ValidityDate = order.CouponHistory.Coupon.ValidityDate,
+                                },
+                            },
+                            OrderNote = order.OrderNote,
+                            OrderPay = order.OrderPay,
+                            OrderDate = order.OrderDate,
+                            OrderStatus = order.OrderStatus,
+                            Status = order.Status,
+                            Carts = order.Carts.Select(cart => new CartDTO
+                            {
+                                CartId = cart.CartId,
+                                ProductId = cart.ProductId,
+                                Quantity = cart.Quantity,
+                                Product = new ProductDTO
+                                {
+                                    ProductId = cart.Product.ProductId,
+                                    CategoryId = cart.Product.CategoryId,
+                                    SKU = cart.Product.SKU,
+                                    Name = cart.Product.Name,
+                                    Description = cart.Product.Description,
+                                    Price = cart.Product.Price,
+                                    Stock = cart.Product.Stock,
+                                    Status = cart.Product.Status,
+                                    Category = new CategoryDTO
+                                    {
+                                        CategoryId = cart.Product.Category.CategoryId,
+                                        Name = cart.Product.Category.Name,
+                                        Status = cart.Product.Category.Status
+                                    },
+                                    Pictures = cart.Product.Pictures.Where(pic => pic.ProductId == cart.ProductId).Select(pic => new PictureDTO
+                                    {
+                                        PictureId = pic.PictureId,
+                                        Path = pic.Path
+                                    }).ToList(),
+                                    Comments = cart.Product.Comments.Where(comment => comment.ProductId == cart.ProductId).Select(comment => new CommentDTO
+                                    {
+                                        CommentId = comment.CommentId
+                                    }).ToList()
+                                },
+                            }).ToList(),
+                            PaymentNotifications = order.PaymentNotifications.Where(payN => payN.OrderId == order.OrderId).Select(payN => new PaymentNotificationDTO
+                            {
+                                PaymentId = payN.PaymentId,
+                                OrderId = payN.OrderId,
+                                BankId = payN.BankId,
+                                Bank = new BankDTO
+                                {
+                                    Name = payN.Bank.Name,
+                                    AccountName = payN.Bank.AccountName,
+                                    AccountNo = payN.Bank.AccountNo,
+                                    Branch = payN.Bank.Branch,
+                                    IBAN = payN.Bank.IBAN,
+                                },
+                                NameSurname = payN.NameSurname,
+                                TotalAmount = payN.TotalAmount,
+                                Receipt = payN.Receipt,
+                                PayNote = payN.PayNote,
+                                PayDate = payN.PayDate,
+                                Status = payN.Status,
+                            }).ToList(),
+                        }).FirstOrDefault(),
+                    }).FirstOrDefaultAsync();
+
+                return Ok(paymentNotification);
+            }
+
+            return Unauthorized();
+        }
+
+        [HttpPut("PaymentNotification/{id}")]
+        public async Task<IActionResult> SetPaymentNotification(StatusModel Form, int id = 0)
+        {
+            if (await CheckAdmin() == true)
+            {
+                var payItem = await _context.PaymentNotifications.FirstOrDefaultAsync(c => c.PaymentId == id);
+
+                if (payItem == null)
+                {
+                    return NotFound();
+                }
+
+                payItem.Status = Form.Status;
+
+                _context.PaymentNotifications.Update(payItem);
+                await _context.SaveChangesAsync();
+
+                return Ok(new { status = true, msg = "Ödeme Bilgileri Güncellendi" + "<meta http-equiv='refresh' content='2;'>" });
+            }
+
+            return Unauthorized();
+        }
+
+        [HttpDelete("PaymentNotification/{id}")]
+        public async Task<IActionResult> DeletePaymentNotification(int id)
+        {
+            if (await CheckAdmin() == true)
+            {
+                var payItem = await _context.PaymentNotifications.FirstOrDefaultAsync(c => c.PaymentId == id);
+
+                if (payItem == null)
+                {
+                    return NotFound();
+                }
+
+                _context.PaymentNotifications.Remove(payItem);
+                await _context.SaveChangesAsync();
+
+                return Ok(new { status = true, msg = "Ödeme Bildirimi Silindi." + "<meta http-equiv='refresh' content='1;'>" });
+            }
+
+            return Unauthorized();
+        }
+
+        [HttpGet("Banks")]
+        public async Task<IActionResult> GetBanks()
+        {
+            if (await CheckAdmin() == true)
+            {
+                var banks = await _context.Banks
+                    .OrderBy(p => p.BankId)
+                    .Select(p => new BankDTO
+                    {
+                        BankId = p.BankId,
+                        Name = p.Name,
+                        AccountName = p.AccountName,
+                        AccountNo = p.AccountNo,
+                        Branch = p.Branch,
+                        IBAN = p.IBAN,
+                        Status = p.Status
+                    })
+                    .ToListAsync();
+
+                return Ok(banks);
+            }
+
+            return Unauthorized();
+        }
+
+        [HttpGet("Bank/{id}")]
+        public async Task<IActionResult> GetBanks(int id)
+        {
+            if (await CheckAdmin() == true)
+            {
+                var bank = await _context.Banks
+                    .OrderBy(p => p.BankId)
+                    .Where(p => p.BankId == id)
+                    .Select(p => new BankDTO
+                    {
+                        BankId = p.BankId,
+                        Name = p.Name,
+                        AccountName = p.AccountName,
+                        AccountNo = p.AccountNo,
+                        Branch = p.Branch,
+                        IBAN = p.IBAN,
+                        Status = p.Status
+                    })
+                    .FirstOrDefaultAsync();
+
+                return Ok(bank);
+            }
+
+            return Unauthorized();
+        }
+
+        [HttpPut("Bank/{id}")]
+        public async Task<IActionResult> SetBank(BankModel Form, int id = 0)
+        {
+            if (await CheckAdmin() == true)
+            {
+                var bankItem = await _context.Banks.FirstOrDefaultAsync(c => c.BankId == id);
+
+                if (bankItem == null)
+                {
+                    return NotFound();
+                }
+
+                bankItem.Name = Form.Name;
+                bankItem.AccountName = Form.AccountName;
+                bankItem.AccountNo = Form.AccountNo;
+                bankItem.Branch = Form.Branch;
+                bankItem.IBAN = Form.IBAN;
+                bankItem.Status = Form.Status;
+
+                _context.Banks.Update(bankItem);
+                await _context.SaveChangesAsync();
+
+                return Ok(new { status = true, msg = "Banka Bilgileri Güncellendi" + "<meta http-equiv='refresh' content='2;'>" });
+            }
+
+            return Unauthorized();
+        }
+
+        [HttpPost("Bank")]
+        public async Task<IActionResult> AddBank(BankModel Form)
+        {
+            if (await CheckAdmin() == true)
+            {
+                var bankItem = new Bank
+                {
+                    Name = Form.Name,
+                    AccountName = Form.AccountName,
+                    AccountNo = Form.AccountNo,
+                    Branch = Form.Branch,
+                    IBAN = Form.IBAN,
+                    Status = Form.Status
+                };
+
+                _context.Banks.Add(bankItem);
+                await _context.SaveChangesAsync();
+
+                return Json(new { status = true, msg = "Banka Hesabı Eklendi" + "<meta http-equiv='refresh' content='2;URL=/Admin/Banks'>" });
+            }
+
+            return Unauthorized();
+        }
+
+        [HttpDelete("Bank/{id}")]
+        public async Task<IActionResult> DeleteBank(int id)
+        {
+            if (await CheckAdmin() == true)
+            {
+                var bankItem = await _context.Banks.FirstOrDefaultAsync(c => c.BankId == id);
+
+                if (bankItem == null)
+                {
+                    return NotFound();
+                }
+
+                _context.Banks.Remove(bankItem);
+                await _context.SaveChangesAsync();
+
+                return Ok(new { status = true, msg = "Banka Silindi." + "<meta http-equiv='refresh' content='1;'>" });
+            }
+
+            return Unauthorized();
+        }
+
+        [HttpPost("Settings")]
+        public async Task<IActionResult> UpdateSettings([FromBody] Dictionary<string, string> settings)
+        {
+            if (await CheckAdmin() == true)
+            {
+                if (settings == null || settings.Count == 0)
+                {
+                    return BadRequest("Invalid settings data.");
+                }
+
+                foreach (var setting in settings)
+                {
+                    var existingSetting = await _context.Settings.FirstOrDefaultAsync(s => s.Mkey == setting.Key);
+                    if (existingSetting != null)
+                    {
+                        existingSetting.Mval = setting.Value;
+                        _context.Settings.Update(existingSetting);
+                    }
+                    else
+                    {
+                        var newSetting = new Setting
+                        {
+                            Mkey = setting.Key,
+                            Mval = setting.Value
+                        };
+                        await _context.Settings.AddAsync(newSetting);
+                    }
+                }
+
+                await _context.SaveChangesAsync();
+
+                return Ok(new { status = true, msg = "Ayarlar Güncellendi." + "<meta http-equiv='refresh' content='2;'>" });
+            }
+
+            return Unauthorized();
+        }
+
         private User ValidateToken(string token)
         {
             var tokenHandler = new JwtSecurityTokenHandler();

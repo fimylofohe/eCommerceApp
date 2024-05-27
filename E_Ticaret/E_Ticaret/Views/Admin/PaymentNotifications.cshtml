@@ -1,0 +1,104 @@
+﻿@{
+    ViewData["Title"] = "Admin Panel";
+    var paymentNotifications = ViewBag.PaymentNotifications;
+}
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Ödeme Bildirimleri</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item "><a asp-controller="Admin" asp-action="Index">Panel</a></li>
+                    <li class="breadcrumb-item active">Ödeme Bildirimleri</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-gradient-info">
+                        <h3 class="card-title">Ödeme Bildirimleri</h3>
+                    </div>
+                    <div class="card-body">
+                        <table id="example1" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Sipariş</th>
+                                    <th>Banka</th>
+                                    <th>Kullanıcı</th>
+                                    <th>Ödeme Tutarı</th>
+                                    <th>Ödeme Tarihi</th>
+                                    <th>Durum</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var paymentNotification in paymentNotifications)
+                                {
+                                    <tr>
+                                        <td>
+                                            @paymentNotification.PaymentId
+                                        </td>
+                                        <td>
+                                            <a href="/Admin/Order/@paymentNotification.OrderId">#@paymentNotification.OrderId Numaralı Sipariş</a>
+                                        </td>
+                                        <td>
+                                            @paymentNotification.Bank.Name
+                                        </td>
+                                        <td>
+                                            <a href="/Admin/User/@paymentNotification.Order.UserId">@paymentNotification.Order.User.NameSurname</a>
+                                        </td>
+                                        <td>
+                                            @(Double.Parse(paymentNotification.TotalAmount.ToString()).ToString("N2")) ₺
+                                        </td>
+                                        <td>
+                                            @paymentNotification.PayDate
+                                        </td>
+                                        <td>
+                                            @if (paymentNotification.Status == false)
+                                            {
+                                                <span class="badge badge-danger">Pasif</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge badge-success">Aktif</span>
+                                            }
+                                        </td>
+                                        <td style="display: flex;">
+                                            <a href="/Admin/PaymentNotification/@paymentNotification.PaymentId" class="btn btn-info">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <a href="/Admin/PaymentNotification/@paymentNotification.PaymentId" class="btn btn-danger delete_btn">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Sipariş</th>
+                                    <th>Banka</th>
+                                    <th>Kullanıcı</th>
+                                    <th>Ödeme Tutarı</th>
+                                    <th>Ödeme Tarihi</th>
+                                    <th>Durum</th>
+                                    <th></th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -6,6 +6,7 @@ namespace E_Ticaret_API.DTO
     {
         public int PaymentId { get; set; }
         public int? OrderId { get; set; }
+        public OrderDTO Order { get; set; } = null!;
         public int? BankId { get; set; }
         public BankDTO Bank { get; set; } = null!;
         public string? NameSurname { get; set; }

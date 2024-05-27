@@ -1,0 +1,161 @@
+﻿@{
+    @model E_Ticaret.Models.BankModel
+
+    ViewData["Title"] = "E-Ticaret Banka Hesabı Düzenle";
+
+    var bank = ViewBag.Bank;
+}
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Banka Hesapları</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item "><a asp-controller="Admin" asp-action="Index">Panel</a></li>
+                    <li class="breadcrumb-item "><a asp-controller="Admin" asp-action="Banks">Banka Hesapları</a></li>
+                    <li class="breadcrumb-item active">#@bank.BankId</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="x">
+                    <div class="xs" style="margin-block-end: 100px;">
+                        <div class="row">
+                            <div class="col-12 col-md-6">
+                                <div class="card shadow" style="width: 100%;">
+                                    <div class="card-header bg-gradient-info">
+                                        <h4 class="card-title">Banka Bilgileri</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <table class="table">
+                                            <tbody>
+                                                <tr>
+                                                    <th scope="row">#</th>
+                                                    <td>:</td>
+                                                    <td>@bank.BankId</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">Banka Adı</th>
+                                                    <td>:</td>
+                                                    <td>@bank.Name</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">Hesap Adı</th>
+                                                    <td>:</td>
+                                                    <td>@bank.AccountName</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">Hesap Numarası</th>
+                                                    <td>:</td>
+                                                    <td>@bank.AccountNo</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">Şube</th>
+                                                    <td>:</td>
+                                                    <td>@bank.Branch</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">IBAN</th>
+                                                    <td>:</td>
+                                                    <td>@bank.IBAN</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">Durum</th>
+                                                    <td>:</td>
+                                                    <td>
+                                                        @if (bank.Status == false)
+                                                        {
+                                                            <label class="font-weight-bold" style="color: red">Pasif</label>
+                                                        }
+                                                        else
+                                                        {
+                                                            <label class="font-weight-bold" style="color: #009d45">Aktif</label>
+                                                        }
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <div class="card shadow" style="width: 100%;">
+                                    <div class="card-header bg-gradient-dark">
+                                        <h4 class="card-title">Banka Hesabı Güncelle</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <form action="" method="post" class="form_send">
+                                            <div class="row">
+                                                <div class="col-12 col-md-4" style="margin-block-end: 10px;">
+                                                    <label asp-for="Name"></label>
+                                                    <input asp-for="Name" class="form-control" value="@bank.Name">
+                                                </div>
+
+                                                <div class="col-12 col-md-4" style="margin-block-end: 10px;">
+                                                    <label asp-for="AccountName"></label>
+                                                    <input asp-for="AccountName" class="form-control" value="@bank.AccountName">
+                                                </div>
+
+                                                <div class="col-12 col-md-4" style="margin-block-end: 10px;">
+                                                    <label asp-for="AccountNo"></label>
+                                                    <input asp-for="AccountNo" class="form-control" value="@bank.AccountNo">
+                                                </div>
+
+                                                <div class="col-12 col-md-4" style="margin-block-end: 10px;">
+                                                    <label asp-for="Branch"></label>
+                                                    <input asp-for="Branch" class="form-control" value="@bank.Branch">
+                                                </div>
+
+                                                <div class="col-12 col-md-4" style="margin-block-end: 10px;">
+                                                    <label asp-for="IBAN"></label>
+                                                    <input asp-for="IBAN" class="form-control" value="@bank.IBAN">
+                                                </div>
+
+                                                <div class="col-12 col-md-4" style="margin-block-end: 10px;">
+                                                    <label asp-for="Status">Durum</label>
+                                                    <select asp-for="Status" class="form-control">
+                                                        @if (bank.Status == false)
+                                                        {
+                                                            <option value="false" selected>Pasif</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="false">Pasif</option>
+                                                        }
+
+                                                        @if (bank.Status == true)
+                                                        {
+                                                            <option value="true" selected>Aktif</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="true">Aktif</option>
+                                                        }
+                                                    </select>
+                                                </div>
+
+                                                <div class="col-12">
+                                                    <button type="submit" class="btn btn-success mt-4 btn-block" style="background-color: #061b3d;"> Güncelle</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

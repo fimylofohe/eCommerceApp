@@ -273,5 +273,41 @@ namespace E_Ticaret.Controllers
                 return Json(new { status = false, msg = "Dosya yüklenirken hata oluştu, lütfen daha sonra tekrar deneyiniz." });
             }
         }
+
+        [HttpPost("User/Comment/{order_id}/{product_id}")]
+        public async Task<IActionResult> OrdersComment(CommentModel Form, int order_id = 0, int product_id = 0)
+        {
+            Tools.CheckToken(HttpContext);
+
+            dynamic settings = await Tools.SettingAsync();
+            ViewBag.Setting = settings;
+            string site_url = await Tools.GetUrl(HttpContext);
+            ViewBag.SiteUrl = site_url;
+            string api_url = settings.api_url;
+
+            var jsonModel = JsonSerializer.Serialize(Form);
+
+            var httpContent = new StringContent(jsonModel, Encoding.UTF8, "application/json");
+
+            using (var httpClient = new HttpClient())
+            {
+                string token = Request.Cookies["token"];
+                if (!string.IsNullOrEmpty(token))
+                {
+                    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                }
+
+                using (var response = await httpClient.PostAsync(api_url + "/Api/User/Comment/" + order_id + "/" + product_id, httpContent))
+                {
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string apiResponse = await response.Content.ReadAsStringAsync();
+                        return Json(new { status = true, msg = "Yorumunuz Gönderildi" + "<meta http-equiv='refresh' content='2'>" });
+                    }
+
+                    return BadRequest(new { status = true, msg = "Api isteği sırasında hata oluştu." });
+                }
+            }
+        }
     }
 }

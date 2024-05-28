@@ -86,8 +86,35 @@
                                                         if (deger_sor == false)
                                                         {
                                                             <div>
-                                                                <button class="btn btn-info">Yorum Yap</button>
+                                                                <button class="btn btn-info" style="margin-left: 10px;" data-toggle="modal" data-target="#commentModal_@order.OrderId">Yorum Yap</button>
                                                             </div>
+
+                                                            <div class="modal fade" id="commentModal_@order.OrderId" tabindex="-1" aria-labelledby="commentModal_@(order.OrderId)Label" aria-hidden="true">
+                                                                <div class="modal-dialog">
+                                                                    <div class="modal-content">
+                                                                        <div class="modal-header">
+                                                                            <h5 class="modal-title" id="exampleModalLabel">@cart.Product.Name Ürüne Yorum Yap</h5>
+                                                                        </div>
+                                                                        <div class="modal-body">
+                                                                            <form action="/User/Comment/@order.OrderId/@cart.Product.ProductId" method="post">
+                                                                                <input style="display: none;" name="Status" value="false" />
+                                                                                <div class="row">
+                                                                                    <div class="col-12">
+                                                                                        <div class="checkout__textarea">
+                                                                                            <p>Yorum <span>*</span></p>
+                                                                                            <textarea type="text" name="Text" required></textarea>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="col-12">
+                                                                                        <button type="submit" class="btn btn-info btn-block" style="background-color: #2289c6;">Gönder</button>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </form>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
                                                         }
                                                     }
                                                 </div>

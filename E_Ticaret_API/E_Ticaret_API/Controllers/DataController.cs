@@ -219,7 +219,7 @@ namespace E_Ticaret_API.Controllers
                                                  PictureId = pic.PictureId,
                                                  Path = pic.Path
                                              }).ToList(),
-                                             Comments = _context.Comments.Where(comment => comment.ProductId == p.ProductId).Select(comment => new CommentDTO
+                                             Comments = _context.Comments.Where(comment => comment.ProductId == p.ProductId && comment.Status == true).Select(comment => new CommentDTO
                                              {
                                                  CommentId = comment.CommentId,
                                                  Text = comment.Text,

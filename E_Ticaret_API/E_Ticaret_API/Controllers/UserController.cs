@@ -469,6 +469,42 @@ namespace E_Ticaret_API.Controllers
             return Ok(new { status = true, msg = "Ödeme Onaylandı" });
         }
 
+        [HttpPost("Comment/{order_id}/{product_id}")]
+        public async Task<IActionResult> OrdersComment(CommentModel Form, int order_id = 0, int product_id = 0)
+        {
+            string token = Request.Headers[HeaderNames.Authorization].ToString();
+            if (!string.IsNullOrEmpty(token) && token.StartsWith("Bearer "))
+            {
+                string tokenWithoutBearer = token.Replace("Bearer ", "");
+                var userInfo = ValidateToken(tokenWithoutBearer);
+                if (userInfo != null)
+                {
+                    var comNot = new Comment
+                    {
+                        ProductId = product_id,
+                        OrderId = order_id,
+                        UserId = userInfo.UserId,
+                        Text = Form.Text,
+                        PublishedDate = DateTime.Now,
+                        Status = false
+                    };
+
+                    var comNotc = await _context.Comments.AddAsync(comNot);
+                    try
+                    {
+                        await _context.SaveChangesAsync();
+                        return Ok(new { status = true, msg = "Kayıt Başarılı" });
+                    }
+                    catch (DbUpdateException ex)
+                    {
+                        return BadRequest(new { status = true, msg = ex.InnerException.Message });
+                    }
+                }
+            }
+
+            return Unauthorized();
+        }
+
         private string GenerateJWT(User user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();

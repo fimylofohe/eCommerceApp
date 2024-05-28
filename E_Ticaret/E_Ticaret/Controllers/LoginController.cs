@@ -62,6 +62,7 @@ namespace E_Ticaret.Controllers
                                 Response.Cookies.Append("token", login_data.Token);
                                 var userClaims = new List<Claim>();
 
+                                userClaims.Add(new Claim("UserId", login_data.User.UserId.ToString()));
                                 userClaims.Add(new Claim("Name", login_data.User.Name));
                                 userClaims.Add(new Claim("Surname", login_data.User.Surname));
                                 userClaims.Add(new Claim("NameSurname", login_data.User.NameSurname));

@@ -1,6 +1,8 @@
 ﻿@{
     ViewData["Title"] = "E-Ticaret Kullanıcı";
 
+    string GetUserId = @User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
+
     var order = ViewBag.Order;
     var banks = ViewBag.Banks;
 }
@@ -71,6 +73,29 @@
                                                         }
                                                     </div>
                                                     <div class="order-item">@cart.Product.Name</div>
+                                                    @if (order.OrderStatus != 0 && order.OrderStatus != 5)
+                                                    {
+                                                        bool deger_sor = false;
+                                                        @foreach (var comment in cart.Product.Comments)
+                                                        {
+                                                            if (comment.UserId == Int32.Parse(GetUserId))
+                                                                                {
+                                                                deger_sor = true;
+                                                            }
+                                                        }
+                                                        if (deger_sor == false)
+                                                        {
+                                                            <div>
+                                                                <button class="btn btn-info">Yorum Yap</button>
+                                                            </div>
+                                                        }
+                                                        else
+                                                        {
+                                                            <div>
+                                                                <button class="btn btn-info">Yorum Yapılmış</button>
+                                                            </div>
+                                                        }
+                                                    }
                                                 </div>
                                             </th>
                                             <td class="text-right"><b>@(Double.Parse((cart.Product.Price * cart.Quantity).ToString()).ToString("N2")) ₺</b></td>

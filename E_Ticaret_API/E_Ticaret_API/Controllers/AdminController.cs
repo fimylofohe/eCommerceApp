@@ -19,6 +19,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
 using static Azure.Core.HttpHeader;
 using System.Net;
+using Newtonsoft.Json.Linq;
 
 namespace E_Ticaret_API.Controllers
 {
@@ -1968,30 +1969,33 @@ namespace E_Ticaret_API.Controllers
             return Unauthorized();
         }
 
-        [HttpPost("Settings")]
-        public async Task<IActionResult> UpdateSettings([FromBody] Dictionary<string, string> settings)
+        [HttpPut("Settings")]
+        public async Task<IActionResult> UpdateSettings([FromBody] JObject json_obj)
         {
-            if (await CheckAdmin() == true)
+            if (await CheckAdmin())
             {
-                if (settings == null || settings.Count == 0)
+                if (json_obj == null || json_obj.Count == 0)
                 {
-                    return BadRequest("Invalid settings data.");
+                    return Json(new { status = false, msg = "Geçersiz Veri" });
                 }
 
-                foreach (var setting in settings)
+                foreach (var item in json_obj)
                 {
-                    var existingSetting = await _context.Settings.FirstOrDefaultAsync(s => s.Mkey == setting.Key);
+                    var key = item.Key;
+                    var value = item.Value.ToString();
+
+                    var existingSetting = await _context.Settings.FirstOrDefaultAsync(s => s.Mkey == key);
                     if (existingSetting != null)
                     {
-                        existingSetting.Mval = setting.Value;
+                        existingSetting.Mval = value;
                         _context.Settings.Update(existingSetting);
                     }
                     else
                     {
                         var newSetting = new Setting
                         {
-                            Mkey = setting.Key,
-                            Mval = setting.Value
+                            Mkey = key,
+                            Mval = value
                         };
                         await _context.Settings.AddAsync(newSetting);
                     }
@@ -1999,7 +2003,7 @@ namespace E_Ticaret_API.Controllers
 
                 await _context.SaveChangesAsync();
 
-                return Ok(new { status = true, msg = "Ayarlar Güncellendi." + "<meta http-equiv='refresh' content='2;'>" });
+                return Json(new { status = true, msg = "Ayarlar Güncellendi." + "<meta http-equiv='refresh' content='1;'>" });
             }
 
             return Unauthorized();

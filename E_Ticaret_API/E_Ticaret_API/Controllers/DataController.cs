@@ -219,14 +219,19 @@ namespace E_Ticaret_API.Controllers
                                                  PictureId = pic.PictureId,
                                                  Path = pic.Path
                                              }).ToList(),
-                                             Comments = p.Comments.Select(comment => new CommentDTO
+                                             Comments = _context.Comments.Where(comment => comment.ProductId == p.ProductId).Select(comment => new CommentDTO
                                              {
                                                  CommentId = comment.CommentId,
                                                  Text = comment.Text,
                                                  PublishedDate = comment.PublishedDate,
                                                  Status = comment.Status,
                                                  ProductId = comment.ProductId,
-                                                 UserId = comment.UserId
+                                                 UserId = comment.UserId,
+                                                 User = _context.Users.Where(user => user.UserId == comment.UserId).Select(user => new UserDTO
+                                                 {
+                                                     Name = user.Name,
+                                                     Surname = user.Surname,
+                                                 }).FirstOrDefault()
                                              }).ToList()
                                          })
                                          .FirstOrDefaultAsync();

@@ -778,7 +778,7 @@ namespace E_Ticaret.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        [HttpGet("Admin/Comment/{id}")]
+        [HttpDelete("Admin/Comment/{id}")]
         public async Task<IActionResult> DeleteComment(int id)
         {
             if (await CheckAdmin() == true)
@@ -1556,8 +1556,7 @@ namespace E_Ticaret.Controllers
         }
 
         [HttpPost("Admin/Settings")]
-        [Consumes("application/json")]
-        public async Task<IActionResult> SetSettings([FromForm] IFormCollection formCollection)
+        public async Task<IActionResult> SetSettings(IFormCollection formCollection)
         {
             if (await CheckAdmin() == true)
             {
@@ -1567,10 +1566,20 @@ namespace E_Ticaret.Controllers
                 ViewBag.SiteUrl = site_url;
                 string api_url = settings.api_url;
 
-                var jsonModel = JsonSerializer.Serialize(formCollection);
-                var httpContent = new StringContent(jsonModel, Encoding.UTF8, "application/json");
+                var json_obj = new JObject();
 
-                return Ok(formCollection);
+                foreach (var post_data in formCollection)
+                {
+                    if(post_data.Key != "__RequestVerificationToken")
+                    {
+                        json_obj[post_data.Key] = post_data.Value[0];
+                    }
+                }
+
+                // JSON string'ine dönüştürme
+                var jsonModel = json_obj.ToString();
+
+                var httpContent = new StringContent(jsonModel, Encoding.UTF8, "application/json");
 
                 using (var httpClient = new HttpClient())
                 {
@@ -1580,19 +1589,19 @@ namespace E_Ticaret.Controllers
                         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                     }
 
-                    using (var response = await httpClient.PostAsync(api_url + "/Api/Admin/Settings", httpContent))
+                    using (var response = await httpClient.PutAsync(api_url + "/Api/Admin/Settings", httpContent))
                     {
                         string apiResponse = await response.Content.ReadAsStringAsync();
-                        return Ok(formCollection);
-                        var apiData = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
+                        var api_data = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
 
-                        return Ok(new { status = apiData.Status, msg = apiData.Msg });
+                        return Json(new { status = api_data.Status, msg = api_data.Msg });
                     }
                 }
             }
 
             return RedirectToAction("Index", "Home");
         }
+
 
         private async Task<bool> CheckAdmin()
         {

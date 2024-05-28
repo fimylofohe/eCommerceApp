@@ -3,6 +3,7 @@
     public class CommentDTO
     {
         public int CommentId { get; set; }
+        public int OrderId { get; set; }
         public string? Text { get; set; }
         public DateTime PublishedDate { get; set; }
         public bool Status { get; set; }

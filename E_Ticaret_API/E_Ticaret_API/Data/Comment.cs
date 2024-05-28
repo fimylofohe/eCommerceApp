@@ -6,6 +6,7 @@ namespace E_Ticaret_API.Data
     {
         [Key]
         public int CommentId { get; set; }
+        public int OrderId { get; set; }
         public int ProductId { get; set; }
         public Product Product { get; set; } = null!;
         public int UserId { get; set; }

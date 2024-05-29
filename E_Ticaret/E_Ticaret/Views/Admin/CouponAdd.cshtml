@@ -1,0 +1,104 @@
+﻿@{
+    ViewData["Title"] = "E-Ticaret Yorum";
+
+    var coupon = ViewBag.Coupon;
+    var couponHistory = ViewBag.CouponHistory;
+}
+
+<style>
+    .dflex {
+        display: flex;
+    }
+</style>
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Kupon Ekle</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item "><a asp-controller="Admin" asp-action="Index">Panel</a></li>
+                    <li class="breadcrumb-item "><a asp-controller="Admin" asp-action="Coupons">Kuponlar</a></li>
+                    <li class="breadcrumb-item active">Kupon Ekle</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="x">
+                    <div class="xs" style="margin-block-end: 100px;">
+                        <div class="row">
+                            <div class="col-md-12 col-12 d-flex align-items-stretch">
+                                <div class="card shadow" style="width: 100%;">
+                                    <div class="card-header bg-gradient-dark">
+                                        <h4 class="card-title">Kupon Güncelleme</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <form action="" method="post">
+                                            <div class="row">
+                                                <div class="col-12 col-md-4" style="margin-block-end: 10px;">
+                                                    <label>Başlık</label>
+                                                    <input type="text" class="form-control" name="Name">
+                                                </div>
+
+                                                <div class="col-12 col-md-4" style="margin-block-end: 10px;">
+                                                    <label>Kupon Kodu</label>
+                                                    <input type="text" class="form-control" name="CouponCode">
+                                                </div>
+
+                                                <div class="col-12 col-md-4" style="margin-block-end: 10px;">
+                                                    <label>Son Kullanım Tarihi</label>
+                                                    <input type="text" class="form-control" name="ValidityDate">
+                                                </div>
+
+                                                <div class="col-12 col-md-3" style="margin-block-end: 10px;">
+                                                    <label>Tip</label>
+                                                    <select name="Type" class="form-control">
+                                                        <option value="1">Normal</option>
+                                                        <option value="2">Yüzde</option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="col-12 col-md-3" style="margin-block-end: 10px;">
+                                                    <label>İndirim Miktarı</label>
+                                                    <input type="number" class="form-control" name="DiscountAmount">
+                                                </div>
+
+                                                <div class="col-12 col-md-3" style="margin-block-end: 10px;">
+                                                    <label>Tek Kullanım</label>
+                                                    <select name="SingleUse" class="form-control">
+                                                        <option value="true">Aktif</option>
+                                                        <option value="false">Pasif</option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="col-12 col-md-3" style="margin-block-end: 10px;">
+                                                    <label>Durum</label>
+                                                    <select name="Status" class="form-control">
+                                                        <option value="false">Pasif</option>
+                                                        <option value="true">Aktif</option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="col-12">
+                                                    <button type="submit" class="btn btn-success mt-4 btn-block" style="background-color: #061b3d;"> Güncelle</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

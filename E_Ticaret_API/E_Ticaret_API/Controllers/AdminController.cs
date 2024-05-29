@@ -994,6 +994,31 @@ namespace E_Ticaret_API.Controllers
 
             return Unauthorized();
         }
+        
+        [HttpPost("Product")]
+        public async Task<IActionResult> AddProduct(ProductModel Form)
+        {
+            if (await CheckAdmin() == true)
+            {
+                var proItem = new Product
+                {
+                    Name = Form.Name,
+                    Description = Form.Description,
+                    SKU = Form.Sku,
+                    Price = Form.Price,
+                    Stock = Form.Stock,
+                    CategoryId = Form.CategoryId,
+                    Status = Form.Status,
+                };
+
+                _context.Products.Add(proItem);
+                await _context.SaveChangesAsync();
+
+                return Json(new { status = true, msg = "Ürün Eklendi" + "<meta http-equiv='refresh' content='2;URL=/Admin/Products'>" });
+            }
+
+            return Unauthorized();
+        }
 
         [HttpGet("Images/{id}")]
         public async Task<IActionResult> GetImages(int id)
@@ -1122,6 +1147,26 @@ namespace E_Ticaret_API.Controllers
                 await _context.SaveChangesAsync();
 
                 return Ok(new { status = true, msg = "Kategori Bilgileri Güncellendi" });
+            }
+
+            return Unauthorized();
+        }
+
+        [HttpPost("Category")]
+        public async Task<IActionResult> AddCategory(CategoryModel Form)
+        {
+            if (await CheckAdmin() == true)
+            {
+                var catItem = new Category
+                {
+                    Name = Form.Name,
+                    Status = Form.Status,
+                };
+
+                _context.Categories.Add(catItem);
+                await _context.SaveChangesAsync();
+
+                return Json(new { status = true, msg = "Kategori Eklendi" + "<meta http-equiv='refresh' content='2;URL=/Admin/Categories'>" });
             }
 
             return Unauthorized();
@@ -1354,6 +1399,31 @@ namespace E_Ticaret_API.Controllers
                 await _context.SaveChangesAsync();
 
                 return Ok(new { status = true, msg = "Kupon Bilgileri Güncellendi" });
+            }
+
+            return Unauthorized();
+        }
+
+        [HttpPost("Coupon")]
+        public async Task<IActionResult> AddCoupon(CouponsModel Form)
+        {
+            if (await CheckAdmin() == true)
+            {
+                var coupItem = new Coupon
+                {
+                    Name = Form.Name,
+                    Type = Form.Type,
+                    DiscountAmount = Form.DiscountAmount,
+                    CouponCode = Form.CouponCode,
+                    ValidityDate = Form.ValidityDate,
+                    SingleUse = Form.SingleUse,
+                    Status = Form.Status,
+                };
+
+                _context.Coupons.Add(coupItem);
+                await _context.SaveChangesAsync();
+
+                return Json(new { status = true, msg = "Kupon Eklendi" + "<meta http-equiv='refresh' content='2;URL=/Admin/Coupons'>" });
             }
 
             return Unauthorized();

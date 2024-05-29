@@ -1,0 +1,71 @@
+﻿@{
+    @model E_Ticaret.Models.CategoryModel
+    ViewData["Title"] = "E-Ticaret Kullanıcı";
+
+    var category = ViewBag.Category;
+}
+
+<style>
+    .dflex {
+        display: flex;
+    }
+</style>
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Kategori Ekle</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item "><a asp-controller="Admin" asp-action="Index">Panel</a></li>
+                    <li class="breadcrumb-item "><a asp-controller="Admin" asp-action="Categories">Kategoriler</a></li>
+                    <li class="breadcrumb-item active">Kategori Ekle</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="x">
+                    <div class="xs" style="margin-block-end: 100px;">
+                        <div class="row">
+                            <div class="col-md-12 col-12 d-flex align-items-stretch">
+                                <div class="card shadow" style="width: 100%;">
+                                    <div class="card-header bg-gradient-info">
+                                        <h4 class="card-title">Kategori Ekle</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <form action="" method="post">
+                                            <div class="row">
+                                                <div class="col-12 col-md-6" style="margin-block-end: 10px;">
+                                                    <label asp-for="Name"></label>
+                                                    <input asp-for="Name" class="form-control">
+                                                </div>
+                                                <div class="col-12 col-md-6">
+                                                    <label asp-for="Status"></label>
+                                                    <select asp-for="Status" class="form-control">
+                                                        <option value="false">Pasif</option>
+                                                        <option value="true" selected>Aktif</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-12">
+                                                    <button type="submit" class="btn btn-success mt-4 btn-block" style="background-color: #061b3d;"> Ekle</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

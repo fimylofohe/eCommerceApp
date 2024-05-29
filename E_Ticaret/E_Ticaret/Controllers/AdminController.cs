@@ -347,6 +347,77 @@ namespace E_Ticaret.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [HttpGet("Admin/Product/Add")]
+        public async Task<IActionResult> AddProduct()
+        {
+            if (await CheckAdmin() == true)
+            {
+                dynamic settings = await Tools.SettingAsync();
+                ViewBag.Setting = settings;
+                string site_url = await Tools.GetUrl(HttpContext);
+                ViewBag.SiteUrl = site_url;
+                string api_url = settings.api_url;
+
+                var categories = new List<Category>();
+                using (var httpClient = new HttpClient())
+                {
+                    string token = Request.Cookies["token"];
+                    if (!string.IsNullOrEmpty(token))
+                    {
+                        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                    }
+
+                    using (var response = await httpClient.GetAsync(api_url + "/Api/Admin/Categories"))
+                    {
+                        string apiResponse = await response.Content.ReadAsStringAsync();
+                        categories = JsonSerializer.Deserialize<List<Category>>(apiResponse);
+                    }
+                }
+
+                ViewBag.Categories = categories;
+
+                return View("ProductAdd");
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpPost("Admin/Product/Add")]
+        public async Task<IActionResult> AddProductc(ProductModel Form)
+        {
+            if (await CheckAdmin() == true)
+            {
+                dynamic settings = await Tools.SettingAsync();
+                ViewBag.Setting = settings;
+                string site_url = await Tools.GetUrl(HttpContext);
+                ViewBag.SiteUrl = site_url;
+                string api_url = settings.api_url;
+
+                var jsonModel = JsonSerializer.Serialize(Form);
+
+                var httpContent = new StringContent(jsonModel, Encoding.UTF8, "application/json");
+
+                using (var httpClient = new HttpClient())
+                {
+                    string token = Request.Cookies["token"];
+                    if (!string.IsNullOrEmpty(token))
+                    {
+                        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                    }
+
+                    using (var response = await httpClient.PostAsync(api_url + "/Api/Admin/Product", httpContent))
+                    {
+                        var apiResponse = await response.Content.ReadAsStringAsync();
+                        var api_data = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
+
+                        return Json(new { status = api_data.Status, msg = api_data.Msg });
+                    }
+                }
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
         [HttpGet("Admin/Product/{id}")]
         public async Task<IActionResult> GetProduct(int id)
         {
@@ -564,6 +635,59 @@ namespace E_Ticaret.Controllers
 
                 ViewBag.Categories = categories;
                 return View("Categories");
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet("Admin/Category/Add")]
+        public async Task<IActionResult> AddCategory(int id)
+        {
+            if (await CheckAdmin() == true)
+            {
+                dynamic settings = await Tools.SettingAsync();
+                ViewBag.Setting = settings;
+                string site_url = await Tools.GetUrl(HttpContext);
+                ViewBag.SiteUrl = site_url;
+                string api_url = settings.api_url;
+
+                return View("CategoryAdd");
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpPost("Admin/Category/Add")]
+        public async Task<IActionResult> AddCategorys(CategoryModel Form)
+        {
+            if (await CheckAdmin() == true)
+            {
+                dynamic settings = await Tools.SettingAsync();
+                ViewBag.Setting = settings;
+                string site_url = await Tools.GetUrl(HttpContext);
+                ViewBag.SiteUrl = site_url;
+                string api_url = settings.api_url;
+
+                var jsonModel = JsonSerializer.Serialize(Form);
+
+                var httpContent = new StringContent(jsonModel, Encoding.UTF8, "application/json");
+
+                using (var httpClient = new HttpClient())
+                {
+                    string token = Request.Cookies["token"];
+                    if (!string.IsNullOrEmpty(token))
+                    {
+                        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                    }
+
+                    using (var response = await httpClient.PostAsync(api_url + "/Api/Admin/Category", httpContent))
+                    {
+                        var apiResponse = await response.Content.ReadAsStringAsync();
+                        var api_data = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
+
+                        return Json(new { status = api_data.Status, msg = api_data.Msg });
+                    }
+                }
             }
 
             return RedirectToAction("Index", "Home");
@@ -876,6 +1000,59 @@ namespace E_Ticaret.Controllers
 
                 ViewBag.Coupons = coupons;
                 return View("Coupons");
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet("Admin/Coupon/Add")]
+        public async Task<IActionResult> AddCoupons()
+        {
+            if (await CheckAdmin() == true)
+            {
+                dynamic settings = await Tools.SettingAsync();
+                ViewBag.Setting = settings;
+                string site_url = await Tools.GetUrl(HttpContext);
+                ViewBag.SiteUrl = site_url;
+                string api_url = settings.api_url;
+
+                return View("CouponAdd");
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpPost("Admin/Coupon/Add")]
+        public async Task<IActionResult> PostCoupony(CouponsModel Form, int id)
+        {
+            if (await CheckAdmin() == true)
+            {
+                dynamic settings = await Tools.SettingAsync();
+                ViewBag.Setting = settings;
+                string site_url = await Tools.GetUrl(HttpContext);
+                ViewBag.SiteUrl = site_url;
+                string api_url = settings.api_url;
+
+                var jsonModel = JsonSerializer.Serialize(Form);
+
+                var httpContent = new StringContent(jsonModel, Encoding.UTF8, "application/json");
+
+                using (var httpClient = new HttpClient())
+                {
+                    string token = Request.Cookies["token"];
+                    if (!string.IsNullOrEmpty(token))
+                    {
+                        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                    }
+
+                    using (var response = await httpClient.PostAsync(api_url + "/Api/Admin/Coupon", httpContent))
+                    {
+                        var apiResponse = await response.Content.ReadAsStringAsync();
+                        var api_data = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
+
+                        return Json(new { status = api_data.Status, msg = api_data.Msg });
+                    }
+                }
             }
 
             return RedirectToAction("Index", "Home");

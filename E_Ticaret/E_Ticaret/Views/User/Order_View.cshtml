@@ -201,7 +201,25 @@
                             </div>
                         </div>
                     </div>
-                    
+
+                    @if (order.CargoCode != null && order.CargoCompany != null && order.OrderStatus >= 3 && order.OrderStatus <= 5)
+                    {
+                        <hr />
+
+                        <div class="d-flex flex-column justify-content-center align-items-center" style="max-width: unset;">
+                            <div class="d-sm-flex justify-content-between rounded my-3 subscriptions">
+                                <div>
+                                    Kargo Firması:
+                                    @order.CargoCompany
+                                </div>
+                                <div style="margin-left: 10px; border-left: 1px solid black; padding-left: 10px;">
+                                    Kargo Kodu:
+                                    @order.CargoCode
+                                </div>
+                            </div>
+                        </div>
+                    }
+
                     <hr />
 
                     @if (order.OrderStatus == 0 && order.OrderPay == 2)

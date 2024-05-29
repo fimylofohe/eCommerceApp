@@ -1,0 +1,134 @@
+﻿@{
+    @model E_Ticaret.Models.UserModel
+
+    ViewData["Title"] = "E-Ticaret Kullanıcı";
+
+    var user = ViewBag.User;
+}
+
+<style>
+    .form_buttonc {
+        width: 100%;
+        text-align: center;
+        color: #ffffff;
+        background: #111111;
+        border-color: #111111;
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        border: 1px solid #e1e1e1;
+        border-top-color: rgb(225, 225, 225);
+        border-right-color: rgb(225, 225, 225);
+        border-bottom-color: rgb(225, 225, 225);
+        border-left-color: rgb(225, 225, 225);
+        padding: 14px 35px;
+        display: inline-block;
+    }
+</style>
+
+<section class="breadcrumb-option">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb__text">
+                    <h4>Adres Ekle</h4>
+                    <div class="breadcrumb__links">
+                        <a asp-controller="Home" asp-action="Index">AnaSayfa</a>
+                        <a asp-controller="User" asp-action="Index">Hesabım</a>
+                        <a>Hesap Ayarları</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@Html.Partial("_Navigation")
+
+<section class="shopping-cart">
+    <div class="container">
+        <div class="row" style="margin-block-end: 50px;">
+            <div class="col-md-6 col-12 d-flex align-items-stretch">
+                <div class="card shadow" style="width: 100%;">
+                    <div class="card-header bg-gradient-info">
+                        <h4 class="card-title">Hesap Ayarlar</h4>
+                    </div>
+                    <div class="card-body">
+                        <form action="" method="post">
+                            <div class="row">
+                                <div class="col-12 col-md-6" style="margin-block-end: 25px;">
+                                    <label asp-for="Name"></label>
+                                    <input asp-for="Name" class="form-control" value="@user.Name">
+                                </div>
+                                <div class="col-12 col-md-6" style="margin-block-end: 25px;">
+                                    <label asp-for="Surname"></label>
+                                    <input asp-for="Surname" class="form-control" value="@user.Surname">
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <label asp-for="Email"></label>
+                                    <input asp-for="Email" class="form-control" value="@user.Email">
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <label asp-for="PhoneNumber"></label>
+                                    <input asp-for="PhoneNumber" class="form-control" value="@user.PhoneNumber">
+                                </div>
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-success mt-4 btn-block" style="background-color: #061b3d;"> Güncelle</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-12 d-flex align-items-stretch">
+                <div class="card shadow" style="width: 100%;">
+                    <div class="card-header bg-gradient-dark">
+                        <h4 class="card-title">Şifre Güncelleme</h4>
+                    </div>
+                    <div class="card-body">
+                        <form action="" method="post">
+                            <div class="row">
+                                <div class="col-12 col-md-6" style="margin-block-end: 25px; display:none;">
+                                    <label asp-for="Name"></label>
+                                    <input asp-for="Name" class="form-control" value="@user.Name">
+                                </div>
+                                <div class="col-12 col-md-6" style="margin-block-end: 25px; display:none;">
+                                    <label asp-for="Surname"></label>
+                                    <input asp-for="Surname" class="form-control" value="@user.Surname">
+                                </div>
+                                <div class="col-12 col-md-6" style="margin-block-end: 25px; display:none;">
+                                    <label asp-for="Email"></label>
+                                    <input asp-for="Email" class="form-control" value="@user.Email">
+                                </div>
+                                <div class="col-12 col-md-6" style="margin-block-end: 25px; display:none;">
+                                    <label asp-for="PhoneNumber"></label>
+                                    <input asp-for="PhoneNumber" class="form-control" value="@user.PhoneNumber">
+                                </div>
+                                <div class="col-12 col-md-6" style="margin-block-end: 25px;">
+                                    <label>E-Posta Adresi</label>
+                                    <input type="text" class="form-control" value="@user.Email" disabled>
+                                </div>
+                                <div class="col-12 col-md-6" style="margin-block-end: 25px;">
+                                    <label asp-for="EPassword"></label>
+                                    <input asp-for="EPassword" class="form-control">
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <label asp-for="Password"></label>
+                                    <input asp-for="Password" class="form-control">
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <label asp-for="TPassword"></label>
+                                    <input asp-for="TPassword" class="form-control">
+                                </div>
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-success mt-4 btn-block" style="background-color: #061b3d;"> Güncelle</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

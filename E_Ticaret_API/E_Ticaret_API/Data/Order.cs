@@ -21,6 +21,8 @@ namespace E_Ticaret_API.Data
         public DateTime OrderDate { get; set; }
         public int? OrderStatus { get; set; }
         public bool Status { get; set; }
+        public string? CargoCompany { get; set; }
+        public string? CargoCode { get; set; }
         public ICollection<Cart> Carts { get; set; } = new List<Cart>();
         public ICollection<PaymentNotification> PaymentNotifications { get; set; } = new List<PaymentNotification>();
     }

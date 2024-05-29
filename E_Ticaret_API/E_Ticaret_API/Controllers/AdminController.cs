@@ -412,6 +412,8 @@ namespace E_Ticaret_API.Controllers
                                 OrderDate = p.OrderDate,
                                 OrderStatus = p.OrderStatus,
                                 Status = p.Status,
+                                CargoCompany = p.CargoCompany,
+                                CargoCode = p.CargoCode,
                                 Carts = p.Carts.Select(cart => new CartDTO
                                 {
                                     CartId = cart.CartId,
@@ -474,6 +476,31 @@ namespace E_Ticaret_API.Controllers
                             .FirstOrDefaultAsync();
 
                 return Ok(carts);
+            }
+
+            return Unauthorized();
+        }
+
+        [HttpPut("Order/{id}")]
+        public async Task<IActionResult> PostOrder(OrderModel Form, int id)
+        {
+            if (await CheckAdmin() == true)
+            {
+                var orderItem = await _context.Orders.FirstOrDefaultAsync(c => c.OrderId == id);
+
+                if (orderItem == null)
+                {
+                    return NotFound();
+                }
+
+                orderItem.CargoCompany = Form.CargoCompany;
+                orderItem.CargoCode = Form.CargoCode;
+                orderItem.OrderStatus = Form.OrderStatus;
+
+                _context.Orders.Update(orderItem);
+                await _context.SaveChangesAsync();
+
+                return Ok(new { status = true, msg = "Sipariş Bilgileri Güncellendi" });
             }
 
             return Unauthorized();

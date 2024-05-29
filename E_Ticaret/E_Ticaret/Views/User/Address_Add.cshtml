@@ -1,8 +1,31 @@
 ﻿@{
+    @model E_Ticaret.Models.AddressModel
+
     ViewData["Title"] = "E-Ticaret Kullanıcı";
 
     var address = ViewBag.Address;
 }
+
+<style>
+    .form_buttonc {
+        width: 100%;
+        text-align: center;
+        color: #ffffff;
+        background: #111111;
+        border-color: #111111;
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        border: 1px solid #e1e1e1;
+        border-top-color: rgb(225, 225, 225);
+        border-right-color: rgb(225, 225, 225);
+        border-bottom-color: rgb(225, 225, 225);
+        border-left-color: rgb(225, 225, 225);
+        padding: 14px 35px;
+        display: inline-block;
+    }
+</style>
 
 <section class="breadcrumb-option">
     <div class="container">
@@ -25,41 +48,41 @@
 @Html.Partial("_Navigation")
 
 <section class="shopping-cart">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="checkout__input">
-                    <p>Açık Adres<span>*</span></p>
-                    <input type="text" class="checkout__input__add">
-                </div>
-                <div class="checkout__input">
-                    <p>İl<span>*</span></p>
-                    <input type="text">
-                </div>
-                <div class="checkout__input">
-                    <p>İlçe<span>*</span></p>
-                    <input type="text">
-                </div>
-                <div class="checkout__input">
-                    <p>Posta Kodu<span>*</span></p>
-                    <input type="text">
-                </div>
-                <div class="checkout__input">
-                    <p>Ülke<span>*</span></p>
-                    <input type="text">
-                </div>
-
-                <div class="row">
-                    <div class="col-lg-6 col-md-6 col-sm-6">
+    <form action="" method="post">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="checkout__input">
+                        <p>Açık Adres<span>*</span></p>
+                        <input asp-for="AddressText" class="checkout__input__add">
                     </div>
-                    <div class="col-lg-6 col-md-6 col-sm-6">
-                        <div class="continue__btn update__btn">
-                            <a type="button"><i class="fa fa-plus"></i> Ekle</a>
+                    <div class="checkout__input">
+                        <p>İl<span>*</span></p>
+                        <input asp-for="Province">
+                    </div>
+                    <div class="checkout__input">
+                        <p>İlçe<span>*</span></p>
+                        <input asp-for="District">
+                    </div>
+                    <div class="checkout__input">
+                        <p>Posta Kodu<span>*</span></p>
+                        <input asp-for="PostalCode">
+                    </div>
+                    <div class="checkout__input">
+                        <p>Ülke<span>*</span></p>
+                        <input asp-for="Country">
+                    </div>
+                    <div class="row" style="margin-block-end: 50px;">
+                        <div class="col-12">
+                            <div class="continue__btn update__btn">
+                                <button type="submit" class="form_buttonc">
+                                    <i class="fa fa-plus"></i> Ekle
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
-    </div>
+    </form>
 </section>

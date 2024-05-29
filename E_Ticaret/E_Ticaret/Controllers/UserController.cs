@@ -10,6 +10,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json.Linq;
 
 namespace E_Ticaret.Controllers
 {
@@ -26,9 +27,112 @@ namespace E_Ticaret.Controllers
         {
             Tools.CheckToken(HttpContext);
 
+            dynamic settings = await Tools.SettingAsync();
+            ViewBag.Setting = settings;
+            string site_url = await Tools.GetUrl(HttpContext);
+            ViewBag.SiteUrl = site_url;
+            string api_url = settings.api_url;
+
             if (User.Identity!.IsAuthenticated)
             {
+                using (var httpClient = new HttpClient())
+                {
+                    string token = Request.Cookies["token"];
+                    if (!string.IsNullOrEmpty(token))
+                    {
+                        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                    }
+
+                    using (var response = await httpClient.GetAsync(api_url + "/Api/User/Statistics"))
+                    {
+                        string apiResponse = await response.Content.ReadAsStringAsync();
+                        JObject jsonResponse = JObject.Parse(apiResponse);
+
+                        ViewBag.Statistics = jsonResponse;
+                    }
+                }
+
                 return View();
+            }
+            else
+            {
+                return RedirectToAction("Index", "Login");
+            }
+        }
+
+        [HttpGet("User/Settings")]
+        public async Task<IActionResult> UserSettings()
+        {
+            Tools.CheckToken(HttpContext);
+
+            dynamic settings = await Tools.SettingAsync();
+            ViewBag.Setting = settings;
+            string site_url = await Tools.GetUrl(HttpContext);
+            ViewBag.SiteUrl = site_url;
+            string api_url = settings.api_url;
+
+            if (User.Identity!.IsAuthenticated)
+            {
+                var user = new User();
+
+                using (var httpClient = new HttpClient())
+                {
+                    string token = Request.Cookies["token"];
+                    if (!string.IsNullOrEmpty(token))
+                    {
+                        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                    }
+
+                    using (var response = await httpClient.GetAsync(api_url + "/Api/User"))
+                    {
+                        string apiResponse = await response.Content.ReadAsStringAsync();
+                        user = JsonSerializer.Deserialize<User>(apiResponse);
+                    }
+                }
+
+                ViewBag.User = user;
+
+                return View("Settings");
+            }
+            else
+            {
+                return RedirectToAction("Index", "Login");
+            }
+        }
+
+        [HttpPost("User/Settings")]
+        public async Task<IActionResult> UserSettingsPost(UserModel Form)
+        {
+            Tools.CheckToken(HttpContext);
+
+            dynamic settings = await Tools.SettingAsync();
+            ViewBag.Setting = settings;
+            string site_url = await Tools.GetUrl(HttpContext);
+            ViewBag.SiteUrl = site_url;
+            string api_url = settings.api_url;
+
+            if (User.Identity!.IsAuthenticated)
+            {
+                var jsonModel = JsonSerializer.Serialize(Form);
+
+                var httpContent = new StringContent(jsonModel, Encoding.UTF8, "application/json");
+
+                using (var httpClient = new HttpClient())
+                {
+                    string token = Request.Cookies["token"];
+                    if (!string.IsNullOrEmpty(token))
+                    {
+                        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                    }
+
+                    using (var response = await httpClient.PostAsync(api_url + "/Api/User", httpContent))
+                    {
+                        var apiResponse = await response.Content.ReadAsStringAsync();
+                        var api_data = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
+
+                        return Json(new { status = api_data.Status, msg = api_data.Msg });
+                    }
+                }
             }
             else
             {
@@ -91,6 +195,49 @@ namespace E_Ticaret.Controllers
             }
         }
 
+        [HttpPost("User/Address/Add")]
+        public async Task<IActionResult> AddressAddP(AddressModel Form)
+        {
+            Tools.CheckToken(HttpContext);
+
+            dynamic settings = await Tools.SettingAsync();
+            ViewBag.Setting = settings;
+            string site_url = await Tools.GetUrl(HttpContext);
+            ViewBag.SiteUrl = site_url;
+            string api_url = settings.api_url;
+
+            if (User.Identity!.IsAuthenticated)
+            {
+                var jsonModel = JsonSerializer.Serialize(Form);
+
+                var httpContent = new StringContent(jsonModel, Encoding.UTF8, "application/json");
+
+                using (var httpClient = new HttpClient())
+                {
+                    string token = Request.Cookies["token"];
+                    if (!string.IsNullOrEmpty(token))
+                    {
+                        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                    }
+
+                    using (var response = await httpClient.PostAsync(api_url + "/Api/User/Address", httpContent))
+                    {
+                        if (response.IsSuccessStatusCode)
+                        {
+                            string apiResponse = await response.Content.ReadAsStringAsync();
+                            return Json(new { status = true, msg = "Adres Eklendi" + "<meta http-equiv='refresh' content='2;URL=/User/Address'>" });
+                        }
+
+                        return BadRequest(new { status = true, msg = "Api isteği sırasında hata oluştu." });
+                    }
+                }
+            }
+            else
+            {
+                return RedirectToAction("Index", "Login");
+            }
+        }
+
         [HttpGet("User/Address/{id}")]
         public async Task<IActionResult> Address(int id = 0)
         {
@@ -124,6 +271,128 @@ namespace E_Ticaret.Controllers
                 ViewBag.Address = address;
 
                 return View("Address_Edit");
+            }
+            else
+            {
+                return RedirectToAction("Index", "Login");
+            }
+        }
+
+        [HttpPost("User/Address/{id}")]
+        public async Task<IActionResult> AddressEdit(AddressModel Form, int id = 0)
+        {
+            Tools.CheckToken(HttpContext);
+
+            dynamic settings = await Tools.SettingAsync();
+            ViewBag.Setting = settings;
+            string site_url = await Tools.GetUrl(HttpContext);
+            ViewBag.SiteUrl = site_url;
+            string api_url = settings.api_url;
+
+            if (User.Identity!.IsAuthenticated)
+            {
+                var jsonModel = JsonSerializer.Serialize(Form);
+
+                var httpContent = new StringContent(jsonModel, Encoding.UTF8, "application/json");
+
+                using (var httpClient = new HttpClient())
+                {
+                    string token = Request.Cookies["token"];
+                    if (!string.IsNullOrEmpty(token))
+                    {
+                        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                    }
+
+                    using (var response = await httpClient.PutAsync(api_url + "/Api/User/Address/" + id, httpContent))
+                    {
+                        if (response.IsSuccessStatusCode)
+                        {
+                            string apiResponse = await response.Content.ReadAsStringAsync();
+                            return Json(new { status = true, msg = "Adres Güncellendi" + "<meta http-equiv='refresh' content='2;URL=/User/Address'>" });
+                        }
+
+                        return BadRequest(new { status = true, msg = "Api isteği sırasında hata oluştu." });
+                    }
+                }
+            }
+            else
+            {
+                return RedirectToAction("Index", "Login");
+            }
+        }
+
+        [HttpDelete("User/Address/{id}")]
+        public async Task<IActionResult> DeleteAddress(int id)
+        {
+            Tools.CheckToken(HttpContext);
+
+            dynamic settings = await Tools.SettingAsync();
+            ViewBag.Setting = settings;
+            string site_url = await Tools.GetUrl(HttpContext);
+            ViewBag.SiteUrl = site_url;
+            string api_url = settings.api_url;
+
+            if (User.Identity!.IsAuthenticated)
+            {
+                using (var httpClient = new HttpClient())
+                {
+                    string token = Request.Cookies["token"];
+                    if (!string.IsNullOrEmpty(token))
+                    {
+                        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                    }
+
+                    using (var response = await httpClient.DeleteAsync(api_url + "/Api/User/Address/" + id))
+                    {
+                        if (response.IsSuccessStatusCode)
+                        {
+                            string apiResponse = await response.Content.ReadAsStringAsync();
+                            return Json(new { status = true, msg = "Adres Silindi " + "<meta http-equiv='refresh' content='2;URL=/User/Address'>" });
+                        }
+
+                        return BadRequest(new { status = true, msg = "Api isteği sırasında hata oluştu." });
+                    }
+                }
+            }
+            else
+            {
+                return RedirectToAction("Index", "Login");
+            }
+        }
+
+        [HttpGet("User/Comments")]
+        public async Task<IActionResult> Comments()
+        {
+            Tools.CheckToken(HttpContext);
+
+            dynamic settings = await Tools.SettingAsync();
+            ViewBag.Setting = settings;
+            string site_url = await Tools.GetUrl(HttpContext);
+            ViewBag.SiteUrl = site_url;
+            string api_url = settings.api_url;
+
+            if (User.Identity!.IsAuthenticated)
+            {
+                var comments = new List<Comment>();
+
+                using (var httpClient = new HttpClient())
+                {
+                    string token = Request.Cookies["token"];
+                    if (!string.IsNullOrEmpty(token))
+                    {
+                        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                    }
+
+                    using (var response = await httpClient.GetAsync(api_url + "/Api/User/Comments"))
+                    {
+                        string apiResponse = await response.Content.ReadAsStringAsync();
+                        comments = JsonSerializer.Deserialize<List<Comment>>(apiResponse);
+                    }
+                }
+
+                ViewBag.Comments = comments;
+
+                return View();
             }
             else
             {

@@ -1,4 +1,5 @@
 ﻿using E_Ticaret_API.Data;
+using System.Text.Json.Serialization;
 
 namespace E_Ticaret_API.DTO
 {
@@ -20,6 +21,8 @@ namespace E_Ticaret_API.DTO
         public DateTime OrderDate { get; set; }
         public int? OrderStatus { get; set; }
         public bool Status { get; set; }
+        public string? CargoCompany { get; set; }
+        public string? CargoCode { get; set; }
         public List<CartDTO> Carts { get; set; } = new List<CartDTO>();
         public List<PaymentNotificationDTO> PaymentNotifications { get; set; } = new List<PaymentNotificationDTO>();
     }

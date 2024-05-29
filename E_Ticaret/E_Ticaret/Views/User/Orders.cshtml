@@ -33,6 +33,7 @@
                                 <th>Sipariş Tutarı</th>
                                 <th>Kupon İndirimi</th>
                                 <th>Sipariş Tarihi</th>
+                                <th>Sipariş Durumu</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -51,6 +52,32 @@
                                     </td>
                                     <td class="product__cart__item">
                                         <h6>@order.OrderDate</h6>
+                                    </td>
+                                    <td>
+                                        @if (order.OrderStatus == 0)
+                                        {
+                                            <span class="badge badge-danger">Ödeme Bekliyor</span>
+                                        }
+                                        else if (order.OrderStatus == 1)
+                                        {
+                                            <span class="badge badge-success">Ödeme Yapıldı</span>
+                                        }
+                                        else if (order.OrderStatus == 2)
+                                        {
+                                            <span class="badge badge-primary">Onaylandı</span>
+                                        }
+                                        else if (order.OrderStatus == 3)
+                                        {
+                                            <span class="badge badge-warning">Kargoya Verildi</span>
+                                        }
+                                        else if (order.OrderStatus == 4)
+                                        {
+                                            <span class="badge badge-success">Teslim Edildi</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge badge-danger">İptal/İade Edildi</span>
+                                        }
                                     </td>
                                     <td class="cart__close" style="display: flex;">
                                         <a href="Orders/@order.OrderId" style="border: unset; background: unset;">

@@ -7,11 +7,11 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="breadcrumb__text">
-                    <h4>Adreslerim</h4>
+                    <h4>Yorumlarım</h4>
                     <div class="breadcrumb__links">
                         <a asp-controller="Home" asp-action="Index">AnaSayfa</a>
                         <a asp-controller="User" asp-action="Index">Hesabım</a>
-                        <span>Adreslerim</span>
+                        <span>Yorumlarım</span>
                     </div>
                 </div>
             </div>
@@ -24,46 +24,43 @@
 <section class="shopping-cart">
     <div class="container">
         <div class="row">
-            <div class="col-lg-12" style="margin-block-end: 50px;">
-                <div class="continue__btn update__btn">
-                    <a href="Address/Add" style="width: 100%; text-align: center;"><i class="fa fa-plus"></i> Adres Ekle</a>
-                </div>
-            </div>
             <div class="col-lg-12">
                 <div class="shopping__cart__table">
                     <table>
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>İl</th>
-                                <th>İlçe</th>
-                                <th>Posta Kodu</th>
-                                <th></th>
+                                <th>Ürün</th>
+                                <th>Yorum</th>
+                                <th>Yayınlanma Tarihi</th>
+                                <th>Durum</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var address in ViewBag.Address)
+                            @foreach (var comment in ViewBag.Comments)
                             {
                                 <tr>
                                     <td class="product__cart__item">
-                                        <h6>@address.AddressId</h6>
+                                        <h6>@comment.CommentId</h6>
                                     </td>
                                     <td class="product__cart__item">
-                                        <h6>@address.Province</h6>
+                                        <h6>@comment.Product.Name</h6>
                                     </td>
                                     <td class="product__cart__item">
-                                        <h6>@address.District</h6>
+                                        <h6>@comment.Text</h6>
                                     </td>
                                     <td class="product__cart__item">
-                                        <h6>@address.PostalCode</h6>
+                                        <h6>@comment.PublishedDate</h6>
                                     </td>
                                     <td class="cart__close" style="display: flex;">
-                                        <a href="/User/Address/@address.AddressId" style="border: unset; background: unset;">
-                                            <i class="fa fa-pencil"></i>
-                                        </a>
-                                        <button href="/User/Address/@address.AddressId" style="border: unset; background: unset;" class="delete_btn">
-                                            <i class="fa fa-close" style="background: #fd214a; color: #fff;"></i>
-                                        </button>
+                                        @if (comment.Status == false)
+                                        {
+                                            <span class="badge badge-danger">Pasif</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge badge-success">Aktif</span>
+                                        }
                                     </td>
                                 </tr>
                             }

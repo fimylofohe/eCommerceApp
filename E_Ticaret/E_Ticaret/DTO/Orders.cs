@@ -52,6 +52,12 @@ namespace E_Ticaret.DTO
         [JsonPropertyName("status")]
         public bool Status { get; set; }
 
+        [JsonPropertyName("cargoCompany")]
+        public string? CargoCompany { get; set; }
+
+        [JsonPropertyName("cargoCode")]
+        public string? CargoCode { get; set; }
+
         [JsonPropertyName("carts")]
         public List<Carts> Carts { get; set; } = new List<Carts>();
 

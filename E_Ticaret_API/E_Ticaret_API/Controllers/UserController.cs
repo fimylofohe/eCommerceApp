@@ -97,6 +97,113 @@ namespace E_Ticaret_API.Controllers
             }
         }
 
+        [HttpGet]
+        public async Task<IActionResult> UserGetData()
+        {
+            string token = Request.Headers[HeaderNames.Authorization].ToString();
+            if (!string.IsNullOrEmpty(token) && token.StartsWith("Bearer "))
+            {
+                string tokenWithoutBearer = token.Replace("Bearer ", "");
+                var userInfo = ValidateToken(tokenWithoutBearer);
+                if (userInfo != null)
+                {
+                    var user = await _context.Users
+                                                  .Where(p => p.UserId == userInfo.UserId)
+                                                  .Select(p => new UserDTO
+                                                  {
+                                                      Name = p.Name,
+                                                      Surname = p.Surname,
+                                                      Email = p.Email,
+                                                      PhoneNumber = p.PhoneNumber
+                                                  })
+                                                  .FirstOrDefaultAsync();
+
+                    return Ok(user);
+                }
+            }
+
+            return Unauthorized();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UserPostData(UserModel Form)
+        {
+            string token = Request.Headers[HeaderNames.Authorization].ToString();
+            if (!string.IsNullOrEmpty(token) && token.StartsWith("Bearer "))
+            {
+                string tokenWithoutBearer = token.Replace("Bearer ", "");
+                var userInfo = ValidateToken(tokenWithoutBearer);
+                if (userInfo != null)
+                {
+                    var userItem = await _context.Users.FirstOrDefaultAsync(c => c.UserId == userInfo.UserId);
+
+                    if (userItem == null)
+                    {
+                        return NotFound();
+                    }
+
+                    if (Form.Password == null)
+                    {
+                        userItem.Name = Form.Name;
+                        userItem.Surname = Form.Surname;
+                        userItem.Email = Form.Email;
+                        userItem.PhoneNumber = Form.PhoneNumber;
+                    }
+                    else
+                    {
+                        if(Form.EPassword == userItem.Password)
+                        {
+                            if (Form.Password == Form.TPassword)
+                            {
+                                userItem.Password = Form.Password;
+                            }
+                            else
+                            {
+                                return Ok(new { status = false, msg = "Yeni Şifreler Eşleşmiyor" });
+                            }
+                        }
+                        else
+                        {
+                            return Ok(new { status = false, msg = "Eski Şifreler Eşleşmiyor" });
+                        }
+                    }
+
+                    _context.Users.Update(userItem);
+                    await _context.SaveChangesAsync();
+
+                    return Ok(new { status = true, msg = "Kullanıcı Bilgileri Güncellendi" + "<meta http-equiv='refresh' content='2;'>" });
+                }
+            }
+
+            return Unauthorized();
+        }
+
+        [HttpGet("Statistics")]
+        public async Task<IActionResult> Statistics()
+        {
+            string token = Request.Headers[HeaderNames.Authorization].ToString();
+            if (!string.IsNullOrEmpty(token) && token.StartsWith("Bearer "))
+            {
+                string tokenWithoutBearer = token.Replace("Bearer ", "");
+                var userInfo = ValidateToken(tokenWithoutBearer);
+                if (userInfo != null)
+                {
+                    var address_adet = await _context.Addresses.Where(p => p.UserId == userInfo.UserId).CountAsync();
+                    var order_adet = await _context.Orders.Where(p => p.UserId == userInfo.UserId).CountAsync();
+                    var comment_adet = await _context.Comments.Where(p => p.UserId == userInfo.UserId).CountAsync();
+
+                    return Json(new
+                    {
+                        AddressCount = address_adet,
+                        OrderCount = order_adet,
+                        CommentCount = comment_adet
+                    });
+                }
+            }
+
+            return Unauthorized();
+        }
+
         [HttpGet("Address")]
         public async Task<IActionResult> Address()
         {
@@ -153,6 +260,149 @@ namespace E_Ticaret_API.Controllers
                                                   .FirstOrDefaultAsync();
 
                     return Ok(carts);
+                }
+            }
+
+            return Unauthorized();
+        }
+
+        [HttpPost("Address")]
+        public async Task<IActionResult> OrdersPay(AddressModel Form)
+        {
+            string token = Request.Headers[HeaderNames.Authorization].ToString();
+            if (!string.IsNullOrEmpty(token) && token.StartsWith("Bearer "))
+            {
+                string tokenWithoutBearer = token.Replace("Bearer ", "");
+                var userInfo = ValidateToken(tokenWithoutBearer);
+                if (userInfo != null)
+                {
+                    var addNot = new Address
+                    {
+                        UserId = userInfo.UserId,
+                        AddressText = Form.AddressText,
+                        District = Form.District,
+                        Province = Form.Province,
+                        Country = Form.Country,
+                        PostalCode = Form.PostalCode,
+                    };
+
+                    var addNotc = await _context.Addresses.AddAsync(addNot);
+                    try
+                    {
+                        await _context.SaveChangesAsync();
+                        return Ok(new { status = true, msg = "Kayıt Başarılı" });
+                    }
+                    catch (DbUpdateException ex)
+                    {
+                        return BadRequest(new { status = true, msg = ex.InnerException.Message });
+                    }
+                }
+            }
+
+            return Unauthorized();
+        }
+
+        [HttpPut("Address/{id}")]
+        public async Task<IActionResult> AddressEdit(AddressModel Form, int id = 0)
+        {
+            string token = Request.Headers[HeaderNames.Authorization].ToString();
+            if (!string.IsNullOrEmpty(token) && token.StartsWith("Bearer "))
+            {
+                string tokenWithoutBearer = token.Replace("Bearer ", "");
+                var userInfo = ValidateToken(tokenWithoutBearer);
+                if (userInfo != null)
+                {
+                    var addressItem = await _context.Addresses.FirstOrDefaultAsync(c => c.AddressId == id);
+
+                    if (addressItem == null)
+                    {
+                        return NotFound();
+                    }
+
+                    addressItem.AddressText = Form.AddressText;
+                    addressItem.Province = Form.Province;
+                    addressItem.District = Form.District;
+                    addressItem.Country = Form.Country;
+                    addressItem.PostalCode = Form.PostalCode;
+
+                    _context.Addresses.Update(addressItem);
+                    await _context.SaveChangesAsync();
+
+                    return Ok(new { status = true, msg = "Adres Bilgisi Güncellendi" });
+                }
+            }
+
+            return Unauthorized();
+        }
+
+        [HttpDelete("Address/{id}")]
+        public async Task<IActionResult> AddressDelete(int id = 0)
+        {
+            string token = Request.Headers[HeaderNames.Authorization].ToString();
+            if (!string.IsNullOrEmpty(token) && token.StartsWith("Bearer "))
+            {
+                string tokenWithoutBearer = token.Replace("Bearer ", "");
+                var userInfo = ValidateToken(tokenWithoutBearer);
+                if (userInfo != null)
+                {
+                    var addressItem = await _context.Addresses.FirstOrDefaultAsync(c => c.AddressId == id);
+
+                    if (addressItem == null)
+                    {
+                        return NotFound();
+                    }
+
+                    _context.Addresses.Remove(addressItem);
+                    await _context.SaveChangesAsync();
+
+                    return Ok(new { status = true, msg = "Adres Silindi." + "<meta http-equiv='refresh' content='1;'>" });
+                }
+            }
+
+            return Unauthorized();
+        }
+
+        [HttpGet("Comments")]
+        public async Task<IActionResult> Comments()
+        {
+            string token = Request.Headers[HeaderNames.Authorization].ToString();
+            if (!string.IsNullOrEmpty(token) && token.StartsWith("Bearer "))
+            {
+                string tokenWithoutBearer = token.Replace("Bearer ", "");
+                var userInfo = ValidateToken(tokenWithoutBearer);
+                if (userInfo != null)
+                {
+                    var comments = await _context.Comments
+                                    .Where(p => p.UserId == userInfo.UserId)
+                                    .Select(p => new CommentDTO
+                                    {
+                                        CommentId = p.CommentId,
+                                        ProductId = p.ProductId,
+                                        UserId = p.UserId,
+                                        OrderId = p.OrderId,
+                                        Text = p.Text,
+                                        PublishedDate = p.PublishedDate,
+                                        Status = p.Status,
+                                        Product = _context.Products.Where(c => c.ProductId == p.ProductId).Select(c => new ProductDTO
+                                        {
+                                            ProductId = c.ProductId,
+                                            CategoryId = c.CategoryId,
+                                            SKU = c.SKU,
+                                            Name = c.Name,
+                                            Description = c.Description,
+                                            Price = c.Price,
+                                            Stock = c.Stock,
+                                            Status = c.Status,
+                                            Pictures = c.Pictures.Select(pic => new PictureDTO
+                                            {
+                                                PictureId = pic.PictureId,
+                                                Path = pic.Path
+                                            }).ToList()
+                                        }).FirstOrDefault()
+                                    })
+                                    .ToListAsync();
+
+                    return Ok(comments);
                 }
             }
 
@@ -340,6 +590,8 @@ namespace E_Ticaret_API.Controllers
                             OrderDate = p.OrderDate,
                             OrderStatus = p.OrderStatus,
                             Status = p.Status,
+                            CargoCompany = p.CargoCompany,
+                            CargoCode = p.CargoCode,
                             Carts = p.Carts.Select(cart => new CartDTO
                             {
                                 CartId = cart.CartId,

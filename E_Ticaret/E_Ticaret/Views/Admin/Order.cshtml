@@ -1,4 +1,6 @@
 ﻿@{
+    @model E_Ticaret.Models.OrderModel
+
     ViewData["Title"] = "E-Ticaret Kullanıcı";
 
     var order = ViewBag.Orders;
@@ -91,11 +93,27 @@
                                             <td>:</td>
                                             @if (order.OrderStatus == 0)
                                             {
-                                                <td style="color: #061b3d;"><b>Onay Bekliyor</b></td>
+                                                <td><span class="badge badge-danger">Ödeme Bekliyor</span></td>
                                             }
                                             else if (order.OrderStatus == 1)
                                             {
-                                                <td style="color: #009d45;"><b>Onaylandı</b></td>
+                                                <td><span class="badge badge-success">Ödeme Yapıldı</span></td>
+                                            }
+                                            else if (order.OrderStatus == 2)
+                                            {
+                                                <td><span class="badge badge-primary">Onaylandı</span></td>
+                                            }
+                                            else if (order.OrderStatus == 3)
+                                            {
+                                                <td><span class="badge badge-warning">Kargoya Verildi</span></td>
+                                            }
+                                            else if (order.OrderStatus == 4)
+                                            {
+                                                <td><span class="badge badge-success">Teslim Edildi</span></td>
+                                            }
+                                            else
+                                            {
+                                                <td><span class="badge badge-danger">İptal/İade Edildi</span></td>
                                             }
                                         </tr>
                                         <tr>
@@ -380,7 +398,7 @@
                             }
                         </div>
                         <div class="row">
-                            <div class="col-12 col-md-6">
+                            <div class="col-12 col-md-4">
                                 <div class="card mt-4 shadow">
                                     <div class="card-header bg-gradient-success">
                                         <h4 class="card-title">Sipariş Notu</h4>
@@ -399,7 +417,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-md-6 no-print">
+                            <div class="col-12 col-md-8 no-print">
                                 <div class="card mt-4 shadow">
                                     <div class="card-header bg-gradient-dark">
                                         <h4 class="card-title">Sipariş Güncelleme</h4>
@@ -408,16 +426,16 @@
                                         <form action="" method="post">
                                             <div class="row">
                                                 <div class="col-md-3">
-                                                    <label>Kargo Firması</label>
-                                                    <input type="text" class="form-control" name="kargo_adi" value="" placeholder="Kargo Firması">
+                                                    <label asp-for="CargoCompany"></label>
+                                                    <input asp-for="CargoCompany" class="form-control" value="@order.CargoCompany">
                                                 </div>
                                                 <div class="col-md-3">
-                                                    <label>Kargo Takip Numarası</label>
-                                                    <input type="text" class="form-control" name="kargo_takip" value="" placeholder="Kargo Takip Numarası">
+                                                    <label asp-for="CargoCode"></label>
+                                                    <input asp-for="CargoCode" class="form-control" value="@order.CargoCode">
                                                 </div>
                                                 <div class="col-md-3">
-                                                    <label>Sipariş Durumu</label>
-                                                    <select id="durum" name="durum" class="form-control">
+                                                    <label asp-for="OrderStatus">Sipariş Durumu</label>
+                                                    <select asp-for="OrderStatus" class="form-control">
                                                         @{
                                                             string[] data_list = { "Ödeme Bekliyor", "Ödeme Yapıldı", "Onaylanan", "Kargoya Verildi", "Teslim Edildi", "İptal/İade Edildi" };
 

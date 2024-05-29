@@ -63,7 +63,7 @@
                                 <div class="product__item">
                                     @if (product.Pictures != null && product.Pictures.Any())
                                     {
-                                        <a href="Product/Detail/@product.ProductId">
+                                        <a href="Product/@product.SeoURL">
                                             <div class="product__item__pic set-bg" data-setbg="img/@product.Pictures[0].Path">
                                                 <span class="label" style="margin: -15px;">@product.Category.Name</span>
                                             </div>

@@ -68,6 +68,7 @@ namespace E_Ticaret_API.Controllers
                                                  CategoryId = pro.CategoryId,
                                                  SKU = pro.SKU,
                                                  Name = pro.Name,
+                                                 SeoURL = pro.SeoURL,
                                                  Description = pro.Description,
                                                  Price = pro.Price,
                                                  Stock = pro.Stock,
@@ -104,6 +105,7 @@ namespace E_Ticaret_API.Controllers
                                              CategoryId = p.CategoryId,
                                              SKU = p.SKU,
                                              Name = p.Name,
+                                             SeoURL = p.SeoURL,
                                              Description = p.Description,
                                              Price = p.Price,
                                              Stock = p.Stock,
@@ -154,6 +156,7 @@ namespace E_Ticaret_API.Controllers
                                              CategoryId = p.CategoryId,
                                              SKU = p.SKU,
                                              Name = p.Name,
+                                             SeoURL = p.SeoURL,
                                              Description = p.Description,
                                              Price = p.Price,
                                              Stock = p.Stock,
@@ -184,10 +187,10 @@ namespace E_Ticaret_API.Controllers
             }
         }
 
-        [HttpGet("Product/{id}")]
-        public async Task<IActionResult> GetProduct(int? id)
+        [HttpGet("Product/{seo_url}")]
+        public async Task<IActionResult> GetProduct(string? seo_url)
         {
-            if (id == null)
+            if (seo_url == null)
             {
                 return NotFound();
             }
@@ -197,13 +200,14 @@ namespace E_Ticaret_API.Controllers
                                          .Include(p => p.Category)
                                          .Include(p => p.Comments)
                                          .Where(p => p.Status)
-                                         .Where(p => p.ProductId == id)
+                                         .Where(p => p.SeoURL == seo_url)
                                          .Select(p => new ProductDTO
                                          {
                                              ProductId = p.ProductId,
                                              CategoryId = p.CategoryId,
                                              SKU = p.SKU,
                                              Name = p.Name,
+                                             SeoURL = p.SeoURL,
                                              Description = p.Description,
                                              Price = p.Price,
                                              Stock = p.Stock,
@@ -237,6 +241,50 @@ namespace E_Ticaret_API.Controllers
                                          .FirstOrDefaultAsync();
 
             return Ok(products);
+        }
+
+        [HttpGet("Blogs/{page}")]
+        public async Task<IActionResult> GetBlogs(int page = 1)
+        {
+            int page_size = 10;
+
+            int blogs_count = await _context.Blogs
+                                        .Where(p => p.Status)
+                                        .CountAsync();
+
+            var blogs = await _context.Blogs
+                                        .Where(p => p.Status)
+                                        .OrderBy(p => p.BlogId)
+                                        .Skip((page - 1) * page_size)
+                                        .Take(page_size)
+                                        .Select(p => new BlogDTO
+                                        {
+                                            BlogId = p.BlogId,
+                                            Title = p.Title,
+                                            SeoURL = p.SeoURL,
+                                            Text = p.Text,
+                                            Picture = p.Picture,
+                                            PublishedDate = p.PublishedDate,
+                                            Status = p.Status,
+                                        })
+                                        .ToListAsync();
+            return Json(new { TotalProduct = blogs_count, ProductPerPage = page_size, TotalPages = (int)Math.Ceiling((decimal)blogs_count / page_size), blogs });
+        }
+
+        [HttpGet("Blog/{seo_url}")]
+        public async Task<IActionResult> GetBlog(string seo_url)
+        {
+            var blog = await _context.Blogs.Where(p => p.SeoURL == seo_url).Select(p => new BlogDTO
+            {
+                BlogId = p.BlogId,
+                Title = p.Title,
+                SeoURL = p.SeoURL,
+                Text = p.Text,
+                PublishedDate = p.PublishedDate,
+                Picture = p.Picture
+            }).FirstOrDefaultAsync();
+
+            return Ok(blog);
         }
 
         [HttpGet("Banks")]

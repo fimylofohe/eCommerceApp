@@ -1,0 +1,97 @@
+﻿@{
+    ViewData["Title"] = "Admin Panel";
+    var blogs = ViewBag.Blogs;
+}
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Bloglar</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item "><a asp-controller="Admin" asp-action="Index">Panel</a></li>
+                    <li class="breadcrumb-item active">Bloglar</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-gradient-info">
+                        <h3 class="card-title">Bloglar</h3>
+                        <a class="btn btn-light" href="/Admin/Blog/Add" style="float: right;">Blog Ekle</a>
+                    </div>
+                    <div class="card-body">
+                        <table id="example1" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Görsel</th>
+                                    <th>Başlık</th>
+                                    <th>Yayınlanma Tarihi</th>
+                                    <th>Durum</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var blog in blogs)
+                                {
+                                    <tr>
+                                        <td>
+                                            @blog.BlogId
+                                        </td>
+                                        <td>
+                                            <img src="/img/@blog.Picture" style="width: 100px;" />
+                                        </td>
+                                        <td>
+                                            <a href="/Blog/@blog.SeoURL">
+                                                @blog.Title
+                                            </a>
+                                        </td>
+                                        <td>
+                                            @blog.PublishedDate
+                                        </td>
+                                        <td>
+                                            @if (blog.Status == false)
+                                            {
+                                                <span class="badge badge-danger">Pasif</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge badge-success">Aktif</span>
+                                            }
+                                        </td>
+                                        <td style="display: flex;">
+                                            <a href="/Admin/Blog/@blog.BlogId" class="btn btn-info">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <a href="/Admin/Blog/@blog.BlogId" class="btn btn-danger delete_btn">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Görsel</th>
+                                    <th>Başlık</th>
+                                    <th>Yayınlanma Tarihi</th>
+                                    <th>Durum</th>
+                                    <th></th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

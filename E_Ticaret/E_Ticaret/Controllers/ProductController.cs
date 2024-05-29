@@ -18,7 +18,8 @@ namespace E_Ticaret.Controllers
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<IActionResult> Detail(int id)
+        [HttpGet("Product/{seo_url}")]
+        public async Task<IActionResult> Index(string seo_url)
         {
             Tools.GenerateGuestToken(HttpContext);
             Tools.CheckToken(HttpContext);
@@ -33,7 +34,7 @@ namespace E_Ticaret.Controllers
 
             using (var httpClient = new HttpClient())
             {
-                using (var response = await httpClient.GetAsync(api_url + "/Api/Data/Product/" + id))
+                using (var response = await httpClient.GetAsync(api_url + "/Api/Data/Product/" + seo_url))
                 {
                     string apiResponse = await response.Content.ReadAsStringAsync();
                     products = JsonSerializer.Deserialize<Product>(apiResponse);

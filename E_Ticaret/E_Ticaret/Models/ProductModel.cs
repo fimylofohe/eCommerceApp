@@ -32,14 +32,5 @@ namespace E_Ticaret.Models
 
         [Display(Name = "Durum")]
         public required bool? Status { get; set; }
-
-        [JsonPropertyName("pictures")]
-        public List<Picture> Pictures { get; set; } = new List<Picture>();
-
-        [JsonPropertyName("category")]
-        public Category Category { get; set; }
-
-        [JsonPropertyName("comments")]
-        public List<Comment> Comments { get; set; } = new List<Comment>();
     }
 }

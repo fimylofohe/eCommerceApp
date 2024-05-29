@@ -70,7 +70,7 @@
                             <span> - 5 Reviews</span>
                         </div>
                         <h3>@(Model.Price.HasValue ? Double.Parse(Model.Price.ToString()).ToString("N2") : "") ₺ ₺</h3>
-                        <p>@Model.Description</p>
+                        <p>@Html.Raw(Model.Description)</p>
                         <div class="product__details__cart__option">
                             <form action="/Cart/Add/@Model.ProductId">
                                 <div class="quantity">

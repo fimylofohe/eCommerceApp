@@ -10,6 +10,7 @@
         public double? Price { get; set; }
         public int? Stock { get; set; }
         public bool Status { get; set; }
+        public string? SeoURL { get; set; }
 
         public CategoryDTO Category { get; set; } = null!;
         public List<PictureDTO> Pictures { get; set; } = new List<PictureDTO>();

@@ -20,6 +20,7 @@ using Microsoft.Net.Http.Headers;
 using static Azure.Core.HttpHeader;
 using System.Net;
 using Newtonsoft.Json.Linq;
+using System.Text.RegularExpressions;
 
 namespace E_Ticaret_API.Controllers
 {
@@ -189,6 +190,7 @@ namespace E_Ticaret_API.Controllers
                                         CategoryId = cart.Product.CategoryId,
                                         SKU = cart.Product.SKU,
                                         Name = cart.Product.Name,
+                                        SeoURL = cart.Product.SeoURL,
                                         Description = cart.Product.Description,
                                         Price = cart.Product.Price,
                                         Stock = cart.Product.Stock,
@@ -302,6 +304,7 @@ namespace E_Ticaret_API.Controllers
                                         CategoryId = cart.Product.CategoryId,
                                         SKU = cart.Product.SKU,
                                         Name = cart.Product.Name,
+                                        SeoURL = cart.Product.SeoURL,
                                         Description = cart.Product.Description,
                                         Price = cart.Product.Price,
                                         Stock = cart.Product.Stock,
@@ -425,6 +428,7 @@ namespace E_Ticaret_API.Controllers
                                         CategoryId = cart.Product.CategoryId,
                                         SKU = cart.Product.SKU,
                                         Name = cart.Product.Name,
+                                        SeoURL = cart.Product.SeoURL,
                                         Description = cart.Product.Description,
                                         Price = cart.Product.Price,
                                         Stock = cart.Product.Stock,
@@ -629,6 +633,7 @@ namespace E_Ticaret_API.Controllers
                                         CategoryId = cart.Product.CategoryId,
                                         SKU = cart.Product.SKU,
                                         Name = cart.Product.Name,
+                                        SeoURL = cart.Product.SeoURL,
                                         Description = cart.Product.Description,
                                         Price = cart.Product.Price,
                                         Stock = cart.Product.Stock,
@@ -686,6 +691,7 @@ namespace E_Ticaret_API.Controllers
                                     CategoryId = product.CategoryId,
                                     SKU = product.SKU,
                                     Name = product.Name,
+                                    SeoURL = product.SeoURL,
                                     Description = product.Description,
                                     Price = product.Price,
                                     Stock = product.Stock,
@@ -727,6 +733,7 @@ namespace E_Ticaret_API.Controllers
                                     CategoryId = cart.Product.CategoryId,
                                     SKU = cart.Product.SKU,
                                     Name = cart.Product.Name,
+                                    SeoURL = cart.Product.SeoURL,
                                     Description = cart.Product.Description,
                                     Price = cart.Product.Price,
                                     Stock = cart.Product.Stock,
@@ -885,6 +892,7 @@ namespace E_Ticaret_API.Controllers
                             CategoryId = p.CategoryId,
                             SKU = p.SKU,
                             Name = p.Name,
+                            SeoURL = p.SeoURL,
                             Description = p.Description,
                             Price = p.Price,
                             Stock = p.Stock,
@@ -932,6 +940,7 @@ namespace E_Ticaret_API.Controllers
                             CategoryId = p.CategoryId,
                             SKU = p.SKU,
                             Name = p.Name,
+                            SeoURL = Seo(p.Name),
                             Description = p.Description,
                             Price = p.Price,
                             Stock = p.Stock,
@@ -978,6 +987,7 @@ namespace E_Ticaret_API.Controllers
                 }
 
                 productItem.Name = Form.Name;
+                productItem.SeoURL = Seo(Form.Name);
                 productItem.CategoryId = Form.CategoryId;
                 productItem.Description = Form.Description;
                 productItem.SKU = Form.Sku;
@@ -1003,6 +1013,7 @@ namespace E_Ticaret_API.Controllers
                 var proItem = new Product
                 {
                     Name = Form.Name,
+                    SeoURL = Seo(Form.Name),
                     Description = Form.Description,
                     SKU = Form.Sku,
                     Price = Form.Price,
@@ -1191,6 +1202,7 @@ namespace E_Ticaret_API.Controllers
                         CategoryId = product.CategoryId,
                         SKU = product.SKU,
                         Name = product.Name,
+                        SeoURL = product.SeoURL,
                         Description = product.Description,
                         Price = product.Price,
                         Stock = product.Stock,
@@ -1246,6 +1258,7 @@ namespace E_Ticaret_API.Controllers
                         CategoryId = product.CategoryId,
                         SKU = product.SKU,
                         Name = product.Name,
+                        SeoURL = product.SeoURL,
                         Description = product.Description,
                         Price = product.Price,
                         Stock = product.Stock,
@@ -1713,6 +1726,7 @@ namespace E_Ticaret_API.Controllers
                                     CategoryId = cart.Product.CategoryId,
                                     SKU = cart.Product.SKU,
                                     Name = cart.Product.Name,
+                                    SeoURL = cart.Product.SeoURL,
                                     Description = cart.Product.Description,
                                     Price = cart.Product.Price,
                                     Stock = cart.Product.Stock,
@@ -1848,6 +1862,7 @@ namespace E_Ticaret_API.Controllers
                                     CategoryId = cart.Product.CategoryId,
                                     SKU = cart.Product.SKU,
                                     Name = cart.Product.Name,
+                                    SeoURL = cart.Product.SeoURL,
                                     Description = cart.Product.Description,
                                     Price = cart.Product.Price,
                                     Stock = cart.Product.Stock,
@@ -2106,6 +2121,139 @@ namespace E_Ticaret_API.Controllers
             return Unauthorized();
         }
 
+        [HttpGet("Blogs")]
+        public async Task<IActionResult> GetBlogs()
+        {
+            if (await CheckAdmin() == true)
+            {
+                var blogs = await _context.Blogs
+                    .OrderBy(p => p.BlogId)
+                    .Select(p => new BlogDTO
+                    {
+                        BlogId = p.BlogId,
+                        Title = p.Title,
+                        Text = p.Text,
+                        SeoURL = p.SeoURL,
+                        Picture = p.Picture,
+                        PublishedDate = p.PublishedDate,
+                        Status = p.Status
+                    })
+                    .ToListAsync();
+
+                return Ok(blogs);
+            }
+
+            return Unauthorized();
+        }
+
+        [HttpGet("Blog/{id}")]
+        public async Task<IActionResult> GetBlog(int id)
+        {
+            if (await CheckAdmin() == true)
+            {
+                var slider = await _context.Blogs
+                    .OrderBy(p => p.BlogId)
+                    .Where(p => p.BlogId == id)
+                    .Select(p => new BlogDTO
+                    {
+                        BlogId = p.BlogId,
+                        Title = p.Title,
+                        Text = p.Text,
+                        SeoURL = p.SeoURL,
+                        Picture = p.Picture,
+                        PublishedDate = p.PublishedDate,
+                        Status = p.Status
+                    })
+                    .FirstOrDefaultAsync();
+
+                return Ok(slider);
+            }
+
+            return Unauthorized();
+        }
+
+        [HttpPut("Blog/{id}")]
+        public async Task<IActionResult> SetBlog(BlogModel Form, int id = 0)
+        {
+            if (await CheckAdmin() == true)
+            {
+                var blogItem = await _context.Blogs.FirstOrDefaultAsync(c => c.BlogId == id);
+
+                if (blogItem == null)
+                {
+                    return NotFound();
+                }
+
+                if (Form.Picture == null)
+                {
+                    blogItem.Title = Form.Title;
+                    blogItem.Text = Form.Text;
+                    blogItem.SeoURL = Seo(Form.Title);
+                    blogItem.Status = Form.Status;
+                }
+                else
+                {
+                    blogItem.Title = Form.Title;
+                    blogItem.Text = Form.Text;
+                    blogItem.SeoURL = Seo(Form.Title);
+                    blogItem.Status = Form.Status;
+                    blogItem.Picture = Form.Picture;
+                }
+
+                _context.Blogs.Update(blogItem);
+                await _context.SaveChangesAsync();
+
+                return Ok(new { status = true, msg = "Blog Bilgileri Güncellendi" + "<meta http-equiv='refresh' content='2;'>" });
+            }
+
+            return Unauthorized();
+        }
+
+        [HttpPost("Blog")]
+        public async Task<IActionResult> AddBlog(BlogModel Form)
+        {
+            if (await CheckAdmin() == true)
+            {
+                var blogItem = new Blog
+                {
+                    Title = Form.Title,
+                    Text = Form.Text,
+                    SeoURL = Seo(Form.Title),
+                    Picture = Form.Picture,
+                    PublishedDate = DateTime.Now,
+                    Status = Form.Status,
+                };
+
+                _context.Blogs.Add(blogItem);
+                await _context.SaveChangesAsync();
+
+                return Json(new { status = true, msg = "Blog Eklendi" + "<meta http-equiv='refresh' content='2;URL=/Admin/Blogs'>" });
+            }
+
+            return Unauthorized();
+        }
+
+        [HttpDelete("Blog/{id}")]
+        public async Task<IActionResult> DeleteBlog(int id)
+        {
+            if (await CheckAdmin() == true)
+            {
+                var blogItem = await _context.Blogs.FirstOrDefaultAsync(c => c.BlogId == id);
+
+                if (blogItem == null)
+                {
+                    return NotFound();
+                }
+
+                _context.Blogs.Remove(blogItem);
+                await _context.SaveChangesAsync();
+
+                return Ok(new { status = true, msg = "Blog Silindi." + "<meta http-equiv='refresh' content='1;'>" });
+            }
+
+            return Unauthorized();
+        }
+
         private User ValidateToken(string token)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -2169,6 +2317,27 @@ namespace E_Ticaret_API.Controllers
             }
 
             return false;
+        }
+
+        private static string Seo(string text)
+        {
+            var find = new char[] { 'Ç', 'Ş', 'Ğ', 'Ü', 'İ', 'Ö', 'ç', 'ş', 'ğ', 'ü', 'ö', 'ı', '+', '#', '.' };
+            var replace = new string[] { "c", "s", "g", "u", "i", "o", "c", "s", "g", "u", "o", "i", "plus", "sharp", "-" };
+
+            for (int i = 0; i < find.Length; i++)
+            {
+                text = text.Replace(find[i].ToString(), replace[i]);
+            }
+
+            text = text.ToLower();
+
+            text = Regex.Replace(text, @"[^a-z0-9\-_\.]", " ");
+
+            text = Regex.Replace(text, @"\s+", " ");
+
+            text = text.Trim().Replace(" ", "-");
+
+            return text;
         }
     }
 }

@@ -14,6 +14,7 @@ namespace E_Ticaret_API.Data
         public double? Price { get; set; }
         public int? Stock {  get; set; }
         public bool Status { get; set; }
+        public string? SeoURL { get; set; }
 
         public ICollection<Picture> Pictures { get; set; } = new List<Picture>();
         public ICollection<Comment> Comments { get; set; } = new List<Comment>();

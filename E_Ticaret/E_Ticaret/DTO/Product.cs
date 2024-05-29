@@ -28,6 +28,9 @@ namespace E_Ticaret.DTO
         [JsonPropertyName("status")]
         public bool? Status { get; set; }
 
+        [JsonPropertyName("seoURL")]
+        public string? SeoURL { get; set; }
+
         [JsonPropertyName("pictures")]
         public List<Picture> Pictures { get; set; } = new List<Picture>();
 

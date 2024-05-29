@@ -1789,7 +1789,6 @@ namespace E_Ticaret.Controllers
                     }
                 }
 
-                // JSON string'ine dönüştürme
                 var jsonModel = json_obj.ToString();
 
                 var httpContent = new StringContent(jsonModel, Encoding.UTF8, "application/json");
@@ -1815,6 +1814,266 @@ namespace E_Ticaret.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [HttpGet("Admin/Blogs")]
+        public async Task<IActionResult> Blogs()
+        {
+            if (await CheckAdmin() == true)
+            {
+                dynamic settings = await Tools.SettingAsync();
+                ViewBag.Setting = settings;
+                string site_url = await Tools.GetUrl(HttpContext);
+                ViewBag.SiteUrl = site_url;
+                string api_url = settings.api_url;
+
+                var blogs = new List<Blog>();
+
+                using (var httpClient = new HttpClient())
+                {
+                    string token = Request.Cookies["token"];
+                    if (!string.IsNullOrEmpty(token))
+                    {
+                        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                    }
+
+                    using (var response = await httpClient.GetAsync(api_url + "/Api/Admin/Blogs"))
+                    {
+                        string apiResponse = await response.Content.ReadAsStringAsync();
+                        blogs = JsonSerializer.Deserialize<List<Blog>>(apiResponse);
+                    }
+                }
+
+                ViewBag.Blogs = blogs;
+                return View("Blogs");
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet("Admin/Blog/Add")]
+        public async Task<IActionResult> AddBlog()
+        {
+            if (await CheckAdmin() == true)
+            {
+                return View("BlogAdd");
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpPost("Admin/Blog/Add")]
+        public async Task<IActionResult> AddBlog(IFormFile Picture, BlogModel Form)
+        {
+            if (await CheckAdmin() == true)
+            {
+                dynamic settings = await Tools.SettingAsync();
+                ViewBag.Setting = settings;
+                string site_url = await Tools.GetUrl(HttpContext);
+                ViewBag.SiteUrl = site_url;
+                string api_url = settings.api_url;
+
+                if (Picture != null)
+                {
+                    var extent = Path.GetExtension(Picture.FileName);
+                    var randomName = ($"{Guid.NewGuid()}{extent}");
+                    var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\img", randomName);
+
+                    using (var stream = new FileStream(path, FileMode.Create))
+                    {
+                        await Picture.CopyToAsync(stream);
+                    }
+
+                    Form.Picture = randomName;
+
+                    var jsonModel = JsonSerializer.Serialize(Form);
+
+                    var httpContent = new StringContent(jsonModel, Encoding.UTF8, "application/json");
+
+                    using (var httpClient = new HttpClient())
+                    {
+                        string token = Request.Cookies["token"];
+                        if (!string.IsNullOrEmpty(token))
+                        {
+                            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                        }
+
+                        using (var response = await httpClient.PostAsync(api_url + "/Api/Admin/Blog", httpContent))
+                        {
+                            string apiResponse = await response.Content.ReadAsStringAsync();
+                            var api_data = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
+
+                            return Json(new { status = api_data.Status, msg = api_data.Msg });
+                        }
+                    }
+                }
+                else
+                {
+                    Form.Picture = "default-blog.png";
+
+                    var jsonModel = JsonSerializer.Serialize(Form);
+
+                    var httpContent = new StringContent(jsonModel, Encoding.UTF8, "application/json");
+
+                    using (var httpClient = new HttpClient())
+                    {
+                        string token = Request.Cookies["token"];
+                        if (!string.IsNullOrEmpty(token))
+                        {
+                            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                        }
+
+                        using (var response = await httpClient.PostAsync(api_url + "/Api/Admin/Blog", httpContent))
+                        {
+                            string apiResponse = await response.Content.ReadAsStringAsync();
+                            var api_data = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
+
+                            return Json(new { status = api_data.Status, msg = api_data.Msg });
+                        }
+                    }
+                }
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet("Admin/Blog/{id}")]
+        public async Task<IActionResult> GetBlog(int id)
+        {
+            if (await CheckAdmin() == true)
+            {
+                dynamic settings = await Tools.SettingAsync();
+                ViewBag.Setting = settings;
+                string site_url = await Tools.GetUrl(HttpContext);
+                ViewBag.SiteUrl = site_url;
+                string api_url = settings.api_url;
+
+                var blog = new Blog();
+
+                using (var httpClient = new HttpClient())
+                {
+                    string token = Request.Cookies["token"];
+                    if (!string.IsNullOrEmpty(token))
+                    {
+                        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                    }
+
+                    using (var response = await httpClient.GetAsync(api_url + "/Api/Admin/Blog/" + id))
+                    {
+                        string apiResponse = await response.Content.ReadAsStringAsync();
+                        blog = JsonSerializer.Deserialize<Blog>(apiResponse);
+                    }
+                }
+
+                ViewBag.Blog = blog;
+                return View("Blog");
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpPost("Admin/Blog/{id}")]
+        public async Task<IActionResult> SetBlog(IFormFile Picture, BlogModel Form, int id = 0)
+        {
+            if (await CheckAdmin() == true)
+            {
+                dynamic settings = await Tools.SettingAsync();
+                ViewBag.Setting = settings;
+                string site_url = await Tools.GetUrl(HttpContext);
+                ViewBag.SiteUrl = site_url;
+                string api_url = settings.api_url;
+
+                if (Picture != null)
+                {
+                    var extent = Path.GetExtension(Picture.FileName);
+                    var randomName = ($"{Guid.NewGuid()}{extent}");
+                    var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\img", randomName);
+
+                    using (var stream = new FileStream(path, FileMode.Create))
+                    {
+                        await Picture.CopyToAsync(stream);
+                    }
+
+                    Form.Picture = randomName;
+
+                    var jsonModel = JsonSerializer.Serialize(Form);
+
+                    var httpContent = new StringContent(jsonModel, Encoding.UTF8, "application/json");
+
+                    using (var httpClient = new HttpClient())
+                    {
+                        string token = Request.Cookies["token"];
+                        if (!string.IsNullOrEmpty(token))
+                        {
+                            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                        }
+
+                        using (var response = await httpClient.PutAsync(api_url + "/Api/Admin/Blog/" + id, httpContent))
+                        {
+                            string apiResponse = await response.Content.ReadAsStringAsync();
+                            var api_data = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
+
+                            return Json(new { status = api_data.Status, msg = api_data.Msg });
+                        }
+                    }
+                }
+                else
+                {
+                    var jsonModel = JsonSerializer.Serialize(Form);
+
+                    var httpContent = new StringContent(jsonModel, Encoding.UTF8, "application/json");
+
+                    using (var httpClient = new HttpClient())
+                    {
+                        string token = Request.Cookies["token"];
+                        if (!string.IsNullOrEmpty(token))
+                        {
+                            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                        }
+
+                        using (var response = await httpClient.PutAsync(api_url + "/Api/Admin/Blog/" + id, httpContent))
+                        {
+                            string apiResponse = await response.Content.ReadAsStringAsync();
+                            var api_data = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
+
+                            return Json(new { status = api_data.Status, msg = api_data.Msg });
+                        }
+                    }
+                }
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpDelete("Admin/Blog/{id}")]
+        public async Task<IActionResult> DeleteBlog(int id)
+        {
+            if (await CheckAdmin() == true)
+            {
+                dynamic settings = await Tools.SettingAsync();
+                ViewBag.Setting = settings;
+                string site_url = await Tools.GetUrl(HttpContext);
+                ViewBag.SiteUrl = site_url;
+                string api_url = settings.api_url;
+
+                using (var httpClient = new HttpClient())
+                {
+                    string token = Request.Cookies["token"];
+                    if (!string.IsNullOrEmpty(token))
+                    {
+                        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                    }
+
+                    using (var response = await httpClient.DeleteAsync(api_url + "/Api/Admin/Blog/" + id))
+                    {
+                        string apiResponse = await response.Content.ReadAsStringAsync();
+                        var api_data = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
+
+                        return Json(new { status = api_data.Status, msg = api_data.Msg });
+                    }
+                }
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
 
         private async Task<bool> CheckAdmin()
         {

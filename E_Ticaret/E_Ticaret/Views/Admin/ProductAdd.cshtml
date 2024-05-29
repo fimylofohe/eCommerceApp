@@ -7,6 +7,10 @@
     .dflex {
         display: flex;
     }
+
+    .ck-editor__editable {
+        min-height: 200px;
+    }
 </style>
 
 <div class="content-header">
@@ -79,7 +83,8 @@
                                                 </div>
                                                 <div class="col-12 col-md-6" style="margin-block-end: 10px;">
                                                     <label asp-for="Description"></label>
-                                                    <textarea name="Description" class="form-control"></textarea>
+                                                    <textarea name="Description" id="Text" style="display: none;"></textarea>
+                                                    <div id="editor"></div>
                                                 </div>
                                                 <div class="col-12">
                                                     <button type="submit" class="btn btn-success mt-4 btn-block" style="background-color: #061b3d;"> Ekle</button>

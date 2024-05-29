@@ -1,0 +1,92 @@
+﻿@{
+    @model E_Ticaret.Models.BlogModel
+
+    ViewData["Title"] = "E-Ticaret Blog Ekle";
+}
+
+<style>
+    .dflex {
+        display: flex;
+    }
+
+    .ck-editor__editable {
+        min-height: 200px;
+    }
+</style>
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Blog Ekle</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item "><a asp-controller="Admin" asp-action="Index">Panel</a></li>
+                    <li class="breadcrumb-item "><a asp-controller="Admin" asp-action="Blogs">Bloglar</a></li>
+                    <li class="breadcrumb-item active">Blog Ekle</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="x">
+                    <div class="xs" style="margin-block-end: 100px;">
+                        <div class="row">
+                            <div class="col-12 d-flex align-items-stretch">
+                                <div class="card shadow" style="width: 100%;">
+                                    <div class="card-header bg-gradient-dark">
+                                        <h4 class="card-title">Blog Ekle</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <form action="" method="post" class="form_send">
+                                            <div class="row">
+
+                                                <div class="col-12 col-md-4" style="margin-block-end: 10px;">
+                                                    <label for="BackgroundImg">
+                                                        <img src="/img/default-blog.png" style="width: 100%;" id="BackgroundImgFile" />
+                                                    </label>
+                                                    <input name="Picture" id="BackgroundImg" type="file" class="form-control">
+                                                </div>
+
+                                                <div class="col-12 col-md-8 row">
+                                                    <div class="col-12 col-md-6" style="margin-block-end: 10px;">
+                                                        <label asp-for="Title"></label>
+                                                        <input asp-for="Title" class="form-control">
+                                                    </div>
+
+                                                    <div class="col-12 col-md-6" style="margin-block-end: 10px;">
+                                                        <label asp-for="Status"></label>
+                                                        <select asp-for="Status" class="form-control">
+                                                            <option value="true">Aktif</option>
+                                                            <option value="false">Pasif</option>
+                                                        </select>
+                                                    </div>
+
+                                                    <div class="col-12 col-md-12" style="margin-block-end: 10px;">
+                                                        <label asp-for="Text"></label>
+                                                        <textarea name="Text" id="Text" style="display: none;"></textarea>
+                                                        <div id="editor"></div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-12">
+                                                    <button type="submit" class="btn btn-success mt-4 btn-block" style="background-color: #061b3d;"> Ekle</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

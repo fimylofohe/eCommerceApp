@@ -45,6 +45,17 @@ namespace E_Ticaret.Controllers
                 }
             }
 
+            var blogs = new Blogs();
+
+            using (var httpClient = new HttpClient())
+            {
+                using (var response = await httpClient.GetAsync(api_url + "/Api/Data/Blogs/1"))
+                {
+                    string apiResponse = await response.Content.ReadAsStringAsync();
+                    blogs = JsonSerializer.Deserialize<Blogs>(apiResponse);
+                }
+            }
+
             var slider = new List<Slider>();
 
             using (var httpClient = new HttpClient())
@@ -70,6 +81,7 @@ namespace E_Ticaret.Controllers
             ViewBag.Products = products;
             ViewBag.Slider = slider;
             ViewBag.Categories = categories;
+            ViewBag.Blogs = blogs;
 
             return View();
         }

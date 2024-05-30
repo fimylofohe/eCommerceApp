@@ -78,9 +78,26 @@
                                             @if (order.OrderStatus == 0)
                                             {
                                                 <span class="badge badge-danger">Ödeme Bekliyor</span>
-                                            }else if (order.OrderStatus == 1)
+                                            }
+                                            else if (order.OrderStatus == 1)
                                             {
                                                 <span class="badge badge-success">Ödeme Yapıldı</span>
+                                            }
+                                            else if (order.OrderStatus == 2)
+                                            {
+                                                <span class="badge badge-primary">Onaylandı</span>
+                                            }
+                                            else if (order.OrderStatus == 3)
+                                            {
+                                                <span class="badge badge-warning">Kargoya Verildi</span>
+                                            }
+                                            else if (order.OrderStatus == 4)
+                                            {
+                                                <span class="badge badge-success">Teslim Edildi</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge badge-danger">İptal/İade Edildi</span>
                                             }
                                         </td>
                                         <td style="display: flex;">

@@ -147,7 +147,7 @@
     /* var timerdate = "2020/12/30" */
 
     $("#countdown").countdown(timerdate, function (event) {
-        $(this).html(event.strftime("<div class='cd-item'><span>%D</span> <p>Days</p> </div>" + "<div class='cd-item'><span>%H</span> <p>Hours</p> </div>" + "<div class='cd-item'><span>%M</span> <p>Minutes</p> </div>" + "<div class='cd-item'><span>%S</span> <p>Seconds</p> </div>"));
+        $(this).html(event.strftime("<div class='cd-item'><span>%D</span> <p>Gun</p> </div>" + "<div class='cd-item'><span>%H</span> <p>Saat</p> </div>" + "<div class='cd-item'><span>%M</span> <p>Dakika</p> </div>" + "<div class='cd-item'><span>%S</span> <p>Saniye</p> </div>"));
     });
 
     /*------------------
@@ -183,6 +183,25 @@
     proQty.prepend('<span class="fa fa-angle-left dec qtybtn"></span>');
     proQty.append('<span class="fa fa-angle-right inc qtybtn"></span>');
     proQty.on('click', '.qtybtn', function () {
+        var $button = $(this);
+        var oldValue = $button.parent().find('input').val();
+        if ($button.hasClass('inc')) {
+            var newVal = parseFloat(oldValue) + 1;
+        } else {
+            // Don't allow decrementing below zero
+            if (oldValue > 0) {
+                var newVal = parseFloat(oldValue) - 1;
+            } else {
+                newVal = 0;
+            }
+        }
+        $button.parent().find('input').val(newVal).trigger('change');
+    });
+
+    var proQty = $('.pro-qtyss');
+    proQty.prepend('<span class="fa fa-angle-up inc qtybtnss"></span>');
+    proQty.append('<span class="fa fa-angle-down dec qtybtnss"></span>');
+    proQty.on('click', '.qtybtnss', function () {
         var $button = $(this);
         var oldValue = $button.parent().find('input').val();
         if ($button.hasClass('inc')) {

@@ -161,8 +161,6 @@ namespace E_Ticaret_API.Controllers
                         if (coupon_type == 2)
                         {
                             total_cprice = (double)((total_cprice / 100) * coupon.Coupon.DiscountAmount);
-
-                            total_cprice = total_price - total_cprice;
                         }
                     }                    
 
@@ -625,8 +623,6 @@ namespace E_Ticaret_API.Controllers
                                 if (coupon_type == 2)
                                 {
                                     total_cprice = (double)((total_cprice / 100) * coupon.Coupon.DiscountAmount);
-
-                                    total_cprice = total_price - total_cprice;
                                 }
 
                                 CouponHistoryId = coupon.CouponHistoryId;
@@ -681,6 +677,15 @@ namespace E_Ticaret_API.Controllers
 
                                 foreach (var cartItem in cartItems)
                                 {
+                                    var productItem = await _context.Products.FirstOrDefaultAsync(pc => pc.ProductId == cartItem.ProductId);
+
+                                    int get_stok = (int)productItem.Stock;
+                                    int dus_adet = cartItem.Quantity;
+                                    int hesap_son = (get_stok - dus_adet);
+
+                                    productItem.Stock = hesap_son;
+                                    _context.Products.Update(productItem);
+
                                     cartItem.OrderId = orderId;
                                     _context.Carts.Update(cartItem);
                                 }

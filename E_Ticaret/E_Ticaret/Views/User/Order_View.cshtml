@@ -49,6 +49,30 @@
                         <h4 style="color: white;">Ödeme Yapıldı</h4>
                     </div>
                 }
+                else if (order.OrderStatus == 2)
+                {
+                    <div class="d-flex flex-column justify-content-center align-items-center" style="max-width: unset; background: #385dec; height: 50px;">
+                        <h4 style="color: white;">Onaylandı</h4>
+                    </div>
+                }
+                else if (order.OrderStatus == 3)
+                {
+                    <div class="d-flex flex-column justify-content-center align-items-center" style="max-width: unset; background: #ecd038; height: 50px;">
+                        <h4 style="color: white;">Kargoya Verildi</h4>
+                    </div>
+                }
+                else if (order.OrderStatus == 4)
+                {
+                    <div class="d-flex flex-column justify-content-center align-items-center" style="max-width: unset; background: #009d45; height: 50px;">
+                        <h4 style="color: white;">Teslim Edildi</h4>
+                    </div>
+                }
+                else
+                {
+                    <div class="d-flex flex-column justify-content-center align-items-center" style="max-width: unset; background: #ff5a5a; height: 50px;">
+                        <h4 style="color: white;">İptal/İade Edildi</h4>
+                    </div>
+                }
                 <div class="wrapper bg-white" style="max-width: unset;">
                     <div class="table-responsive" style="height: 100%;">
                         <table class="table table-borderless">
@@ -329,11 +353,11 @@
                                     <div>@payN.PayDate</div>
                                     <div>
                                         Durum:
-                                        @if (order.OrderStatus == 0)
+                                        @if (payN.Status == false)
                                         {
                                             <b>Onay Bekliyor</b>
                                         }
-                                        else if (order.OrderStatus == 1)
+                                        else
                                         {
                                             <b>Onaylandı</b>
                                         }

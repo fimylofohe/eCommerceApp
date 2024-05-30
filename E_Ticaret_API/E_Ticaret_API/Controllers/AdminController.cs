@@ -49,6 +49,7 @@ namespace E_Ticaret_API.Controllers
                 int users_count = await _context.Users.CountAsync();
                 int comments_count = await _context.Comments.CountAsync();
                 int coupons_count = await _context.Coupons.CountAsync();
+                int blogs_count = await _context.Blogs.CountAsync();
 
                 DateTime today = DateTime.Today;
                 DateTime startOfDay = new DateTime(today.Year, today.Month, today.Day, 0, 0, 0);
@@ -89,6 +90,7 @@ namespace E_Ticaret_API.Controllers
                     UsersCounts = users_count,
                     CommentsCounts = comments_count,
                     CouponsCounts = coupons_count,
+                    BlogsCounts = blogs_count,
                     DailyEarning = dailyEarning,
                     WeeklyEarning = weeklyEarning,
                     MonthlyEarning = monthlyEarning,

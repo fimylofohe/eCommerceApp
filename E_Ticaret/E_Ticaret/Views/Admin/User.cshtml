@@ -357,7 +357,7 @@
                                                                     {
                                                                         var picture = product.Pictures[i];
 
-                                                                        <a href="/Admin/Products/@product.ProductId">
+                                                                        <a href="/Admin/Product/@product.ProductId">
                                                                             <img src="/img/@picture.Path" style="width: 40px;" title="@products.Quantity Adet : @product.Name" />
                                                                             <p style="display: none;">@products.Quantity Adet : @product.Name, </p>
                                                                         </a>
@@ -415,7 +415,7 @@
                                                             @cart.CartId
                                                         </td>
                                                         <td>
-                                                            <a href="/Admin/Products/@cart.Product.ProductId">
+                                                            <a href="/Admin/Product/@cart.Product.ProductId">
                                                                 @if (cart.Product.Pictures != null && cart.Product.Pictures.Count > 0)
                                                                 {
                                                                     for (int i = 0; i < 1; i++)
@@ -524,7 +524,7 @@
                                                             <h6>@comment.CommentId</h6>
                                                         </td>
                                                         <td>
-                                                            <a href="/Admin/Products/@comment.ProductId">
+                                                            <a href="/Admin/Product/@comment.ProductId">
                                                                 @if (comment.Product.Pictures != null && comment.Product.Pictures.Count > 0)
                                                                 {
                                                                     <img src="/img/@comment.Product.Pictures[0].Path" style="width: 40px;" />

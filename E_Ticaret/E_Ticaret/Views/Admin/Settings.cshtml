@@ -36,7 +36,13 @@
                                                     <a class="nav-link active" id="custom-tabs-one-setting-tab" data-toggle="pill" href="#custom-tabs-one-setting" role="tab" aria-controls="custom-tabs-one-setting" aria-selected="true">Genel Ayarlar</a>
                                                 </li>
                                                 <li class="nav-item">
+                                                    <a class="nav-link" id="custom-tabs-one-con-tab" data-toggle="pill" href="#custom-tabs-one-con" role="tab" aria-controls="custom-tabs-one-con" aria-selected="false">İletişim Ayarları</a>
+                                                </li>
+                                                <li class="nav-item">
                                                     <a class="nav-link" id="custom-tabs-one-payment-tab" data-toggle="pill" href="#custom-tabs-one-payment" role="tab" aria-controls="custom-tabs-one-payment" aria-selected="false">Ödeme Ayarları</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link" id="custom-tabs-one-sec-tab" data-toggle="pill" href="#custom-tabs-one-sec" role="tab" aria-controls="custom-tabs-one-sec" aria-selected="false">Güvenlik Ayarları</a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -82,11 +88,6 @@
                                                         <div class="col-12 col-md-4" style="margin-block-end: 10px;">
                                                             <label>Anahtar Kelimeler</label>
                                                             <input class="form-control" name="keywords" value="@setting.keywords">
-                                                        </div>
-
-                                                        <div class="col-12 col-md-4" style="margin-block-end: 10px;">
-                                                            <label>API URL</label>
-                                                            <input class="form-control" name="api_url" value="@setting.api_url">
                                                         </div>
 
                                                         <div class="col-12">
@@ -135,6 +136,71 @@
                                                                     <option value="true">Aktif</option>
                                                                 }
                                                             </select>
+                                                        </div>
+
+                                                        <div class="col-12">
+                                                            <button type="submit" class="btn btn-success mt-4 btn-block" style="background-color: #061b3d;"> Güncelle</button>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="custom-tabs-one-sec" role="tabpanel" aria-labelledby="custom-tabs-one-sec-tab">
+                                            <div class="card shadow" style="width: 100%;">
+                                                <div class="card-header bg-gradient-dark">
+                                                    <h4 class="card-title">Güvenlik Ayarları</h4>
+                                                </div>
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="col-12 col-md-4" style="margin-block-end: 10px;">
+                                                            <label>reCaptcha SiteKey</label>
+                                                            <input class="form-control" name="recaptcha_sitekey" value="@setting.recaptcha_sitekey">
+                                                        </div>
+
+                                                        <div class="col-12 col-md-4" style="margin-block-end: 10px;">
+                                                            <label>reCaptcha SecretKey</label>
+                                                            <input class="form-control" name="recaptcha_secretkey" value="@setting.recaptcha_secretkey">
+                                                        </div>
+
+                                                        <div class="col-12 col-md-4" style="margin-block-end: 10px;">
+                                                            <label>API URL</label>
+                                                            <input class="form-control" name="api_url" value="@setting.api_url">
+                                                        </div>
+
+                                                        <div class="col-12">
+                                                            <button type="submit" class="btn btn-success mt-4 btn-block" style="background-color: #061b3d;"> Güncelle</button>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="custom-tabs-one-con" role="tabpanel" aria-labelledby="custom-tabs-one-con-tab">
+                                            <div class="card shadow" style="width: 100%;">
+                                                <div class="card-header bg-gradient-danger">
+                                                    <h4 class="card-title">İletişim Ayarları</h4>
+                                                </div>
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="col-12 col-md-4" style="margin-block-end: 10px;">
+                                                            <label>Google Maps IFrame Url</label>
+                                                            <input class="form-control" name="google_iframe" value="@setting.google_iframe">
+                                                        </div>
+
+                                                        <div class="col-12 col-md-4" style="margin-block-end: 10px;">
+                                                            <label>Adres</label>
+                                                            <input class="form-control" name="address" value="@setting.address">
+                                                        </div>
+
+                                                        <div class="col-12 col-md-4" style="margin-block-end: 10px;">
+                                                            <label>Telefon Numarası</label>
+                                                            <input class="form-control" name="phonenumber" value="@setting.phonenumber">
+                                                        </div>
+
+                                                        <div class="col-12 col-md-4" style="margin-block-end: 10px;">
+                                                            <label>E-Posta Adresi</label>
+                                                            <input class="form-control" name="email" value="@setting.email">
                                                         </div>
 
                                                         <div class="col-12">

@@ -1,0 +1,73 @@
+﻿@{
+    @model E_Ticaret.Models.ContactModel
+
+    ViewData["Title"] = "E-Ticaret";
+
+    var setting = ViewBag.Setting;
+}
+
+<div class="map">
+    <iframe src="@setting.google_iframe" height="500" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
+</div>
+
+<section class="contact spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 col-md-6">
+                <div class="contact__text">
+                    <div class="section-title">
+                        <span>Bilgiler</span>
+                        <h2>İletişim</h2>
+                        <p>
+                            
+                        </p>
+                    </div>
+                    <ul>
+                        <li>
+                            <h4>Adres</h4>
+                            <p>@setting.address</p>
+                        </li>
+                        <li>
+                            <h4>Telefon Numarası</h4>
+                            <p>@setting.phonenumber</p>
+                        </li>
+                        <li>
+                            <h4>E-Posta</h4>
+                            <p>@setting.email</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6">
+                <div class="contact__form">
+                    <form action="#">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <label asp-for="NameSurname"></label>
+                                <input asp-for="NameSurname" style="margin-bottom: 5px;">
+                            </div>
+                            <div class="col-lg-6">
+                                <label asp-for="Email"></label>
+                                <input asp-for="Email" style="margin-bottom: 5px;">
+                            </div>
+                            <div class="col-lg-12">
+                                <label asp-for="Subject"></label>
+                                <input asp-for="Subject" style="margin-bottom: 5px;">
+                            </div>
+                            <div class="col-lg-12">
+                                <label asp-for="Text"></label>
+                                <textarea asp-for="Text" placeholder="Mesaj" style="margin-bottom: 5px;"></textarea>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="g-recaptcha" data-sitekey="@setting.recaptcha_sitekey"></div>
+                            </div>
+                            <div class="col-lg-6">
+                                <button type="submit" class="site-btn" style="float: right;">Gönder</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

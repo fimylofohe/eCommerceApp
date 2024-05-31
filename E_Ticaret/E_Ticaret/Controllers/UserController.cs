@@ -140,6 +140,44 @@ namespace E_Ticaret.Controllers
             }
         }
 
+        [HttpPost("User/Password")]
+        public async Task<IActionResult> UserPasswordPost(PasswordModel Form)
+        {
+            Tools.CheckToken(HttpContext);
+
+            dynamic settings = await Tools.SettingAsync();
+            ViewBag.Setting = settings;
+            string site_url = await Tools.GetUrl(HttpContext);
+            ViewBag.SiteUrl = site_url;
+            string api_url = settings.api_url;
+
+            if (User.Identity!.IsAuthenticated)
+            {
+                var jsonModel = JsonSerializer.Serialize(Form);
+
+                var httpContent = new StringContent(jsonModel, Encoding.UTF8, "application/json");
+
+                using (var httpClient = new HttpClient())
+                {
+                    string token = Request.Cookies["token"];
+                    if (!string.IsNullOrEmpty(token))
+                    {
+                        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                    }
+
+                    using (var response = await httpClient.PostAsync(api_url + "/Api/User/Password", httpContent))
+                    {
+                        var apiResponse = await response.Content.ReadAsStringAsync();
+                        return Ok(apiResponse);
+                    }
+                }
+            }
+            else
+            {
+                return RedirectToAction("Index", "Login");
+            }
+        }
+
         [HttpGet("User/Address")]
         public async Task<IActionResult> Address()
         {

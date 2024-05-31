@@ -778,31 +778,47 @@ namespace E_Ticaret_API.Controllers
                     return NotFound();
                 }
 
-                if (Form.Password == null)
-                {
-                    userItem.Name = Form.Name;
-                    userItem.Surname = Form.Surname;
-                    userItem.Email = Form.Email;
-                    userItem.PhoneNumber = Form.PhoneNumber;
-                    userItem.Status = Form.Status;
-                    userItem.Admin = Form.Admin;
-                }
-                else
-                {
-                    if (Form.Password == Form.TPassword)
-                    {
-                        userItem.Password = Form.Password;
-                    }
-                    else
-                    {
-                        return Ok(new { status = false, msg = "Yeni Şifreler Eşleşmiyor" });
-                    }
-                }
+                userItem.Name = Form.Name;
+                userItem.Surname = Form.Surname;
+                userItem.Email = Form.Email;
+                userItem.PhoneNumber = Form.PhoneNumber;
+                userItem.Status = Form.Status;
+                userItem.Admin = Form.Admin;
 
                 _context.Users.Update(userItem);
                 await _context.SaveChangesAsync();
 
                 return Ok(new { status = true, msg = "Kullanıcı Bilgileri Güncellendi" });
+            }
+
+            return Unauthorized();
+        }
+
+        [HttpPut("UserPass/{id}")]
+        public async Task<IActionResult> PostUserPass(PasswordModel Form, int id)
+        {
+            if (await CheckAdmin() == true)
+            {
+                var userItem = await _context.Users.FirstOrDefaultAsync(c => c.UserId == id);
+
+                if (userItem == null)
+                {
+                    return NotFound();
+                }
+
+                if (Form.Password == Form.TPassword)
+                {
+                    userItem.Password = Form.Password;
+                }
+                else
+                {
+                    return Ok(new { status = false, msg = "Yeni Şifreler Eşleşmiyor" });
+                }
+
+                _context.Users.Update(userItem);
+                await _context.SaveChangesAsync();
+
+                return Ok(new { status = true, msg = "Şifre Güncellendi" });
             }
 
             return Unauthorized();
@@ -2251,6 +2267,71 @@ namespace E_Ticaret_API.Controllers
                 await _context.SaveChangesAsync();
 
                 return Ok(new { status = true, msg = "Blog Silindi." + "<meta http-equiv='refresh' content='1;'>" });
+            }
+
+            return Unauthorized();
+        }
+
+        [HttpGet("Contacts")]
+        public async Task<IActionResult> Contacts()
+        {
+            if (await CheckAdmin() == true)
+            {
+                var contacts = await _context.Contacts.OrderBy(p => p.ContactId).Select(contact => new ContactDTO
+                {
+                    ContactId = contact.ContactId,
+                    NameSurname = contact.NameSurname,
+                    Email = contact.Email,
+                    Subject = contact.Subject,
+                    Text = contact.Text,
+                    PublishedDate = contact.PublishedDate,
+                    Status = contact.Status
+                }).ToListAsync();
+
+                return Ok(contacts);
+            }
+
+            return Unauthorized();
+        }
+
+        [HttpGet("Contact/{id}")]
+        public async Task<IActionResult> GetContact(int id)
+        {
+            if (await CheckAdmin() == true)
+            {
+                var contact = await _context.Contacts.OrderBy(p => p.ContactId).Where(p => p.ContactId == id).Select(contact => new ContactDTO
+                {
+                    ContactId = contact.ContactId,
+                    NameSurname = contact.NameSurname,
+                    Email = contact.Email,
+                    Subject = contact.Subject,
+                    Text = contact.Text,
+                    PublishedDate = contact.PublishedDate,
+                    Status = contact.Status
+                }).FirstOrDefaultAsync();
+
+                return Ok(contact);
+            }
+
+            return Unauthorized();
+        }
+
+        [HttpDelete("Contact/{id}")]
+        public async Task<IActionResult> DeleteContact(int id)
+        {
+            if (await CheckAdmin() == true)
+            {
+                var contactItem = await _context.Contacts.FirstOrDefaultAsync(c => c.ContactId == id);
+
+                if (contactItem == null)
+                {
+                    return NotFound();
+                }
+
+                _context.Contacts.Remove(contactItem);
+                await _context.SaveChangesAsync();
+
+                return Ok(new { status = true, msg = "İletişim Mesajı Silindi." + "<meta http-equiv='refresh' content='1;'>" });
             }
 
             return Unauthorized();

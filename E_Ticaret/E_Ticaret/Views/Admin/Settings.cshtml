@@ -22,7 +22,7 @@
 
 <section class="content">
     <div class="container-fluid">
-        <form action="" method="post">
+        <form action="" method="post" class="form_send">
             <div class="row">
                 <div class="col-md-12">
                     <div class="x">
@@ -51,6 +51,39 @@
                                                 </div>
                                                 <div class="card-body">
                                                     <div class="row">
+                                                        <div class="col-12 col-md-4" style="margin-block-end: 10px;">
+                                                            <label for="BackgroundImg">
+                                                                Logo
+                                                                <br />
+                                                                <img src="/img/@setting.logo" style="width: 270px;" id="BackgroundImgFile" />
+                                                            </label>
+                                                            <input name="logo" id="BackgroundImg" type="file" style="display: none;" value="@setting.logo">
+                                                        </div>
+
+                                                        <div class="col-12 col-md-4" style="margin-block-end: 10px;">
+                                                            <label for="BackgroundImg2">
+                                                                Favicon
+                                                                <br />
+                                                                <img src="/img/@setting.favicon" style="width: 40px;" id="BackgroundImg2File" />
+                                                            </label>
+                                                            <input name="favicon" id="BackgroundImg2" type="file" style="display: none;" value="@setting.favicon">
+                                                        </div>
+
+                                                        <div class="col-12 col-md-4" style="margin-block-end: 10px;">
+                                                            <label>Site Başlığı</label>
+                                                            <input class="form-control" name="title" value="@setting.title">
+                                                        </div>
+
+                                                        <div class="col-12 col-md-4" style="margin-block-end: 10px;">
+                                                            <label>Açıklama</label>
+                                                            <input class="form-control" name="description" value="@setting.description">
+                                                        </div>
+
+                                                        <div class="col-12 col-md-4" style="margin-block-end: 10px;">
+                                                            <label>Anahtar Kelimeler</label>
+                                                            <input class="form-control" name="keywords" value="@setting.keywords">
+                                                        </div>
+
                                                         <div class="col-12 col-md-4" style="margin-block-end: 10px;">
                                                             <label>API URL</label>
                                                             <input class="form-control" name="api_url" value="@setting.api_url">

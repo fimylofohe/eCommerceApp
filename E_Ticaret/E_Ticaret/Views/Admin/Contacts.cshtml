@@ -1,0 +1,87 @@
+﻿@{
+    ViewData["Title"] = "Admin Panel";
+    var contacts = ViewBag.Contacts;
+}
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">İletişim Mesajları</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item "><a asp-controller="Admin" asp-action="Index">Panel</a></li>
+                    <li class="breadcrumb-item active">İletişim Mesajları</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-gradient-info">
+                        <h3 class="card-title">İletişim Mesajları</h3>
+                    </div>
+                    <div class="card-body">
+                        <table id="example1" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>İsim Soyisim</th>
+                                    <th>E-Posta</th>
+                                    <th>Konu</th>
+                                    <th>Mesaj Tarihi</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var contact in contacts)
+                                {
+                                    <tr>
+                                        <td>
+                                            @contact.ContactId
+                                        </td>
+                                        <td>
+                                            @contact.NameSurname
+                                        </td>
+                                        <td>
+                                            @contact.Email
+                                        </td>
+                                        <td>
+                                            @contact.Subject
+                                        </td>
+                                        <td>
+                                            @contact.PublishedDate
+                                        </td>
+                                        <td style="display: flex;">
+                                            <a href="/Admin/Contact/@contact.ContactId" class="btn btn-info">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <a href="/Admin/Contact/@contact.ContactId" class="btn btn-danger delete_btn">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>#</th>
+                                    <th>İsim Soyisim</th>
+                                    <th>E-Posta</th>
+                                    <th>Konu</th>
+                                    <th>Mesaj Tarihi</th>
+                                    <th></th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

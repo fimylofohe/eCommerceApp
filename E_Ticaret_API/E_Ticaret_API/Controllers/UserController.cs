@@ -142,36 +142,58 @@ namespace E_Ticaret_API.Controllers
                         return NotFound();
                     }
 
-                    if (Form.Password == null)
+                    userItem.Name = Form.Name;
+                    userItem.Surname = Form.Surname;
+                    userItem.Email = Form.Email;
+                    userItem.PhoneNumber = Form.PhoneNumber;
+                    
+                    _context.Users.Update(userItem);
+                    await _context.SaveChangesAsync();
+
+                    return Ok(new { status = true, msg = "Kullanıcı Bilgileri Güncellendi" + "<meta http-equiv='refresh' content='2;'>" });
+                }
+            }
+
+            return Unauthorized();
+        }
+
+        [HttpPost("Password")]
+        public async Task<IActionResult> UserPostPassword(PasswordModel Form)
+        {
+            string token = Request.Headers[HeaderNames.Authorization].ToString();
+            if (!string.IsNullOrEmpty(token) && token.StartsWith("Bearer "))
+            {
+                string tokenWithoutBearer = token.Replace("Bearer ", "");
+                var userInfo = ValidateToken(tokenWithoutBearer);
+                if (userInfo != null)
+                {
+                    var userItem = await _context.Users.FirstOrDefaultAsync(c => c.UserId == userInfo.UserId);
+
+                    if (userItem == null)
                     {
-                        userItem.Name = Form.Name;
-                        userItem.Surname = Form.Surname;
-                        userItem.Email = Form.Email;
-                        userItem.PhoneNumber = Form.PhoneNumber;
+                        return NotFound();
                     }
-                    else
+
+                    if (Form.EPassword == userItem.Password)
                     {
-                        if(Form.EPassword == userItem.Password)
+                        if (Form.Password == Form.TPassword)
                         {
-                            if (Form.Password == Form.TPassword)
-                            {
-                                userItem.Password = Form.Password;
-                            }
-                            else
-                            {
-                                return Ok(new { status = false, msg = "Yeni Şifreler Eşleşmiyor" });
-                            }
+                            userItem.Password = Form.Password;
                         }
                         else
                         {
-                            return Ok(new { status = false, msg = "Eski Şifreler Eşleşmiyor" });
+                            return Ok(new { status = false, msg = "Yeni Şifreler Eşleşmiyor" });
                         }
+                    }
+                    else
+                    {
+                        return Ok(new { status = false, msg = "Eski Şifreler Eşleşmiyor" });
                     }
 
                     _context.Users.Update(userItem);
                     await _context.SaveChangesAsync();
 
-                    return Ok(new { status = true, msg = "Kullanıcı Bilgileri Güncellendi" + "<meta http-equiv='refresh' content='2;'>" });
+                    return Ok(new { status = true, msg = "Şifre Güncellendi" + "<meta http-equiv='refresh' content='2;'>" });
                 }
             }
 

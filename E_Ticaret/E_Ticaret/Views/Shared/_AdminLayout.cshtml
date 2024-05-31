@@ -101,43 +101,67 @@
 
             e.preventDefault();
 
-            if (localStorage.getItem("token")) {
-                const token = JSON.parse(localStorage.getItem("token"));
+            function handleSuccess(data) {
+                Swal.close();
 
-                $.ajax({
-                    url: $(this).attr("action"),
-                    method: "POST",
-                    dataType: "JSON",
-                    data: formData,
-                    contentType: false,
-                    processData: false,
-                    success: function (data) {
-                        viewStatus(data.status, data.msg);
-                        form_btn.attr('disabled', false);
-                    },
-                    error: function (xhr, status, error) {
-                        viewStatus(false, "Sunucu Hatası");
-                        form_btn.attr('disabled', false);
-                    }
-                });
-            } else {
-                $.ajax({
-                    url: $(this).attr("action"),
-                    method: "POST",
-                    dataType: "JSON",
-                    data: formData,
-                    contentType: false,
-                    processData: false,
-                    success: function (data) {
-                        viewStatus(data.status, data.msg);
-                        form_btn.attr('disabled', false);
-                    },
-                    error: function (xhr, status, error) {
-                        viewStatus(false, "Sunucu Hatası");
-                        form_btn.attr('disabled', false);
-                    }
-                });
+                var response = data;
+
+                if (response && response.errors && response.title && response.status) {
+                    var errorMessages = Object.entries(response.errors);
+                    errorMessages.forEach(function ([field, messages]) {
+                        var inputField = $('#' + field);
+                        inputField.addClass('is-invalid').css('border', '1px solid #ff5454');
+                        var errorMessage = messages.join(", ");
+                        var validationMessage = $('<span class="text-danger"></span>').text(errorMessage);
+
+                        if (inputField.next('.text-danger').length === 0) {
+                            inputField.after(validationMessage);
+                        } else {
+                            inputField.next('.text-danger').text(errorMessage);
+                        }
+                    });
+                } else {
+                    viewStatus(data.status, data.msg);
+                }
+                form_btn.attr('disabled', false);
             }
+
+            function handleError(xhr) {
+                Swal.close();
+                var response = xhr.responseJSON;
+                if (response && response.errors && response.title && response.status) {
+                    var errorMessages = Object.entries(response.errors);
+                    errorMessages.forEach(function ([field, messages]) {
+                        var inputField = $('#' + field);
+                        inputField.addClass('is-invalid').css('border', '1px solid #ff5454');
+                        var errorMessage = messages.join(", ");
+                        var validationMessage = $('<span class="text-danger"></span>').text(errorMessage);
+
+                        if (inputField.next('.text-danger').length === 0) {
+                            inputField.after(validationMessage);
+                        } else {
+                            inputField.next('.text-danger').text(errorMessage);
+                        }
+                    });
+                } else {
+                    viewStatus(false, "Sunucu Hatası");
+                }
+                form_btn.attr('disabled', false);
+            }
+
+            $('.text-danger').remove();
+            $('input').removeClass('is-invalid').css('border', '');
+
+            $.ajax({
+                url: $(this).attr("action"),
+                method: "POST",
+                dataType: "JSON",
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: handleSuccess,
+                error: handleError
+            });
         });
 
         $("form").submit(function (e) {
@@ -156,21 +180,64 @@
 
             e.preventDefault();
 
-            const token = JSON.parse(localStorage.getItem("token"));
+            function handleSuccess(data) {
+                Swal.close();
+
+                var response = data;
+                if (response && response.errors && response.title && response.status) {
+                    var errorMessages = Object.entries(response.errors);
+                    errorMessages.forEach(function ([field, messages]) {
+                        var inputField = $('#' + field);
+                        inputField.addClass('is-invalid').css('border', '1px solid #ff5454');
+                        var errorMessage = messages.join(", ");
+                        var validationMessage = $('<span class="text-danger"></span>').text(errorMessage);
+
+                        if (inputField.next('.text-danger').length === 0) {
+                            inputField.after(validationMessage);
+                        } else {
+                            inputField.next('.text-danger').text(errorMessage);
+                        }
+                    });
+                } else {
+                    viewStatus(data.status, data.msg);
+                }
+                form_btn.attr('disabled', false);
+            }
+
+            function handleError(xhr) {
+                Swal.close();
+                var response = xhr.responseJSON;
+                if (response && response.errors && response.title && response.status) {
+                    var errorMessages = Object.entries(response.errors);
+                    errorMessages.forEach(function ([field, messages]) {
+                        var inputField = $('#' + field);
+                        inputField.addClass('is-invalid').css('border', '1px solid #ff5454');
+                        var errorMessage = messages.join(", ");
+                        var validationMessage = $('<span class="text-danger"></span>').text(errorMessage);
+
+                        if (inputField.next('.text-danger').length === 0) {
+                            inputField.after(validationMessage);
+                        } else {
+                            inputField.next('.text-danger').text(errorMessage);
+                        }
+                    });
+                } else {
+                    viewStatus(false, "Sunucu Hatası");
+                }
+                
+                form_btn.attr('disabled', false);
+            }
+
+            $('.text-danger').remove();
+            $('input').removeClass('is-invalid').css('border', '');
 
             $.ajax({
                 url: $(this).attr("action"),
                 method: "POST",
                 dataType: "JSON",
                 data: formDataObject,
-                success: function (data) {
-                    viewStatus(data.status, data.msg);
-                    form_btn.attr('disabled', false);
-                },
-                error: function (xhr, status, error) {
-                    viewStatus(false, "Sunucu Hatası");
-                    form_btn.attr('disabled', false);
-                }
+                success: handleSuccess,
+                error: handleError
             });
         });
 
@@ -265,6 +332,17 @@
                 const reader = new FileReader();
                 reader.onload = function (e) {
                     document.getElementById('BackgroundImgFile').src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        document.getElementById('BackgroundImg2').addEventListener('change', function (event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById('BackgroundImg2File').src = e.target.result;
                 }
                 reader.readAsDataURL(file);
             }

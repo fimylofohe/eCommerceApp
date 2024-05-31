@@ -1,9 +1,15 @@
 ﻿using E_Ticaret_API.Data;
 using E_Ticaret_API.DTO;
+using E_Ticaret_API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Net.Http.Headers;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 using System.Dynamic;
 using static Azure.Core.HttpHeader;
+using System.Xml.Linq;
+using System.Net.Http;
 
 namespace E_Ticaret_API.Controllers
 {
@@ -81,110 +87,66 @@ namespace E_Ticaret_API.Controllers
         }
 
         [HttpGet("Products/{page}")]
-        public async Task<IActionResult> GetProducts(int page = 1, int cat = 0)
+        public async Task<IActionResult> GetProducts(int page = 1, int cat = 0, string search = null)
         {
             int page_size = 10;
 
-            if(cat == 0)
-            {
-                int products_count = await _context.Products
-                                         .Where(p => p.Status)
-                                         .CountAsync();
+            IQueryable<Product> query = _context.Products
+                                                .Include(p => p.Pictures)
+                                                .Include(p => p.Category)
+                                                .Include(p => p.Comments)
+                                                .Where(p => p.Status);
 
-                var products = await _context.Products
-                                         .Include(p => p.Pictures)
-                                         .Include(p => p.Category)
-                                         .Include(p => p.Comments)
-                                         .Where(p => p.Status)
-                                         .OrderBy(p => p.ProductId)
-                                         .Skip((page - 1) * page_size)
-                                         .Take(page_size)
-                                         .Select(p => new ProductDTO
-                                         {
-                                             ProductId = p.ProductId,
-                                             CategoryId = p.CategoryId,
-                                             SKU = p.SKU,
-                                             Name = p.Name,
-                                             SeoURL = p.SeoURL,
-                                             Description = p.Description,
-                                             Price = p.Price,
-                                             Stock = p.Stock,
-                                             Status = p.Status,
-                                             Category = new CategoryDTO
-                                             {
-                                                 CategoryId = p.Category.CategoryId,
-                                                 Name = p.Category.Name,
-                                                 Status = p.Category.Status
-                                             },
-                                             Pictures = p.Pictures.Select(pic => new PictureDTO
-                                             {
-                                                 PictureId = pic.PictureId,
-                                                 Path = pic.Path
-                                             }).ToList(),
-                                             Comments = p.Comments.Select(comment => new CommentDTO
-                                             {
-                                                 CommentId = comment.CommentId,
-                                                 Text = comment.Text,
-                                                 PublishedDate = comment.PublishedDate,
-                                                 Status = comment.Status,
-                                                 ProductId = comment.ProductId,
-                                                 UserId = comment.UserId
-                                             }).ToList()
-                                         })
-                                         .ToListAsync();
-                return Json(new { TotalProduct = products_count, ProductPerPage = page_size, TotalPages = (int)Math.Ceiling((decimal)products_count / page_size), products });
-            }
-            else
+            if (cat != 0)
             {
-                int products_count = await _context.Products
-                                         .Where(p => p.Status)
-                                         .Where(p => p.CategoryId == cat)
-                                         .CountAsync();
-
-                var products = await _context.Products
-                                         .Include(p => p.Pictures)
-                                         .Include(p => p.Category)
-                                         .Include(p => p.Comments)
-                                         .Where(p => p.Status)
-                                         .Where(p => p.CategoryId == cat)
-                                         .OrderBy(p => p.ProductId)
-                                         .Skip((page - 1) * page_size)
-                                         .Take(page_size)
-                                         .Select(p => new ProductDTO
-                                         {
-                                             ProductId = p.ProductId,
-                                             CategoryId = p.CategoryId,
-                                             SKU = p.SKU,
-                                             Name = p.Name,
-                                             SeoURL = p.SeoURL,
-                                             Description = p.Description,
-                                             Price = p.Price,
-                                             Stock = p.Stock,
-                                             Status = p.Status,
-                                             Category = new CategoryDTO
-                                             {
-                                                 CategoryId = p.Category.CategoryId,
-                                                 Name = p.Category.Name,
-                                                 Status = p.Category.Status
-                                             },
-                                             Pictures = p.Pictures.Select(pic => new PictureDTO
-                                             {
-                                                 PictureId = pic.PictureId,
-                                                 Path = pic.Path
-                                             }).ToList(),
-                                             Comments = p.Comments.Select(comment => new CommentDTO
-                                             {
-                                                 CommentId = comment.CommentId,
-                                                 Text = comment.Text,
-                                                 PublishedDate = comment.PublishedDate,
-                                                 Status = comment.Status,
-                                                 ProductId = comment.ProductId,
-                                                 UserId = comment.UserId
-                                             }).ToList()
-                                         })
-                                         .ToListAsync();
-                return Json(new { TotalProduct = products_count, ProductPerPage = page_size, TotalPages = (int)Math.Ceiling((decimal)products_count / page_size), products });
+                query = query.Where(p => p.CategoryId == cat);
             }
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                query = query.Where(p => p.Name.Contains(search));
+            }
+
+            int products_count = await query.CountAsync();
+
+            var products = await query.OrderBy(p => p.ProductId)
+                                      .Skip((page - 1) * page_size)
+                                      .Take(page_size)
+                                      .Select(p => new ProductDTO
+                                      {
+                                          ProductId = p.ProductId,
+                                          CategoryId = p.CategoryId,
+                                          SKU = p.SKU,
+                                          Name = p.Name,
+                                          SeoURL = p.SeoURL,
+                                          Description = p.Description,
+                                          Price = p.Price,
+                                          Stock = p.Stock,
+                                          Status = p.Status,
+                                          Category = new CategoryDTO
+                                          {
+                                              CategoryId = p.Category.CategoryId,
+                                              Name = p.Category.Name,
+                                              Status = p.Category.Status
+                                          },
+                                          Pictures = p.Pictures.Select(pic => new PictureDTO
+                                          {
+                                              PictureId = pic.PictureId,
+                                              Path = pic.Path
+                                          }).ToList(),
+                                          Comments = p.Comments.Select(comment => new CommentDTO
+                                          {
+                                              CommentId = comment.CommentId,
+                                              Text = comment.Text,
+                                              PublishedDate = comment.PublishedDate,
+                                              Status = comment.Status,
+                                              ProductId = comment.ProductId,
+                                              UserId = comment.UserId
+                                          }).ToList()
+                                      })
+                                      .ToListAsync();
+
+            return Json(new { TotalProduct = products_count, ProductPerPage = page_size, TotalPages = (int)Math.Ceiling((decimal)products_count / page_size), products });
         }
 
         [HttpGet("Product/{seo_url}")]
@@ -305,6 +267,36 @@ namespace E_Ticaret_API.Controllers
                 .ToListAsync();
 
             return Ok(products);
+        }
+
+        [HttpPost("Contact")]
+        public async Task<IActionResult> AddToContact(ContactModel Form)
+        {
+            var re = await _context.Settings.Where(p => p.Mkey == "recaptcha_secretkey").FirstOrDefaultAsync();
+
+            using var client = new HttpClient();
+            var response = client.GetStringAsync($@"https://www.google.com/recaptcha/api/siteverify?secret={re.Mval}&response={Form.gRecaptcha}").Result;
+            var recaptchaResponse = JsonConvert.DeserializeObject<RecaptchaResponse>(response);
+
+            if (!recaptchaResponse.Success)
+            {
+                return Json(new { status = false, msg = "Robot Doğrulama Hatası" });
+            }
+
+            var contactItem = new Contact
+            {
+                NameSurname = Form.NameSurname,
+                Email = Form.Email,
+                Subject = Form.Subject,
+                Text = Form.Text,
+                PublishedDate = DateTime.Now,
+                Status = false
+            };
+
+            _context.Contacts.Add(contactItem);
+            await _context.SaveChangesAsync();
+
+            return Json(new { status = true, msg = "Mesaj Gönderildi" });
         }
     }
 }

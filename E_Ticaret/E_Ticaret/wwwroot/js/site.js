@@ -277,6 +277,10 @@ $(".form_send").submit(function (e) {
 });
 
 $("form").submit(function (e) {
+    if ($(this).attr('id') === 'search-form') {
+        return;
+    }
+
     var form = $(this);
     var formData = new FormData(form[0]);
 
@@ -285,12 +289,69 @@ $("form").submit(function (e) {
         formDataObject[key] = value;
     });
 
+    if ('g-recaptcha-response' in formDataObject) {
+        formDataObject['gRecaptcha'] = formDataObject['g-recaptcha-response'];
+        delete formDataObject['g-recaptcha-response'];
+    }
+
     var form_btn = form.find('button');
     form_btn.attr('disabled', true);
 
     Swal.fire("İşlem Gerçekleştiriliyor!", "", "warning");
 
     e.preventDefault();
+
+    function handleSuccess(data) {
+        Swal.close();
+        if ('token' in data) {
+            localStorage.setItem("token", JSON.stringify(data.token));
+        }
+        var response = data;
+        if (response && response.errors && response.title && response.status) {
+            var errorMessages = Object.entries(response.errors);
+            errorMessages.forEach(function ([field, messages]) {
+                var inputField = $('#' + field);
+                inputField.addClass('is-invalid').css('border', '1px solid #ff5454');
+                var errorMessage = messages.join(", ");
+                var validationMessage = $('<span class="text-danger"></span>').text(errorMessage);
+
+                if (inputField.next('.text-danger').length === 0) {
+                    inputField.after(validationMessage);
+                } else {
+                    inputField.next('.text-danger').text(errorMessage);
+                }
+            });
+        } else {
+            viewStatus(data.status, data.msg);
+        }
+        form_btn.attr('disabled', false);
+    }
+
+    function handleError(xhr) {
+        Swal.close();
+        var response = xhr.responseJSON;
+        if (response && response.errors && response.title && response.status) {
+            var errorMessages = Object.entries(response.errors);
+            errorMessages.forEach(function ([field, messages]) {
+                var inputField = $('#' + field);
+                inputField.addClass('is-invalid').css('border', '1px solid #ff5454');
+                var errorMessage = messages.join(", ");
+                var validationMessage = $('<span class="text-danger" style="padding-block-end: 20px; display: block; "></span>').text(errorMessage);
+
+                if (inputField.next('.text-danger').length === 0) {
+                    inputField.after(validationMessage);
+                } else {
+                    inputField.next('.text-danger').text(errorMessage);
+                }
+            });
+        } else {
+            viewStatus(false, "Sunucu Hatası");
+        }
+        form_btn.attr('disabled', false);
+    }
+
+    $('.text-danger').remove();
+    $('input').removeClass('is-invalid').css('border', '1px solid #e1e1e1');
 
     if (localStorage.getItem("token")) {
         const token = JSON.parse(localStorage.getItem("token"));
@@ -300,18 +361,8 @@ $("form").submit(function (e) {
             method: "POST",
             dataType: "JSON",
             data: formDataObject,
-            success: function (data) {
-                if ('token' in data) {
-                    localStorage.setItem("token", JSON.stringify(data.token));
-                }
-                cartUpdate();
-                viewStatus(data.status, data.msg);
-                form_btn.attr('disabled', false);
-            },
-            error: function (xhr, status, error) {
-                viewStatus(false, "Sunucu Hatası");
-                form_btn.attr('disabled', false);
-            }
+            success: handleSuccess,
+            error: handleError
         });
     } else {
         $.ajax({
@@ -319,18 +370,8 @@ $("form").submit(function (e) {
             method: "POST",
             dataType: "JSON",
             data: formDataObject,
-            success: function (data) {
-                if ('token' in data) {
-                    localStorage.setItem("token", JSON.stringify(data.token));
-                }
-                cartUpdate();
-                viewStatus(data.status, data.msg);
-                form_btn.attr('disabled', false);
-            },
-            error: function (xhr, status, error) {
-                viewStatus(false, "Sunucu Hatası");
-                form_btn.attr('disabled', false);
-            }
+            success: handleSuccess,
+            error: handleError
         });
     }
 });

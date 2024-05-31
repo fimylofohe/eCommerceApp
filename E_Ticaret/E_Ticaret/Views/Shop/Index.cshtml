@@ -24,10 +24,23 @@
             <div class="col-lg-3">
                 <div class="shop__sidebar">
                     <div class="shop__sidebar__search">
-                        <form action="#">
-                            <input type="text" placeholder="Arama...">
-                            <button type="submit"><span class="icon_search"></span></button>
-                        </form>
+                        @{
+                            string deger_get = "/Shop";
+
+                            @if (ViewBag.Cat != 0)
+                            {
+                                deger_get = "?page=" + ViewBag.Page + "&cat=" + ViewBag.Cat;
+                            }
+                            else
+                            {
+                                deger_get = "?page=" + ViewBag.Page;
+                            }
+
+                            <form action="@deger_get" method="GET" id="search-form">
+                                <input type="text" name="search" placeholder="Arama...">
+                                <button type="submit"><span class="icon_search"></span></button>
+                            </form>
+                        }
                     </div>
                     <div class="shop__sidebar__accordion">
                         <div class="accordion" id="accordionExample">

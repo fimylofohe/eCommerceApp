@@ -20,15 +20,6 @@ namespace E_Ticaret_API.Models
         [Required(ErrorMessage = "Lütfen Telefon Numarası Giriniz")]
         public required string PhoneNumber { get; set; }
 
-        [Display(Name = "Eski Şifre")]
-        public string? EPassword { get; set; }
-
-        [Display(Name = "Yeni Şifre")]
-        public string? Password { get; set; }
-
-        [Display(Name = "Tekrar Yeni Şifre")]
-        public string? TPassword { get; set; }
-
         [Display(Name = "Hesap Durumu")]
         public required bool Status { get; set; }
 

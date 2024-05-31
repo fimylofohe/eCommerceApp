@@ -23,6 +23,7 @@ namespace E_Ticaret_API.Data
         public DbSet<PaymentNotification> PaymentNotifications => Set<PaymentNotification>();
         public DbSet<Setting> Settings => Set<Setting>();
         public DbSet<Blog> Blogs => Set<Blog>();
+        public DbSet<Contact> Contacts => Set<Contact>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

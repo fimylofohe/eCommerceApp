@@ -1,0 +1,78 @@
+﻿@{
+    ViewData["Title"] = "E-Ticaret Yorum";
+
+    var contact = ViewBag.Contact;
+}
+
+<style>
+    .dflex {
+        display: flex;
+    }
+</style>
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Mesaj Detayları</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item "><a asp-controller="Admin" asp-action="Index">Panel</a></li>
+                    <li class="breadcrumb-item "><a asp-controller="Admin" asp-action="Contacts">İletişim Mesajları</a></li>
+                    <li class="breadcrumb-item active">#@contact.ContactId</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="x">
+                    <div class="xs" style="margin-block-end: 100px;">
+                        <div class="row">
+                            <div class="col-12 d-flex align-items-stretch">
+                                <div class="card shadow" style="width: 100%;">
+                                    <div class="card-header bg-gradient-dark">
+                                        <h4 class="card-title">Mesaj Detayları</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-12 col-md-3" style="margin-block-end: 10px;">
+                                                <label>İsim Soyisim</label>
+                                                <input type="text" class="form-control" value="@contact.NameSurname">
+                                            </div>
+
+                                            <div class="col-12 col-md-3" style="margin-block-end: 10px;">
+                                                <label>E-Posta Adresi</label>
+                                                <input type="text" class="form-control" value="@contact.Email">
+                                            </div>
+
+                                            <div class="col-12 col-md-3" style="margin-block-end: 10px;">
+                                                <label>Konu</label>
+                                                <input type="text" class="form-control" value="@contact.Subject">
+                                            </div>
+
+                                            <div class="col-12 col-md-3" style="margin-block-end: 10px;">
+                                                <label>Gönderim Tarihi</label>
+                                                <input type="text" class="form-control" value="@contact.PublishedDate">
+                                            </div>
+
+                                            <div class="col-12" style="margin-block-end: 10px;">
+                                                <label>Mesaj</label>
+                                                <textarea class="form-control">@contact.Text</textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

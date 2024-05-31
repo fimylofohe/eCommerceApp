@@ -196,9 +196,7 @@ namespace E_Ticaret.Controllers
                     using (var response = await httpClient.PutAsync(api_url + "/Api/Admin/Order/" + id, httpContent))
                     {
                         var apiResponse = await response.Content.ReadAsStringAsync();
-                        var api_data = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
-
-                        return Json(new { status = api_data.Status, msg = api_data.Msg });
+                        return Ok(apiResponse);
                     }
                 }
             }
@@ -302,9 +300,41 @@ namespace E_Ticaret.Controllers
                     using (var response = await httpClient.PutAsync(api_url + "/Api/Admin/User/" + id, httpContent))
                     {
                         var apiResponse = await response.Content.ReadAsStringAsync();
-                        var api_data = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
+                        return Ok(apiResponse);
+                    }
+                }
+            }
 
-                        return Json(new { status = api_data.Status, msg = api_data.Msg });
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpPost("Admin/UserPass/{id}")]
+        public async Task<IActionResult> PostUserPass(PasswordModel Form, int id)
+        {
+            if (await CheckAdmin() == true)
+            {
+                dynamic settings = await Tools.SettingAsync();
+                ViewBag.Setting = settings;
+                string site_url = await Tools.GetUrl(HttpContext);
+                ViewBag.SiteUrl = site_url;
+                string api_url = settings.api_url;
+
+                var jsonModel = JsonSerializer.Serialize(Form);
+
+                var httpContent = new StringContent(jsonModel, Encoding.UTF8, "application/json");
+
+                using (var httpClient = new HttpClient())
+                {
+                    string token = Request.Cookies["token"];
+                    if (!string.IsNullOrEmpty(token))
+                    {
+                        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                    }
+
+                    using (var response = await httpClient.PutAsync(api_url + "/Api/Admin/UserPass/" + id, httpContent))
+                    {
+                        var apiResponse = await response.Content.ReadAsStringAsync();
+                        return Ok(apiResponse);
                     }
                 }
             }
@@ -408,9 +438,7 @@ namespace E_Ticaret.Controllers
                     using (var response = await httpClient.PostAsync(api_url + "/Api/Admin/Product", httpContent))
                     {
                         var apiResponse = await response.Content.ReadAsStringAsync();
-                        var api_data = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
-
-                        return Json(new { status = api_data.Status, msg = api_data.Msg });
+                        return Ok(apiResponse);
                     }
                 }
             }
@@ -486,9 +514,7 @@ namespace E_Ticaret.Controllers
                     using (var response = await httpClient.PutAsync(api_url + "/Api/Admin/Product/" + id, httpContent))
                     {
                         var apiResponse = await response.Content.ReadAsStringAsync();
-                        var api_data = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
-
-                        return Json(new { status = api_data.Status, msg = api_data.Msg });
+                        return Ok(apiResponse);
                     }
                 }
             }
@@ -563,9 +589,7 @@ namespace E_Ticaret.Controllers
                     using (var response = await httpClient.PostAsync(api_url + "/Api/Admin/Image/" + id, httpContent))
                     {
                         var apiResponse = await response.Content.ReadAsStringAsync();
-                        var api_data = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
-
-                        return Json(new { status = api_data.Status, msg = api_data.Msg });
+                        return Ok(apiResponse);
                     }
                 }
             }
@@ -595,9 +619,7 @@ namespace E_Ticaret.Controllers
                     using (var response = await httpClient.DeleteAsync(api_url + "/Api/Admin/Image/" + id))
                     {
                         var apiResponse = await response.Content.ReadAsStringAsync();
-                        var api_data = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
-
-                        return Json(new { status = api_data.Status, msg = api_data.Msg });
+                        return Ok(apiResponse);
                     }
                 }
             }
@@ -683,9 +705,7 @@ namespace E_Ticaret.Controllers
                     using (var response = await httpClient.PostAsync(api_url + "/Api/Admin/Category", httpContent))
                     {
                         var apiResponse = await response.Content.ReadAsStringAsync();
-                        var api_data = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
-
-                        return Json(new { status = api_data.Status, msg = api_data.Msg });
+                        return Ok(apiResponse);
                     }
                 }
             }
@@ -752,9 +772,7 @@ namespace E_Ticaret.Controllers
                     using (var response = await httpClient.PutAsync(api_url + "/Api/Admin/Category/" + id, httpContent))
                     {
                         var apiResponse = await response.Content.ReadAsStringAsync();
-                        var api_data = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
-
-                        return Json(new { status = api_data.Status, msg = api_data.Msg });
+                        return Ok(apiResponse);
                     }
                 }
             }
@@ -928,9 +946,7 @@ namespace E_Ticaret.Controllers
                     using (var response = await httpClient.PutAsync(api_url + "/Api/Admin/Comment/" + id, httpContent))
                     {
                         string apiResponse = await response.Content.ReadAsStringAsync();
-                        var api_data = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
-
-                        return Json(new { status = api_data.Status, msg = api_data.Msg });
+                        return Ok(apiResponse);
                     }
                 }
             }
@@ -960,9 +976,7 @@ namespace E_Ticaret.Controllers
                     using (var response = await httpClient.DeleteAsync(api_url + "/Api/Admin/Comment/" + id))
                     {
                         string apiResponse = await response.Content.ReadAsStringAsync();
-                        var api_data = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
-
-                        return Json(new { status = api_data.Status, msg = api_data.Msg });
+                        return Ok(apiResponse);
                     }
                 }
             }
@@ -1048,9 +1062,7 @@ namespace E_Ticaret.Controllers
                     using (var response = await httpClient.PostAsync(api_url + "/Api/Admin/Coupon", httpContent))
                     {
                         var apiResponse = await response.Content.ReadAsStringAsync();
-                        var api_data = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
-
-                        return Json(new { status = api_data.Status, msg = api_data.Msg });
+                        return Ok(apiResponse);
                     }
                 }
             }
@@ -1125,9 +1137,7 @@ namespace E_Ticaret.Controllers
                     using (var response = await httpClient.PutAsync(api_url + "/Api/Admin/Coupon/" + id, httpContent))
                     {
                         string apiResponse = await response.Content.ReadAsStringAsync();
-                        var api_data = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
-
-                        return Json(new { status = api_data.Status, msg = api_data.Msg });
+                        return Ok(apiResponse);
                     }
                 }
             }
@@ -1157,9 +1167,7 @@ namespace E_Ticaret.Controllers
                     using (var response = await httpClient.DeleteAsync(api_url + "/Api/Admin/Cart/" + id))
                     {
                         var apiResponse = await response.Content.ReadAsStringAsync();
-                        var api_data = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
-
-                        return Json(new { status = api_data.Status, msg = api_data.Msg });
+                        return Ok(apiResponse);
                     }
                 }
             }
@@ -1252,9 +1260,7 @@ namespace E_Ticaret.Controllers
                         using (var response = await httpClient.PostAsync(api_url + "/Api/Admin/Slider", httpContent))
                         {
                             string apiResponse = await response.Content.ReadAsStringAsync();
-                            var api_data = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
-
-                            return Json(new { status = api_data.Status, msg = api_data.Msg });
+                            return Ok(apiResponse);
                         }
                     }
                 }
@@ -1277,9 +1283,7 @@ namespace E_Ticaret.Controllers
                         using (var response = await httpClient.PostAsync(api_url + "/Api/Admin/Slider", httpContent))
                         {
                             string apiResponse = await response.Content.ReadAsStringAsync();
-                            var api_data = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
-
-                            return Json(new { status = api_data.Status, msg = api_data.Msg });
+                            return Ok(apiResponse);
                         }
                     }
                 }
@@ -1362,9 +1366,7 @@ namespace E_Ticaret.Controllers
                         using (var response = await httpClient.PutAsync(api_url + "/Api/Admin/Slider/" + id, httpContent))
                         {
                             string apiResponse = await response.Content.ReadAsStringAsync();
-                            var api_data = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
-
-                            return Json(new { status = api_data.Status, msg = api_data.Msg });
+                            return Ok(apiResponse);
                         }
                     }
                 }
@@ -1385,9 +1387,7 @@ namespace E_Ticaret.Controllers
                         using (var response = await httpClient.PutAsync(api_url + "/Api/Admin/Slider/" + id, httpContent))
                         {
                             string apiResponse = await response.Content.ReadAsStringAsync();
-                            var api_data = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
-
-                            return Json(new { status = api_data.Status, msg = api_data.Msg });
+                            return Ok(apiResponse);
                         }
                     }
                 }
@@ -1418,9 +1418,7 @@ namespace E_Ticaret.Controllers
                     using (var response = await httpClient.DeleteAsync(api_url + "/Api/Admin/Slider/" + id))
                     {
                         string apiResponse = await response.Content.ReadAsStringAsync();
-                        var api_data = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
-
-                        return Json(new { status = api_data.Status, msg = api_data.Msg });
+                        return Ok(apiResponse);
                     }
                 }
             }
@@ -1524,9 +1522,7 @@ namespace E_Ticaret.Controllers
                     using (var response = await httpClient.PutAsync(api_url + "/Api/Admin/PaymentNotification/" + id, httpContent))
                     {
                         string apiResponse = await response.Content.ReadAsStringAsync();
-                        var api_data = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
-
-                        return Json(new { status = api_data.Status, msg = api_data.Msg });
+                        return Ok(apiResponse);
                     }
                 }
             }
@@ -1556,9 +1552,7 @@ namespace E_Ticaret.Controllers
                     using (var response = await httpClient.DeleteAsync(api_url + "/Api/Admin/PaymentNotification/" + id))
                     {
                         string apiResponse = await response.Content.ReadAsStringAsync();
-                        var api_data = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
-
-                        return Json(new { status = api_data.Status, msg = api_data.Msg });
+                        return Ok(apiResponse);
                     }
                 }
             }
@@ -1638,9 +1632,7 @@ namespace E_Ticaret.Controllers
                     using (var response = await httpClient.PostAsync(api_url + "/Api/Admin/Bank", httpContent))
                     {
                         string apiResponse = await response.Content.ReadAsStringAsync();
-                        var api_data = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
-
-                        return Json(new { status = api_data.Status, msg = api_data.Msg });
+                        return Ok(apiResponse);
                     }
                 }
             }
@@ -1709,9 +1701,7 @@ namespace E_Ticaret.Controllers
                     using (var response = await httpClient.PutAsync(api_url + "/Api/Admin/Bank/" + id, httpContent))
                     {
                         string apiResponse = await response.Content.ReadAsStringAsync();
-                        var api_data = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
-
-                        return Json(new { status = api_data.Status, msg = api_data.Msg });
+                        return Ok(apiResponse);
                     }
                 }
             }
@@ -1741,9 +1731,7 @@ namespace E_Ticaret.Controllers
                     using (var response = await httpClient.DeleteAsync(api_url + "/Api/Admin/Bank/" + id))
                     {
                         string apiResponse = await response.Content.ReadAsStringAsync();
-                        var api_data = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
-
-                        return Json(new { status = api_data.Status, msg = api_data.Msg });
+                        return Ok(apiResponse);
                     }
                 }
             }
@@ -1769,7 +1757,7 @@ namespace E_Ticaret.Controllers
         }
 
         [HttpPost("Admin/Settings")]
-        public async Task<IActionResult> SetSettings(IFormCollection formCollection)
+        public async Task<IActionResult> SetSettings(IFormFile logo, IFormFile favicon, IFormCollection formCollection)
         {
             if (await CheckAdmin() == true)
             {
@@ -1789,6 +1777,42 @@ namespace E_Ticaret.Controllers
                     }
                 }
 
+                if (logo != null)
+                {
+                    var extent = Path.GetExtension(logo.FileName);
+                    var randomName = ($"{Guid.NewGuid()}{extent}");
+                    var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\img", randomName);
+
+                    using (var stream = new FileStream(path, FileMode.Create))
+                    {
+                        await logo.CopyToAsync(stream);
+                    }
+
+                    json_obj["logo"] = randomName;
+                }
+                else
+                {
+                    json_obj["logo"] = settings.logo;
+                }
+
+                if (favicon != null)
+                {
+                    var extent = Path.GetExtension(favicon.FileName);
+                    var randomName = ($"{Guid.NewGuid()}{extent}");
+                    var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\img", randomName);
+
+                    using (var stream = new FileStream(path, FileMode.Create))
+                    {
+                        await favicon.CopyToAsync(stream);
+                    }
+
+                    json_obj["favicon"] = randomName;
+                }
+                else
+                {
+                    json_obj["favicon"] = settings.favicon;
+                }
+
                 var jsonModel = json_obj.ToString();
 
                 var httpContent = new StringContent(jsonModel, Encoding.UTF8, "application/json");
@@ -1804,9 +1828,7 @@ namespace E_Ticaret.Controllers
                     using (var response = await httpClient.PutAsync(api_url + "/Api/Admin/Settings", httpContent))
                     {
                         string apiResponse = await response.Content.ReadAsStringAsync();
-                        var api_data = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
-
-                        return Json(new { status = api_data.Status, msg = api_data.Msg });
+                        return Ok(apiResponse);
                     }
                 }
             }
@@ -1899,9 +1921,7 @@ namespace E_Ticaret.Controllers
                         using (var response = await httpClient.PostAsync(api_url + "/Api/Admin/Blog", httpContent))
                         {
                             string apiResponse = await response.Content.ReadAsStringAsync();
-                            var api_data = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
-
-                            return Json(new { status = api_data.Status, msg = api_data.Msg });
+                            return Ok(apiResponse);
                         }
                     }
                 }
@@ -1924,9 +1944,7 @@ namespace E_Ticaret.Controllers
                         using (var response = await httpClient.PostAsync(api_url + "/Api/Admin/Blog", httpContent))
                         {
                             string apiResponse = await response.Content.ReadAsStringAsync();
-                            var api_data = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
-
-                            return Json(new { status = api_data.Status, msg = api_data.Msg });
+                            return Ok(apiResponse);
                         }
                     }
                 }
@@ -2009,9 +2027,7 @@ namespace E_Ticaret.Controllers
                         using (var response = await httpClient.PutAsync(api_url + "/Api/Admin/Blog/" + id, httpContent))
                         {
                             string apiResponse = await response.Content.ReadAsStringAsync();
-                            var api_data = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
-
-                            return Json(new { status = api_data.Status, msg = api_data.Msg });
+                            return Ok(apiResponse);
                         }
                     }
                 }
@@ -2032,9 +2048,7 @@ namespace E_Ticaret.Controllers
                         using (var response = await httpClient.PutAsync(api_url + "/Api/Admin/Blog/" + id, httpContent))
                         {
                             string apiResponse = await response.Content.ReadAsStringAsync();
-                            var api_data = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
-
-                            return Json(new { status = api_data.Status, msg = api_data.Msg });
+                            return Ok(apiResponse);
                         }
                     }
                 }
@@ -2065,9 +2079,107 @@ namespace E_Ticaret.Controllers
                     using (var response = await httpClient.DeleteAsync(api_url + "/Api/Admin/Blog/" + id))
                     {
                         string apiResponse = await response.Content.ReadAsStringAsync();
-                        var api_data = JsonSerializer.Deserialize<ApiStatus>(apiResponse);
+                        return Ok(apiResponse);
+                    }
+                }
+            }
 
-                        return Json(new { status = api_data.Status, msg = api_data.Msg });
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet("Admin/Contacts")]
+        public async Task<IActionResult> Contacts()
+        {
+            if (await CheckAdmin() == true)
+            {
+                dynamic settings = await Tools.SettingAsync();
+                ViewBag.Setting = settings;
+                string site_url = await Tools.GetUrl(HttpContext);
+                ViewBag.SiteUrl = site_url;
+                string api_url = settings.api_url;
+
+                var contact = new List<Contact>();
+
+                using (var httpClient = new HttpClient())
+                {
+                    string token = Request.Cookies["token"];
+                    if (!string.IsNullOrEmpty(token))
+                    {
+                        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                    }
+
+                    using (var response = await httpClient.GetAsync(api_url + "/Api/Admin/Contacts"))
+                    {
+                        string apiResponse = await response.Content.ReadAsStringAsync();
+                        contact = JsonSerializer.Deserialize<List<Contact>>(apiResponse);
+                    }
+                }
+
+                ViewBag.Contacts = contact;
+                return View("Contacts");
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet("Admin/Contact/{id}")]
+        public async Task<IActionResult> Contact(int id)
+        {
+            if (await CheckAdmin() == true)
+            {
+                dynamic settings = await Tools.SettingAsync();
+                ViewBag.Setting = settings;
+                string site_url = await Tools.GetUrl(HttpContext);
+                ViewBag.SiteUrl = site_url;
+                string api_url = settings.api_url;
+
+                var contact = new Contact();
+
+                using (var httpClient = new HttpClient())
+                {
+                    string token = Request.Cookies["token"];
+                    if (!string.IsNullOrEmpty(token))
+                    {
+                        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                    }
+
+                    using (var response = await httpClient.GetAsync(api_url + "/Api/Admin/Contact/" + id))
+                    {
+                        string apiResponse = await response.Content.ReadAsStringAsync();
+                        contact = JsonSerializer.Deserialize<Contact>(apiResponse);
+                    }
+                }
+
+                ViewBag.Contact = contact;
+                return View("Contact");
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpDelete("Admin/Contact/{id}")]
+        public async Task<IActionResult> DeleteContact(int id)
+        {
+            if (await CheckAdmin() == true)
+            {
+                dynamic settings = await Tools.SettingAsync();
+                ViewBag.Setting = settings;
+                string site_url = await Tools.GetUrl(HttpContext);
+                ViewBag.SiteUrl = site_url;
+                string api_url = settings.api_url;
+
+                using (var httpClient = new HttpClient())
+                {
+                    string token = Request.Cookies["token"];
+                    if (!string.IsNullOrEmpty(token))
+                    {
+                        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                    }
+
+                    using (var response = await httpClient.DeleteAsync(api_url + "/Api/Admin/Contact/" + id))
+                    {
+                        string apiResponse = await response.Content.ReadAsStringAsync();
+                        return Ok(apiResponse);
                     }
                 }
             }

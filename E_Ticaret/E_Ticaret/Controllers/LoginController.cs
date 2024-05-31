@@ -12,10 +12,13 @@ namespace E_Ticaret.Controllers
 {
     public class LoginController : Controller
     {
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             Tools.GenerateGuestToken(HttpContext);
             Tools.CheckToken(HttpContext);
+
+            dynamic settings = await Tools.SettingAsync();
+            ViewBag.Setting = settings;
 
             if (User.Identity!.IsAuthenticated)
             {

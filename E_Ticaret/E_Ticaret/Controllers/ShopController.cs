@@ -22,7 +22,7 @@ namespace E_Ticaret.Controllers
         }
 
         [HttpGet("Shop")]
-        public async Task<IActionResult> Index(int page = 1, int cat = 0)
+        public async Task<IActionResult> Index(int page = 1, int cat = 0, string search = null)
         {
             Tools.GenerateGuestToken(HttpContext);
             Tools.CheckToken(HttpContext);
@@ -37,7 +37,7 @@ namespace E_Ticaret.Controllers
 
             using (var httpClient = new HttpClient())
             {
-                using (var response = await httpClient.GetAsync(api_url + "/Api/Data/Products/" + page + "?cat=" + cat))
+                using (var response = await httpClient.GetAsync(api_url + "/Api/Data/Products/" + page + "?cat=" + cat + "&search=" + search))
                 {
                     string apiResponse = await response.Content.ReadAsStringAsync();
                     shop = JsonSerializer.Deserialize<Shop>(apiResponse);

@@ -1,4 +1,6 @@
 ﻿@{
+    @model E_Ticaret.Models.CouponsModel
+
     ViewData["Title"] = "E-Ticaret Yorum";
 
     var coupon = ViewBag.Coupon;
@@ -121,23 +123,23 @@
                                         <form action="" method="post">
                                             <div class="row">
                                                 <div class="col-12 col-md-4" style="margin-block-end: 10px;">
-                                                    <label>Başlık</label>
-                                                    <input type="text" class="form-control" name="Name" value="@coupon.Name">
+                                                    <label asp-for="Name"></label>
+                                                    <input asp-for="Name" class="form-control" value="@coupon.Name">
                                                 </div>
 
                                                 <div class="col-12 col-md-4" style="margin-block-end: 10px;">
-                                                    <label>Kupon Kodu</label>
-                                                    <input type="text" class="form-control" name="CouponCode" value="@coupon.CouponCode">
+                                                    <label asp-for="CouponCode"></label>
+                                                    <input asp-for="CouponCode" class="form-control" value="@coupon.CouponCode">
                                                 </div>
 
                                                 <div class="col-12 col-md-4" style="margin-block-end: 10px;">
-                                                    <label>Son Kullanım Tarihi</label>
-                                                    <input type="text" class="form-control" name="ValidityDate" value="@coupon.ValidityDate">
+                                                    <label asp-for="ValidityDate"></label>
+                                                    <input asp-for="ValidityDate" class="form-control" value="@coupon.ValidityDate">
                                                 </div>
 
                                                 <div class="col-12 col-md-3" style="margin-block-end: 10px;">
-                                                    <label>Tip</label>
-                                                    <select name="Type" class="form-control">
+                                                    <label asp-for="Type"></label>
+                                                    <select asp-for="Type" class="form-control">
                                                         @if (coupon.Type == "1")
                                                         {
                                                             <option value="1" selected>Normal</option>
@@ -159,13 +161,13 @@
                                                 </div>
 
                                                 <div class="col-12 col-md-3" style="margin-block-end: 10px;">
-                                                    <label>İndirim Miktarı</label>
-                                                    <input type="number" class="form-control" name="DiscountAmount" value="@coupon.DiscountAmount">
+                                                    <label asp-for="DiscountAmount"></label>
+                                                    <input asp-for="DiscountAmount" class="form-control" value="@coupon.DiscountAmount">
                                                 </div>
 
                                                 <div class="col-12 col-md-3" style="margin-block-end: 10px;">
-                                                    <label>Tek Kullanım</label>
-                                                    <select name="SingleUse" class="form-control">
+                                                    <label asp-for="SingleUse">Tek Kullanım</label>
+                                                    <select asp-for="SingleUse" class="form-control">
                                                         @if (coupon.SingleUse == true)
                                                         {
                                                             <option value="true" selected>Aktif</option>
@@ -187,8 +189,8 @@
                                                 </div>
 
                                                 <div class="col-12 col-md-3" style="margin-block-end: 10px;">
-                                                    <label>Durum</label>
-                                                    <select name="Status" class="form-control">
+                                                    <label asp-for="Status">Durum</label>
+                                                    <select asp-for="Status" class="form-control">
                                                         @if (coupon.Status == false)
                                                         {
                                                             <option value="false" selected>Pasif</option>

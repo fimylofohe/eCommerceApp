@@ -1047,6 +1047,12 @@ namespace E_Ticaret.Controllers
                 ViewBag.SiteUrl = site_url;
                 string api_url = settings.api_url;
 
+                if (!ModelState.IsValid)
+                {
+                    var errors = ModelState.Values.SelectMany(v => v.Errors);
+                    return Ok(errors);
+                }
+
                 var jsonModel = JsonSerializer.Serialize(Form);
 
                 var httpContent = new StringContent(jsonModel, Encoding.UTF8, "application/json");
